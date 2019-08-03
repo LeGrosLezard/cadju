@@ -4,6 +4,4 @@ week end
 en vrai tu peux crop le code mais jtrouve ca plus facile a voir comme ca et x2 travail = meilleur apprentissage
 
 
-remettre en 400 sinon ca vois pas bien la photo bon c du recopiage mais c trop cool
-
-on cligne pas des yeux en meme temps c dingue ca !
+du coup essais de prendre le losange et d'a chaque fois comparer les positions du coup on pourra dire ou y matte et ce qu'il pense hihi
