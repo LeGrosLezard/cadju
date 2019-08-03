@@ -1,10 +1,10 @@
 import numpy as np
 import cv2
 
-from CONFIG import EYES_RIGHT
-from CONFIG import EYES_LEFT
+from CONFIG import PATH_Y_G
+from CONFIG import PATH_Y_D
 
-
+from traitement_image import position_yeux
 
 def video_main(video):
     #Main frame
@@ -15,16 +15,14 @@ def video_main(video):
 
 
 
-def video_left(video, d):
+def video_left(video):
     #Eyes left
+
 
     left_eye = cv2.CascadeClassifier('haarcascade_lefteye_2splits.xml')
   
     ret, frame = video.read()
-    left = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     left = cv2.resize(frame, (400, 400))
-
-    
     eyes = left_eye.detectMultiScale(left)
     
     c = 0
@@ -34,33 +32,32 @@ def video_left(video, d):
         else:
             cv2.rectangle(left, (ex,ey), (ex+ew, ey+eh), 0)
             left = left[ey:ey+eh, ex:ex+ew]
-            path = r"C:\Users\jeanbaptiste\Desktop\cadju\yeux\clignement\image\{0}"
-            image = "image" + str(d) + ".jpg"
-            image = path.format(image)
-            cv2.imwrite(image, left)
+            
+            cv2.imwrite(PATH_Y_G, left)
 
-
+            try:
+                position_yeux()
+            except:
+                pass
             
         c += 1
 
     
-
-    cv2.imshow('LEFT', left)
-
+    try:
+        cv2.imshow('LEFT', left)
+    except:
+        pass
 
 
 
 def video_right(video):
     #Eyes right
 
-
-
+ 
     right_eye = cv2.CascadeClassifier("haarcascade_lefteye_2splits.xml")
     
     ret, frame = video.read()
-    right = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    right = cv2.resize(right, (400, 400))
-
+    right = cv2.resize(frame, (400, 400))
     eyes = right_eye.detectMultiScale(right)
 
     c = 0
@@ -69,6 +66,13 @@ def video_right(video):
         if c % 2 == 0:
             cv2.rectangle(right, (ex,ey), (ex+ew, ey+eh), 0)
             right = right[ey:ey+eh, ex:ex+ew]
+            
+            cv2.imwrite(PATH_Y_D, right)
+
+            try:
+                position_yeux()
+            except:
+                pass
 
         else:
             pass
@@ -77,33 +81,30 @@ def video_right(video):
 
     
 
-
-    cv2.imshow('RIGHT', right)
-
+    try:
+        cv2.imshow('RIGHT', right)
+    except:
+        pass
     
 
 
 def video_capture():
 
-    
+    GLOBAL = []
     video = cv2.VideoCapture(0)
     
-    image_numero = 0
     while(True):
 
-        
-        
-        #video_main(video)
-        video_left(video, image_numero)
-        #video_right(video)
+        video_main(video)
+        video_left(video)
+        video_right(video)
+
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-        image_numero += 1
-
+        
     video.release()
-
     cv2.destroyAllWindows()
 
 
