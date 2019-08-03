@@ -5,3 +5,5 @@ en vrai tu peux crop le code mais jtrouve ca plus facile a voir comme ca et x2 t
 
 
 du coup essais de prendre le losange et d'a chaque fois comparer les positions du coup on pourra dire ou y matte et ce qu'il pense hihi
+
++ speech recog avant dimanche nuit et le week prochain on comment les train haarscade mais ca ca va etre chiant..
