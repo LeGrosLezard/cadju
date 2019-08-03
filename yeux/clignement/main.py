@@ -15,14 +15,14 @@ def video_main(video):
 
 
 
-def video_left(video):
+def video_left(video, d):
     #Eyes left
 
     left_eye = cv2.CascadeClassifier('haarcascade_lefteye_2splits.xml')
   
     ret, frame = video.read()
     left = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    left = cv2.resize(left, (400, 400))
+    left = cv2.resize(frame, (400, 400))
 
     
     eyes = left_eye.detectMultiScale(left)
@@ -32,8 +32,15 @@ def video_left(video):
         if c % 2 == 0:
             pass
         else:
-            cv2.rectangle(left, (ex,ey), (ex+ew, ey+eh), 2)
+            cv2.rectangle(left, (ex,ey), (ex+ew, ey+eh), 0)
             left = left[ey:ey+eh, ex:ex+ew]
+            path = r"C:\Users\jeanbaptiste\Desktop\cadju\yeux\clignement\image\{0}"
+            image = "image" + str(d) + ".jpg"
+            image = path.format(image)
+            cv2.imwrite(image, left)
+
+
+            
         c += 1
 
     
@@ -60,7 +67,7 @@ def video_right(video):
     for (ex, ey, ew, eh) in eyes:
         
         if c % 2 == 0:
-            cv2.rectangle(right, (ex,ey), (ex+ew, ey+eh), 2)
+            cv2.rectangle(right, (ex,ey), (ex+ew, ey+eh), 0)
             right = right[ey:ey+eh, ex:ex+ew]
 
         else:
@@ -80,19 +87,20 @@ def video_capture():
 
     
     video = cv2.VideoCapture(0)
-
+    
+    image_numero = 0
     while(True):
 
-        c = 0
-
-        video_main(video)
-        video_left(video)
-        video_right(video)
+        
+        
+        #video_main(video)
+        video_left(video, image_numero)
+        #video_right(video)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-        c += 1
+        image_numero += 1
 
     video.release()
 
