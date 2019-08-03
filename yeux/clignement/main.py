@@ -22,7 +22,7 @@ def video_left(video):
   
     ret, frame = video.read()
     left = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    left = cv2.resize(left, (300, 300))
+    left = cv2.resize(left, (400, 400))
 
     
     eyes = left_eye.detectMultiScale(left)
@@ -32,7 +32,7 @@ def video_left(video):
         if c % 2 == 0:
             pass
         else:
-            cv2.rectangle(left, (ex,ey), (ex+ew, ey+eh), (0, 255, 0), 2)
+            cv2.rectangle(left, (ex,ey), (ex+ew, ey+eh), 2)
             left = left[ey:ey+eh, ex:ex+ew]
         c += 1
 
@@ -52,7 +52,7 @@ def video_right(video):
     
     ret, frame = video.read()
     right = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    right = cv2.resize(right, (300, 300))
+    right = cv2.resize(right, (400, 400))
 
     eyes = right_eye.detectMultiScale(right)
 
@@ -60,7 +60,7 @@ def video_right(video):
     for (ex, ey, ew, eh) in eyes:
         
         if c % 2 == 0:
-            cv2.rectangle(right, (ex,ey), (ex+ew, ey+eh), (0, 255, 0), 2)
+            cv2.rectangle(right, (ex,ey), (ex+ew, ey+eh), 2)
             right = right[ey:ey+eh, ex:ex+ew]
 
         else:
