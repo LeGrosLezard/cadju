@@ -5,3 +5,5 @@ en vrai tu peux crop le code mais jtrouve ca plus facile a voir comme ca et x2 t
 
 
 remettre en 400 sinon ca vois pas bien la photo bon c du recopiage mais c trop cool
+
+on cligne pas des yeux en meme temps c dingue ca !
