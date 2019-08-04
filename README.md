@@ -1,6 +1,6 @@
 # cadju
 week end 
 
-au moin pour les main ca sera facile mais les yeux c horrible j'ai le rond de l'oeil
+bon ca sert strictement arien MAIS c classe, toute la journée a faire défilé mes yeux et a les prendre en photo horrible horrible
 
-mais j'arrive pas a les positionner serieux c horrible ce machin ! JVE VEUX LES EYUX !
+me faut leur position, jpe avoir le contour des yeux le nez ect mais il me faut la position et faut prendre tout le rectangle des yeux enfete et par apport au nez mais... jai enfin des rond putin et c ligne colonne 
