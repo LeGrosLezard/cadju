@@ -1,25 +1,46 @@
 import numpy as np
 import cv2
+from PIL import Image
+import os
+
 
 from CONFIG import PATH_Y_G
 from CONFIG import PATH_Y_D
 
 from traitement_image import position_yeux
 
-def video_main(video):
+
+
+def video_oeil_gauche(video):
     #Main frame
-    ret, main_frame = video.read()
-    frame = cv2.resize(main_frame, (200, 200))
 
-    cv2.imshow('MAIN', frame)
+    try:
+        
+        im = cv2.imread("gauche_oeil.jpg")
+        cv2.imshow('gauche_oeil', im)
+ 
+    except:
+        pass
 
+def video_oeil_droit(video):
+    #Main frame
 
+    try:
+        
+        im1 = cv2.imread("droite_oeil.jpg")
+        cv2.imshow('droite_oeil', im1)
 
+ 
+    except:
+        pass
+
+    
 def video_left(video):
     #Eyes left
 
 
     left_eye = cv2.CascadeClassifier('haarcascade_lefteye_2splits.xml')
+    
   
     ret, frame = video.read()
     left = cv2.resize(frame, (400, 400))
@@ -35,10 +56,9 @@ def video_left(video):
             
             cv2.imwrite(PATH_Y_G, left)
 
-            try:
-                position_yeux()
-            except:
-                pass
+          
+            position_yeux("gauche_oeil.jpg", "iiiiiii.jpg", "image_position_yeux_gauche.jpg")
+
             
         c += 1
 
@@ -70,7 +90,7 @@ def video_right(video):
             cv2.imwrite(PATH_Y_D, right)
 
             try:
-                position_yeux()
+                position_yeux("droite_oeil.jpg", "jjj.jpg", "image_position_yeux_droit.jpg")
             except:
                 pass
 
@@ -88,14 +108,29 @@ def video_right(video):
     
 
 
+
+
+
 def video_capture():
 
     GLOBAL = []
     video = cv2.VideoCapture(0)
-    
+    repere = 0
     while(True):
+        if repere % 10 == 0:
+            print("REPEREEEEEEEEEEEEEEEE")
+        if repere % 30 == 0:
 
-        video_main(video)
+            liste = ["iiiiiii.jpg", "jjj.jpg", "droite_oeil.jpg", "gauche_oeil.jpg"]
+            for i in liste:
+                os.remove(i)
+            
+                new_im = Image.new('RGB', (300,300), (255,255,255))
+                new_im.save(i, "jpeg")
+
+            
+        video_oeil_gauche(video)
+        video_oeil_droit(video)
         video_left(video)
         video_right(video)
 
@@ -103,7 +138,7 @@ def video_capture():
         if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
-        
+        repere += 1
     video.release()
     cv2.destroyAllWindows()
 
