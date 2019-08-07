@@ -5,35 +5,78 @@ import os
 
 
 
-def position_yeux(nom_image, inter, debut):
 
-    #os.remove(nom_image)
-    img = Image.open(debut)
-    img = img.resize((300, 300), Image.ANTIALIAS)
-    img.save(inter)
+def pre_initialisation(repere, eyes, liste, frame):
+    """Ici si repere est inférieur a 100
+    on ajoute les lignes dans la liste"""
 
-    img = cv2.imread(inter, 0)
-    blur = cv2.blur(img,(3,3))
 
-    try:
-
-        circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, 2, 100, param1=50,
-                                    param2=30, minRadius=40, maxRadius=55)
-
-        circles = np.round(circles[0, :]).astype("int")
-
-        for (x, y, r) in circles:
-            if x < 61:
-                pass
-            else:
-                cv2.circle(img, (x, y), r, (0, 0, 255), 1)
-                cv2.circle(img, (x, y), 2, (0, 0, 255), 3)
-                cv2.imwrite(nom_image, img)
+    for (ex, ey, ew, eh) in eyes:
         
-    except:
-        pass
+        cv2.rectangle(frame, (ex,ey), (ex+ew, ey+eh), 0)
+        ey = ey.tolist()
+        liste.append(ey)
 
+
+
+
+def position_yeux(repere, eyes, liste, frame):
+    """Si repere est superieur a 100
+    c'est qu'on a fini la premiere initialisation"""
+
+
+    for (ex, ey, ew, eh) in eyes:
+
+        cv2.rectangle(frame, (ex,ey), (ex+ew, ey+eh), 0)
+        ey = ey.tolist()
+        liste.append(ey)
+
+
+        if ey < sum(liste)/len(liste) - 100:
+            return "le mec s'est levé"
             
+
+        elif ey > sum(liste)/len(liste) + 100: 
+            return "le mec s'est baissé"
+
+
+        if ey < sum(liste)/len(liste) - 20:
+            return "le mec à levé la tete"
+            
+        elif ey > sum(liste)/len(liste) + 20: 
+            return "le mec à baisser la tete"
+
+        
+        elif ey < sum(liste)/len(liste) - 5:
+            return "le mec regarde en HAUT"
+        
+        elif ey > sum(liste)/len(liste) + 5: 
+            return "le mec regarde en bas"
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
