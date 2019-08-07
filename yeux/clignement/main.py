@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 from PIL import Image
 import os
-
+from statistics import mean
 
 from CONFIG import PATH_Y_G
 from CONFIG import PATH_Y_D
@@ -69,6 +69,56 @@ def video_left(video):
         pass
 
 
+liste = []
+def yo(video, repere):
+    #Eyes left
+
+    
+    left_eye = cv2.CascadeClassifier('haarcascade_lefteye_2splits.xml')
+    
+      
+    ret, frame = video.read()
+    left = cv2.resize(frame, (400, 400))
+    eyes = left_eye.detectMultiScale(left)
+
+    if repere == 100:
+        print("feazKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK")
+    
+    if repere > 100:
+        
+        for (ex, ey, ew, eh) in eyes:
+
+            cv2.rectangle(left, (ex,ey), (ex+ew, ey+eh), 0)
+            liste.append(ey)
+            
+            if ey < sum(liste)/len(liste) - 5:
+                print("HAUT")
+            if ey > sum(liste)/len(liste) + 5: 
+                print("bas")
+        try:
+            
+            cv2.imshow('LEFT', left)
+        except:
+            pass
+
+
+    if repere < 100:
+        for (ex, ey, ew, eh) in eyes:
+            
+            cv2.rectangle(left, (ex,ey), (ex+ew, ey+eh), 0)
+
+            ey = ey.tolist()
+
+            liste.append(ey)
+
+            
+            
+        try:
+     
+            cv2.imshow('LEFT', left)
+        except:
+            pass
+
 
 def video_right(video):
     #Eyes right
@@ -128,15 +178,15 @@ def video_capture():
                 new_im = Image.new('RGB', (300,300), (255,255,255))
                 new_im.save(i, "jpeg")
 
-            
-        video_oeil_gauche(video)
-        video_oeil_droit(video)
-        video_left(video)
-        video_right(video)
+        yo(video, repere)
+        #video_oeil_gauche(video)
+        #video_oeil_droit(video)
+        #video_left(video)
+        #video_right(video)
 
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+            break
 
         repere += 1
     video.release()
