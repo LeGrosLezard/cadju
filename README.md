@@ -1,10 +1,10 @@
 # cadju
-week end 
 
+-------------------------------
 
-a droite
+droite gauche faudra revérifier demain on a pas de droite haut ....
 
-a gauche
+------------------------------
 
 faire la tete mtn
 
