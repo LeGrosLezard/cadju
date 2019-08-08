@@ -102,7 +102,7 @@ def position_yeux_horizontal(eyes, LISTE_DROITE_GAUCHE, frame):
                                 LISTE_DROITE_GAUCHE.append("retour")
                                 return "gauche"
                             
-                            elif round(int(ex+(ew/2))) > LISTE_DROITE_GAUCHE[-2] + 2:
+                            elif round(int(ex+(ew/2))) > LISTE_DROITE_GAUCHE[-2] + 1:
                                LISTE_DROITE_GAUCHE.append("retour")
                                return "droite"
                 except:
