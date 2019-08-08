@@ -1,11 +1,19 @@
 # cadju
 week end 
 
-a chaque fois rajouter OU ramasse ou l'inverse une mauvaise réponse et le sourcile et la tu peux pas revenir en arriere et ta journée est finie
-
-ok ok c pour ca que tu pues calme
 
 a droite
 
 a gauche
 
+faire la tete mtn
+
+chui moche en ce moment ca me dégoute pfff va chez le coiffeur
+
+-----------------------------
+
+commencer a faire la dicté la premiere facile de 1 minute
+
+la deuxieme difficile de 5 minutes (faut monté crescendo)
+
+et comparaison via python
