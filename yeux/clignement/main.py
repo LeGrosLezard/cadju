@@ -17,7 +17,7 @@ def video_capture():
 
     LISTE_AJUSTEMENT = []
     video = cv2.VideoCapture(0)
-    repere = 0
+
     
     while(True):
 
@@ -30,12 +30,12 @@ def video_capture():
         eyes = left_eye.detectMultiScale(frame)
 
 
-        if len(LISTE_AJUSTEMENT) < 100:
-            pre_initialisation(repere, eyes, LISTE_AJUSTEMENT, frame)
+        if len(LISTE_AJUSTEMENT) < 10:
+            pre_initialisation(eyes, LISTE_AJUSTEMENT, frame)
             print("initialisation")
     
         else:
-            position = position_yeux(repere, eyes, LISTE_AJUSTEMENT, frame)
+            position = position_yeux_verticale(eyes, LISTE_AJUSTEMENT, frame)
             if position == None:
                 pass
             else:
@@ -57,7 +57,7 @@ def video_capture():
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-        repere += 1
+
     video.release()
     cv2.destroyAllWindows()
 
