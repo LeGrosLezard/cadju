@@ -41,7 +41,7 @@ def video_capture():
                 pass
 
 
-            if position 1 and position2:
+            if position1 and position2:
                 if position1 == "le mec regarde en HAUT" and\
                    position2 == "gauche":
                     print("le mec a regarder en haut a gauche")
@@ -56,7 +56,7 @@ def video_capture():
                     print("le mec a regarder en bas a gauche")
      
 
-            elif posititon1:
+            elif position1:
                 print(position1)
 
             elif position2:
@@ -65,7 +65,8 @@ def video_capture():
 
 
 
-            if position1 in ("le mec s'est baissé", "le mec s'est levé"):
+            if position1 in ("le mec s'est baissé", "le mec s'est levé",
+                             "le mec à levé la tete", "le mec à baisser la tete"):
                 LISTE_AJUSTEMENT = []
 
 
