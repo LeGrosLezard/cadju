@@ -17,12 +17,8 @@ def pre_initialisation(eyes, liste, frame):
         
         ey = ey.tolist()
         liste.append(ey)
+
         
-
-
-
-
-
 def position_yeux_verticale(eyes, liste, frame):
     """Si repere est superieur a 100
     c'est qu'on a fini la premiere initialisation"""
@@ -52,9 +48,6 @@ def position_yeux_verticale(eyes, liste, frame):
         
         elif ey > sum(liste)/len(liste) + 5: 
             return "le mec regarde en bas"
-
-
-
 
 
 
@@ -117,9 +110,33 @@ def position_yeux_horizontal(eyes, LISTE_DROITE_GAUCHE, frame):
 
 
 
-#gauche puis droite ignore le puis droite
-#si + 3 mais pas au dessus de 5
-#meme chose gauche
+def association(position1, position2, LISTE_AJUSTEMENT):
+
+    if position1 == None:
+        pass
+
+    if position2 == None:
+        pass
 
 
+    if position1 and position2:
+        if position1 == "le mec regarde en HAUT" and\
+           position2 == "gauche":
+            print("le mec a regarder en haut a gauche")
+        elif position1 == "le mec regarde en HAUT" and\
+             position2 == "droite":
+            print("le mec a regarder en haut a droite")
+        elif position1 == "le mec regarde en bas" and\
+             position2 == "droite":
+            print("le mec a regarder en bas a droite")
+        elif position1 == "le mec regarde en bas" and\
+             position2 == "gauche":
+            print("le mec a regarder en bas a gauche")
+
+
+    elif position1:
+        print(position1)
+
+    elif position2:
+        print(position2)
 
