@@ -6,41 +6,43 @@ import os
 
 
 
-def pre_initialisation(repere, eyes, liste, frame):
+def pre_initialisation(eyes, liste, frame):
     """Ici si repere est inférieur a 100
     on ajoute les lignes dans la liste"""
 
-
     for (ex, ey, ew, eh) in eyes:
-        
+
         cv2.rectangle(frame, (ex,ey), (ex+ew, ey+eh), 0)
+        
         ey = ey.tolist()
         liste.append(ey)
+        
 
 
 
 
-def position_yeux(repere, eyes, liste, frame):
+
+def position_yeux_verticale(eyes, liste, frame):
     """Si repere est superieur a 100
     c'est qu'on a fini la premiere initialisation"""
 
 
     for (ex, ey, ew, eh) in eyes:
 
-        cv2.rectangle(frame, (ex,ey), (ex+ew, ey+eh), 0)
+        cv2.rectangle(frame, (ex,ey), (ex+ew, ey+eh), 2)
+        cv2.circle(frame, (round(int(ex+(ew/2))), round(int(ey+(eh/2+5)))), 3, (0, 0, 255), 5)
+        
         ey = ey.tolist()
-        liste.append(ey)
 
-
-        if ey < sum(liste)/len(liste) - 100:
+        if ey < sum(liste)/len(liste) - 90:
             return "le mec s'est levé"
             
 
-        elif ey > sum(liste)/len(liste) + 100: 
+        elif ey > sum(liste)/len(liste) + 90: 
             return "le mec s'est baissé"
 
 
-        if ey < sum(liste)/len(liste) - 20:
+        elif ey < sum(liste)/len(liste) - 20:
             return "le mec à levé la tete"
             
         elif ey > sum(liste)/len(liste) + 20: 
@@ -56,14 +58,8 @@ def position_yeux(repere, eyes, liste, frame):
 
 
 
+
         
-
-
-
-
-
-
-
 
 
 
