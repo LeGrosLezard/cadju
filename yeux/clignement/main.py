@@ -6,17 +6,10 @@ import os
 from traitement_image import *
 
 
-
-
-
-
-
-
-
 def video_capture():
 
     LISTE_AJUSTEMENT = []
-    LISTE_DROITE = []
+    LISTE_DROITE_GAUCHE = []
     LISTE_GAUCHE = []
     
     video = cv2.VideoCapture(0)
@@ -34,18 +27,45 @@ def video_capture():
 
 
         if len(LISTE_AJUSTEMENT) < 50:
-            pre_initialisation(eyes, LISTE_AJUSTEMENT, frame, LISTE_DROITE)
+            pre_initialisation(eyes, LISTE_AJUSTEMENT, frame)
             print("initialisation")
     
         else:
-            position = position_yeux_verticale(eyes, LISTE_AJUSTEMENT, frame)
-            position_yeux_horizontal(eyes, LISTE_DROITE, LISTE_GAUCHE, frame)
-            if position == None:
+            position1 = position_yeux_verticale(eyes, LISTE_AJUSTEMENT, frame)
+            position2 = position_yeux_horizontal(eyes, LISTE_DROITE_GAUCHE, frame)
+
+            if position1 == None:
                 pass
-            else:
-                #print(position)
+
+            if position2 == None:
                 pass
-            if position in ("le mec s'est baissé", "le mec s'est levé"):
+
+
+            if position 1 and position2:
+                if position1 == "le mec regarde en HAUT" and\
+                   position2 == "gauche":
+                    print("le mec a regarder en haut a gauche")
+                elif position1 == "le mec regarde en HAUT" and\
+                     position2 == "droite":
+                    print("le mec a regarder en haut a droite")
+                elif position1 == "le mec regarde en bas" and\
+                     position2 == "droite":
+                    print("le mec a regarder en bas a droite")
+                elif position1 == "le mec regarde en bas" and\
+                     position2 == "gauche":
+                    print("le mec a regarder en bas a gauche")
+     
+
+            elif posititon1:
+                print(position1)
+
+            elif position2:
+                print(position2)
+
+
+
+
+            if position1 in ("le mec s'est baissé", "le mec s'est levé"):
                 LISTE_AJUSTEMENT = []
 
 
