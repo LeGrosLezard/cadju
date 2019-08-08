@@ -4,6 +4,10 @@
 
 droite gauche faudra revérifier demain on a pas de droite haut ....
 
+si y'a plus de 10 regarde vers le haut daffilé remettre a 0 la meme chose pour le bas 
+
+si la tete est penché supprimer l'anonce des yeux
+
 ------------------------------
 
 faire la tete mtn
