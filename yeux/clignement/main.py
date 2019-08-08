@@ -10,8 +10,8 @@ def video_capture():
 
     LISTE_AJUSTEMENT = []
     LISTE_DROITE_GAUCHE = []
-    LISTE_GAUCHE = []
-    
+
+
     video = cv2.VideoCapture(0)
 
     
@@ -29,54 +29,19 @@ def video_capture():
         if len(LISTE_AJUSTEMENT) < 50:
             pre_initialisation(eyes, LISTE_AJUSTEMENT, frame)
             print("initialisation")
-    
+
         else:
             position1 = position_yeux_verticale(eyes, LISTE_AJUSTEMENT, frame)
             position2 = position_yeux_horizontal(eyes, LISTE_DROITE_GAUCHE, frame)
 
-            if position1 == None:
-                pass
-
-            if position2 == None:
-                pass
-
-
-            if position1 and position2:
-                if position1 == "le mec regarde en HAUT" and\
-                   position2 == "gauche":
-                    print("le mec a regarder en haut a gauche")
-                elif position1 == "le mec regarde en HAUT" and\
-                     position2 == "droite":
-                    print("le mec a regarder en haut a droite")
-                elif position1 == "le mec regarde en bas" and\
-                     position2 == "droite":
-                    print("le mec a regarder en bas a droite")
-                elif position1 == "le mec regarde en bas" and\
-                     position2 == "gauche":
-                    print("le mec a regarder en bas a gauche")
-     
-
-            elif position1:
-                print(position1)
-
-            elif position2:
-                print(position2)
-
-
-
+            association(position1, position2, LISTE_AJUSTEMENT)
 
             if position1 in ("le mec s'est baissé", "le mec s'est levé",
                              "le mec à levé la tete", "le mec à baisser la tete"):
                 LISTE_AJUSTEMENT = []
 
 
-
-
         cv2.imshow('YEUX CAPTURE', frame)
-
-
-
-
 
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
