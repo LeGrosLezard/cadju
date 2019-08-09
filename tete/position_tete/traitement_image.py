@@ -3,41 +3,32 @@ import cv2
 from PIL import Image
 import os
 
+def initialisation(video, frame, faceCascade, eyes, LISTE):
 
-def initialisation(video, frame, faceCascade, LISTE_POS_INI_X,
-                   LISTE_POS_INI_Y_H, LISTE_LARGEUR):
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY);
-    
-    faces = faceCascade.detectMultiScale(
-        gray,
+    eyes = eyes.detectMultiScale(gray,
         scaleFactor=1.1,
         minNeighbors=5,
         minSize=(30, 30),
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
-    
-    
-    for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
-        
-        x = x.tolist()
-        y = y.tolist()
-        h = h.tolist()
-        w = w.tolist()
+    c = 0
+    for x, y, w, h in eyes:
+        cv2.rectangle(frame, (x,y), (x+w, y+h),(0, 0, 255), 2)
+        if c == 1:
+            x = x.tolist()
+            LISTE.append(x)
+        c+=1
 
-        LISTE_POS_INI_X.append(x)
-        LISTE_POS_INI_Y_H.append(y + h)
-        LISTE_LARGEUR.append(w)
-        
     cv2.imshow('FACE CAPTURE', frame)
 
 
-def position_tete(video, frame, faceCascade, LISTE_POS_INI_X,
-                  LISTE_POS_INI_Y_H, LISTE_LARGEUR):
+    
+def position_tete(video, frame, faceCascade, eyes, LISTE):
 
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY);
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
     faces = faceCascade.detectMultiScale(
         gray,
@@ -47,40 +38,69 @@ def position_tete(video, frame, faceCascade, LISTE_POS_INI_X,
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
+    eyes = eyes.detectMultiScale(gray,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(30, 30),
+        flags=cv2.CASCADE_SCALE_IMAGE
+    )
 
-    for (x, y, w, h) in faces:
+    counter = 0
+    
+    gauche = 0
+    droite = 0
 
-        x = x.tolist()
-        y = y.tolist()
-        h = h.tolist()
-        w = w.tolist()
+    x_gauche = 0
+    x_droite = 0
 
-        if x < sum(LISTE_POS_INI_X)/len(LISTE_POS_INI_X) - 1 and\
-           sum(LISTE_POS_INI_Y_H)/len(LISTE_POS_INI_Y_H) + 10 < y + w\
-           > sum(LISTE_POS_INI_Y_H)/len(LISTE_POS_INI_Y_H) + 1 and\
-           sum(LISTE_LARGEUR)/len(LISTE_LARGEUR) + 1 < w\
-           > sum(LISTE_LARGEUR)/len(LISTE_LARGEUR) + 1:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
-            return "tete gauche"
+    liste_x = []
+    ok = False
+    
+    for x, y, w, h in eyes:
 
-        elif y + w > sum(LISTE_POS_INI_Y_H)/len(LISTE_POS_INI_Y_H) + 10 and\
-           w > sum(LISTE_LARGEUR)/len(LISTE_LARGEUR) + 10:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-            return "autofocus"
- 
+        if len(eyes) == 1:
+            pass
         else:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            LISTE_POS_INI_X.append(x)
-            LISTE_POS_INI_Y_H.append(y + h)
-            LISTE_LARGEUR.append(w)
+        
+            y = y.tolist()
+            x = x.tolist()
+
+            if counter == 0:
+                cv2.rectangle(frame, (x,y), (x+w, y+h), 2)
+                gauche = y
+
+                
+            if counter == 1:
+                cv2.rectangle(frame, (x,y), (x+w, y+h),(255, 0, 0), 2)
+                droite = y
+                x_droite = x
+                
+            counter += 1
 
 
+    
+    if gauche == 0 or droite == 0:
+        pass
+    else:
+        
+        if gauche < droite - 10 and x_droite > (sum(LISTE) / len(LISTE)) + 20:
+            print("gauche")
+            ok = True
 
+        if ok is True:
+            pass
+        else:
+            if gauche < droite - 10:
+                print("droite")
+
+                    
+
+
+        
     cv2.imshow('FACE CAPTURE', frame)
 
 
 
-#si trop rouge approché
 
 
 
