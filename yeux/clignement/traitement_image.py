@@ -31,10 +31,8 @@ def position_yeux_verticale(eyes, liste, frame):
         if ey < sum(liste)/len(liste) - 90:
             return "le mec s'est levé"
             
-
         elif ey > sum(liste)/len(liste) + 90: 
             return "le mec s'est baissé"
-
 
         elif ey < sum(liste)/len(liste) - 20:
             return "le mec à levé la tete"
@@ -42,7 +40,6 @@ def position_yeux_verticale(eyes, liste, frame):
         elif ey > sum(liste)/len(liste) + 20: 
             return "le mec à baisser la tete"
 
-        
         elif ey < sum(liste)/len(liste) - 5:
             return "le mec regarde en HAUT"
         
@@ -50,6 +47,10 @@ def position_yeux_verticale(eyes, liste, frame):
             return "le mec regarde en bas"
 
 
+def qualibrage(LISTE_QUALIBRAGE):
+    if LISTE_QUALIBRAGE[:-10] in ("le mec regarde en HAUT",
+                                  "le mec regarde en bas"):
+        return "qualibration"
 
 
 def position_yeux_horizontal(eyes, LISTE_DROITE_GAUCHE, frame):
@@ -81,7 +82,7 @@ def position_yeux_horizontal(eyes, LISTE_DROITE_GAUCHE, frame):
                     if LISTE_DROITE_GAUCHE[-2] == "retour":
                         pass
                         #On evite le retour de l'oeil
-                    
+
                     else:
 
                         if round(int(ex+(ew/2))) < LISTE_DROITE_GAUCHE[-2] - 3 or\
@@ -123,12 +124,15 @@ def association(position1, position2, LISTE_AJUSTEMENT):
         if position1 == "le mec regarde en HAUT" and\
            position2 == "gauche":
             print("le mec a regarder en haut a gauche")
+            
         elif position1 == "le mec regarde en HAUT" and\
              position2 == "droite":
             print("le mec a regarder en haut a droite")
+            
         elif position1 == "le mec regarde en bas" and\
              position2 == "droite":
             print("le mec a regarder en bas a droite")
+            
         elif position1 == "le mec regarde en bas" and\
              position2 == "gauche":
             print("le mec a regarder en bas a gauche")
