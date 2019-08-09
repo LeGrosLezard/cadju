@@ -10,11 +10,11 @@ def video_capture():
 
     LISTE_AJUSTEMENT = []
     LISTE_DROITE_GAUCHE = []
-
+    LISTE_QUALIBRAGE = []
 
     video = cv2.VideoCapture(0)
 
-    
+    #LE RETOUR DES YEUX IMPORT si retour alors déplcement des yeux same for gueule
     while(True):
 
 
@@ -25,7 +25,7 @@ def video_capture():
         frame = cv2.resize(frame, (600, 600))
         eyes = left_eye.detectMultiScale(frame)
 
-
+        
         if len(LISTE_AJUSTEMENT) < 50:
             pre_initialisation(eyes, LISTE_AJUSTEMENT, frame)
             print("initialisation")
@@ -36,9 +36,18 @@ def video_capture():
 
             association(position1, position2, LISTE_AJUSTEMENT)
 
+            #---------------------------------------------------Partie effacage de liste
+            #permet d'effacer la liste et de refaire une initialisation
+            LISTE_QUALIBRAGE.append(position1)
+            qualibration = qualibrage(LISTE_QUALIBRAGE)
+            if qualibration == "qualibration":
+                LISTE_AJUSTEMENT = []
+
             if position1 in ("le mec s'est baissé", "le mec s'est levé",
                              "le mec à levé la tete", "le mec à baisser la tete"):
                 LISTE_AJUSTEMENT = []
+
+
 
 
         cv2.imshow('YEUX CAPTURE', frame)
