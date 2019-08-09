@@ -1,16 +1,14 @@
 # cadju
 
-------------------------------
-
-tete penché = yeux
 
 -------------------------------
 
 si bleu = rapproché
 
-faire recule de tete
+faire recule de tete regarde l'ancien commit mais si le cadre grossis  = le mec se rapporche si le cadre rapetit c qui se recule
 
-tete a droite 
+ca degomme sans les lunettes chui un binoclard mtn...
+
 
 
 
@@ -27,8 +25,4 @@ main = sqlette ou zone de contour
 
 -----------------------------
 
-commencer a faire la dicté la premiere facile de 1 minute
 
-la deuxieme difficile de 5 minutes (faut monté crescendo)
-
-et comparaison via python
