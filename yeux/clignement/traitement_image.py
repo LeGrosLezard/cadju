@@ -48,7 +48,7 @@ def position_yeux_verticale(eyes, liste, frame):
 
 
 def qualibrage(LISTE_QUALIBRAGE):
-    if LISTE_QUALIBRAGE[:-10] in ("le mec regarde en HAUT",
+    if LISTE_QUALIBRAGE[-10:] in ("le mec regarde en HAUT",
                                   "le mec regarde en bas"):
         return "qualibration"
 
