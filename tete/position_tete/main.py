@@ -8,41 +8,25 @@ from traitement_image import *
 
 def video_capture():
 
-    LISTE_POS_INI_X = []
-    LISTE_POS_INI_Y_H = []
-    LISTE_LARGEUR = []
+    LISTE = []
+
     
     video = cv2.VideoCapture(0)
     faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
-
+    eyes = cv2.CascadeClassifier('haarcascade_lefteye_2splits.xml')
     
     while(True):
 
 
         ret, frame = video.read()
         frame = cv2.resize(frame, (600, 600))
-        
- 
-        if len(LISTE_POS_INI_X) < 100:
-            initialisation(video, frame, faceCascade, LISTE_POS_INI_X,
-                           LISTE_POS_INI_Y_H, LISTE_LARGEUR)
-            print("initialisation")
-
-        else:
-            position = position_tete(video, frame, faceCascade, LISTE_POS_INI_X,
-                          LISTE_POS_INI_Y_H, LISTE_LARGEUR)
+        if len(LISTE) < 50:
+            initialisation(video, frame, faceCascade, eyes, LISTE)
             
-            if position == "autofocus":
-                LISTE_POS_INI_X = []
-                LISTE_POS_INI_Y_H = []
-                LISTE_LARGEUR = []
-                
-            elif position == "tete gauche":
-                print("tete gauche")
-        
+        else:
+            position1 = position_tete(video, frame, faceCascade, eyes, LISTE)
 
-        #x -
-        #y + h +
+        
 
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
