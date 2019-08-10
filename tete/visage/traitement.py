@@ -53,6 +53,10 @@ def yeux(frame, video, eyesCascade):
 
 
     c = 0
+    pos1 = 0
+    pos1_y = 0
+    pos2 = 0
+    pos2_y = 0
     
     for x1, y1, w1, h1 in eyes:
         
@@ -85,7 +89,8 @@ def yeux(frame, video, eyesCascade):
 
     un = 0
     deux = 0
-
+    x = 0
+    y = 0
     if pos1 < pos2:
         un = pos1
         deux = pos2
@@ -109,19 +114,23 @@ def yeux(frame, video, eyesCascade):
         y = int(round(y))
 
 
-    entre_oeil = cv2.circle(img, (int(round(x)), int(round(y))), 1, (255,0,0), 2)
+    if x == 0 or y == 0:
+        pass
+    else:
+    
+        entre_oeil = cv2.circle(frame, (int(round(x)), int(round(y))), 1, (255,0,0), 2)
 
 
-    arrete_nez1 = cv2.circle(img, (int(round(x)), y + 10), 1, (255,0,0), 2)
-    arrete_nez2 = cv2.circle(img, (int(round(x)), y + 20), 1, (255,0,0), 2)
-    arrete_nez3 = cv2.circle(img, (int(round(x)), y + 30), 1, (255,0,0), 2)
-    arrete_nez4 = cv2.circle(img, (int(round(x)), y + 40), 1, (255,0,0), 2)
-    arrete_nez5 = cv2.circle(img, (int(round(x)), y + 50), 1, (255,0,0), 2)
-    arrete_nez6 = cv2.circle(img, (int(round(x)), y + 60), 1, (255,0,0), 2)
+        arrete_nez1 = cv2.circle(frame, (int(round(x)), int(round(y + 10))), 1, (255,0,0), 2)
+        arrete_nez2 = cv2.circle(frame, (int(round(x)), int(round(y + 20))), 1, (255,0,0), 2)
+        arrete_nez3 = cv2.circle(frame, (int(round(x)), int(round(y + 30))), 1, (255,0,0), 2)
+        arrete_nez4 = cv2.circle(frame, (int(round(x)), int(round(y + 40))), 1, (255,0,0), 2)
+        arrete_nez5 = cv2.circle(frame, (int(round(x)), int(round(y + 50))), 1, (255,0,0), 2)
+        arrete_nez6 = cv2.circle(frame, (int(round(x)), int(round(y + 60))), 1, (255,0,0), 2)
 
-    ange1 = cv2.circle(img, (int(round(x)), y + 90), 1, (255,0,0), 2)
-    ange2 = cv2.circle(img, (int(round(x)), y + 100), 1, (255,0,0), 2)
-    ange3 = cv2.circle(img, (int(round(x)), y + 110), 1, (255,0,0), 2)
+        ange1 = cv2.circle(frame, (int(round(x)), int(round(y + 90))), 1, (255,0,0), 2)
+        ange2 = cv2.circle(frame, (int(round(x)), int(round(y + 100))), 1, (255,0,0), 2)
+        ange3 = cv2.circle(frame, (int(round(x)), int(round(y + 110))), 1, (255,0,0), 2)
 
 
 
