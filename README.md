@@ -5,6 +5,10 @@
 
 finir inclianaison de la tete
 
+du coup mtn faire les sourciles
+
+faire disparaitre le truk quand on trouve pas 
+
 finir les points
 
 essais si un truk touche le pts change de couleur et c la gratouille
