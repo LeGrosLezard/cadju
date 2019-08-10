@@ -1,34 +1,65 @@
-import cv2
 import numpy as np
-import dlib
+import cv2
+from PIL import Image
+import os
 
-cap = cv2.VideoCapture(0)
-
-detector = dlib.get_frontal_face_detector()
-predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
-
-while True:
-    _, frame = cap.read()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    faces = detector(gray)
-    for face in faces:
-        x1 = face.left()
-        y1 = face.top()
-        x2 = face.right()
-        y2 = face.bottom()
-        #cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 3)
-
-        landmarks = predictor(gray, face)
-
-        for n in range(0, 68):
-            x = landmarks.part(n).x
-            y = landmarks.part(n).y
-            cv2.circle(frame, (x, y), 4, (255, 0, 0), -1)
+from traitement import figure
+from traitement import yeux
 
 
-    cv2.imshow("Frame", frame)
+def video_capture():
 
-    key = cv2.waitKey(1)
-    if key == 27:
-        break
+    LISTE = []
+
+    
+    video = cv2.VideoCapture(0)
+    faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
+    eyesCascade = cv2.CascadeClassifier('haarcascade_lefteye_2splits.xml')
+    
+    while(True):
+
+
+        ret, frame = video.read()
+        frame = cv2.resize(frame, (600, 600))
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        figure(frame, video, faceCascade, gray)
+
+
+        
+         
+
+    
+        cv2.imshow('FACE CAPTURE', frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+
+    video.release()
+    cv2.destroyAllWindows()
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+
+    video_capture()
+
+
+
+
+
+
+
+
+
+
+
+
