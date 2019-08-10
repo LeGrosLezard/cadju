@@ -3,11 +3,11 @@
 
 -------------------------------
 
-si bleu = rapproché
+finir inclianaison de la tete
 
-faire recule de tete regarde l'ancien commit mais si le cadre grossis  = le mec se rapporche si le cadre rapetit c qui se recule
+finir les points
 
-ca degomme sans les lunettes chui un binoclard mtn...
+essais si un truk touche le pts change de couleur et c la gratouille
 
 
 
