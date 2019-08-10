@@ -25,4 +25,13 @@ main = sqlette ou zone de contour
 
 -----------------------------
 
+poussez le vice ?
+
+detection de la forme de la boucle d'oreille
+
+detection des boutons dans les zones
+
+detection des rides
+
+-----------------------------
 
