@@ -24,8 +24,9 @@ def video_capture():
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        figure(frame, video, faceCascade, gray)
         yeux(frame, video, eyesCascade)
+        figure(frame, video, faceCascade, gray)
+        
         
         cv2.imshow('FACE CAPTURE', frame)
 
