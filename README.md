@@ -3,8 +3,9 @@
 
 -------------------------------
 
+ca marche pas faut mettre des zones de detection sur toutes les parties enfete et prendre le contour et si l'image change on dit qu'il s'est touché le sourcile ou qu'un truk est passé devant
 
-en plus des que tu changes la tete de place aussi faut pas prendre un pts mais un carre de pts
+
 
 finir les points
 
