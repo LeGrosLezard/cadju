@@ -3,8 +3,7 @@
 
 -------------------------------
 
-ca marche pas faut mettre des zones de detection sur toutes les parties enfete et prendre le contour et si l'image change on dit qu'il s'est touché le sourcile ou qu'un truk est passé devant
-
+figure treshold mettre les pts dessus !!!!! si devient blanc voila ! la meme chose en tresh ou chai pas quoi 
 
 
 finir les points
