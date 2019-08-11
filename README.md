@@ -3,8 +3,8 @@
 
 -------------------------------
 
-finir inclianaison de la tete
 
+en plus des que tu changes la tete de place aussi faut pas prendre un pts mais un carre de pts
 
 finir les points
 
