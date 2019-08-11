@@ -25,7 +25,9 @@ while(True):
     try:
         if sum(LISTE)/len(LISTE) + 2000 < len(liste1):
             cv2.rectangle(frame, (50, 50), (100, 100), (0,0,255), 1)
-
+        else:
+            cv2.rectangle(frame, (50, 50), (100, 100), 1)
+            LISTE.append(len(liste1))
     except:
         cv2.rectangle(frame, (50, 50), (100, 100), 1)
         LISTE.append(len(liste1))
