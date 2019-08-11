@@ -3,14 +3,16 @@
 
 -------------------------------
 
-figure treshold mettre les pts dessus !!!!! si devient blanc voila ! la meme chose en tresh ou chai pas quoi 
+
+faire si le mec deplace sa tete
+
+faut voir les pixel qui ont changé pour dire le sens
 
 
-finir les points
 
-essais si un truk touche le pts change de couleur et c la gratouille
 
-si le mec se gratte le sourcile recuperer les pts qui sallume et selon x1 x2 x3 dire sil se grate de gauche ou droite
+
+
 
 
 ------------------------------
