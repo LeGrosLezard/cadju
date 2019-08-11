@@ -5,12 +5,12 @@ import os
 
 
 
-from traitement import decoupage
-
+from tete import detection_face
 
 def video_capture():
 
 
+    BOX_ONE = []
 
     video = cv2.VideoCapture(0)
     faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
@@ -23,16 +23,14 @@ def video_capture():
         ret, frame = video.read()
         frame = cv2.resize(frame, (600, 600))
 
-        decoupage(frame, faceCascade)
-
-
+        detection_face(faceCascade, frame, BOX_ONE)
 
         
-        cv2.imshow('FACE INITIALISATION', frame)
+        cv2.imshow('FACE', frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('a'):
-            cv2.imwrite("jb.jpg", frame)
-        
+
+
+
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
