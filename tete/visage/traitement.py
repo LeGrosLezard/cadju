@@ -3,422 +3,188 @@ import cv2
 from PIL import Image
 import os
 
-#on récupere la couleur des pixels ici
-def initialisation_tempe(Ltempe_gauche, Ltempe_droite, x, y, h, w, frame):
-    Ltempe_gauche.append(frame[y + 10, x + w - 10])
-    Ltempe_droite.append(frame[y + 10, x + 10])
-
-
-def initialisation_oreille_gauche(Loreille_gauche1, Loreille_gauche2,
-                                  Loreille_gauche3, Loreille_gauche4,
-                                  Loreille_gauche5, Loreille_gauche6,
-                                  Ltempe_droite, x, y, h, w, frame):
-
-    Loreille_gauche1.append(frame[y + 50, x + w])
-    Loreille_gauche2.append(frame[y + 60, x + w])
-    Loreille_gauche3.append(frame[y + 70, x + w])
-    Loreille_gauche4.append(frame[y + 80, x + w])
-    Loreille_gauche5.append(frame[y + 90, x + w])
-    Loreille_gauche6.append(frame[y + 100, x + w])
-
-
-def initialisation_oreille_droite(Loreille_droite1, Loreille_droite2,
-                                  Loreille_droite3, Loreille_droite4,
-                                  Loreille_droite5, Loreille_droite6,
-                                  x, y, h, w, frame):
-
-    Loreille_droite1.append(frame[y + 50, x])
-    Loreille_droite2.append(frame[y + 60, x])
-    Loreille_droite3.append(frame[y + 70, x])
-    Loreille_droite4.append(frame[y + 80, x])
-    Loreille_droite5.append(frame[y + 90, x])
-    Loreille_droite6.append(frame[y + 100, x])
-
-
-def initialisation_cerne_droite(Lcerne_droite1, Lcerne_droite2,
-                                Lcerne_droite3, Lcerne_droite4,
-                                Lcerne_droite5,
-                                x, y, h, w, frame):
-
-    Lcerne_droite1.append(frame[int(round(y + h / 2 - 5)), x + 40])
-    Lcerne_droite2.append(frame[int(round(y + h / 2 - 5)), x + 50])
-    Lcerne_droite3.append(frame[int(round(y + h / 2 - 5)), x + 60])
-    Lcerne_droite4.append(frame[int(round(y + h / 2 - 5)), x + 70])
-    Lcerne_droite5.append(frame[int(round(y + h / 2 - 5)), x + 80])
-
-
-
-def initialisation_cerne_gauche(Lcerne_gauche1, Lcerne_gauche2,
-                                Lcerne_gauche3, Loreille_droite4,
-                                Loreille_droite5,
-                                x, y, h, w, frame):
-
-    Lcerne_gauche1.append(frame[int(round(y + h / 2 - 5)), x + w - 40])
-    Lcerne_gauche2.append(frame[int(round(y + h / 2 - 5)), x + w - 50])
-    Lcerne_gauche3.append(frame[int(round(y + h / 2 - 5)), x + w - 60])
-    Loreille_droite4.append(frame[int(round(y + h / 2 - 5)), x + w - 70])
-    Loreille_droite5.append(frame[int(round(y + h / 2 - 5)), x + w - 80])
-
-
-def initialisation_pomette(Lpomette_droite, Lpomette_gauche, x, y, h, w, frame):
-    Lpomette_droite.append(frame[int(round(y + h / 2 + 10)), x + 40])
-    Lpomette_gauche.append(frame[int(round(y + h / 2 + 10)), x + w - 40])
-
-
-def initialisation_front(Lfront1, Lfront2,
-                         Lfront3, Lfront4,
-                         x, y, h, w, frame):
-    
-    Lfront1.append(frame[y + 5, x + 40:x + w - 40])
-    Lfront2.append(frame[y + 10, x + 40:x + w - 40])
-    Lfront3.append(frame[y + 15, x + 40:x + w - 40])
-    Lfront4.append(frame[y + 20, x + 40:x + w - 40])
-
-
-def initialisation_bouche(frame, Lbouche1, Lbouche2,
-                          Lbouche3, Lbouche4, Lbouche5,
-                          x, y, h, w):
-    Lbouche1.append(frame[y + h - 10, int(round(x + w / 2))])
-    Lbouche2.append(frame[y + h - 10, int(round(x + w / 2 - 10))])
-    Lbouche3.append(frame[y + h - 10, int(round(x + w / 2 + 10))])
-    Lbouche4.append(frame[y + h - 10, int(round(x + w / 2 - 15))])
-    Lbouche5.append(frame[y + h - 10, int(round(x + w / 2 + 15))])
-
-    
-def initialisation_milieu(Lmillieu, x, y, h, w, frame):
-    Lmillieu.append(frame[y:y + h, int(round(x + w/2))])
-    
-
-def initialisation_sourcile_droit(frame, Lsourcile61,
-                                  Lsourcile62, Lsourcile63,
-                                  Lsourcile7,
-                                  Lsourcile8, Lsourcile9,
-                                  Lsourcile10,
-                                  x1, y1, h1, w1):
-    
-    Lsourcile61.append(frame[y1 + 5, x1 + 5][0])
-    Lsourcile62.append(frame[y1 + 5, x1 + 5][1])
-    Lsourcile63.append(frame[y1 + 5, x1 + 5][2])
-
-
-    #Lsourcile7.append(frame[y1 + 5, x1 + 15][0], frame[y1 + 5, x1 + 15][1], frame[y1 + 5, x1 + 15][2])
-    #Lsourcile8.append(frame[y1 + 5, x1 + 25][0], frame[y1 + 5, x1 + 25][1], frame[y1 + 5, x1 + 25][2])
-    #Lsourcile9.append(frame[y1 + 6, x1 + 35][0], frame[y1 + 6, x1 + 35][1], frame[y1 + 6, x1 + 35][2])
-    #Lsourcile10.append(frame[y1 + 7, x1 + 45][0], frame[y1 + 7, x1 + 45][1], frame[y1 + 7, x1 + 45][2])
-
-
-def initialisation_sourcile_gauche(frame, sourcile1, sourcile2,
-                                   sourcile3, sourcile4,
-                                   sourcile5,
-                                   x1, y1, h1, w1):
-
-    sourcile1.append(frame[y1 + 5, x1 + 5])
-    sourcile2.append(frame[y1 + 5, x1 + 15])
-    sourcile3.append(frame[y1 + 5, x1 + 25])
-    sourcile4.append(frame[y1 + 6, x1 + 35])
-    sourcile5.append(frame[y1 + 7, x1 + 45])
-
-
-def initialisation(frame, video, faceCascade, gray,
-                   Ltempe_gauche, Ltempe_droite,
-                   Loreille_gauche1, Loreille_gauche2,
-                   Loreille_gauche3, Loreille_gauche4,
-                   Loreille_gauche5, Loreille_gauche6,
-                   Loreille_droite1, Loreille_droite2,
-                   Loreille_droite3, Loreille_droite4,
-                   Loreille_droite5, Loreille_droite6,
-                   Lcerne_droite1, Lcerne_droite2,
-                   Lcerne_droite3, Lcerne_droite4,
-                   Lcerne_droite5, Lcerne_gauche1,
-                   Lcerne_gauche2, Lcerne_gauche3,
-                   Lcerne_gauche4, Lcerne_gauche5,
-                   Lpomette_droite, Lpomette_gauche,
-                   Lfront1, Lfront2, Lfront3, Lfront4,
-                   Lbouche1, Lbouche2, Lbouche3, Lbouche4,
-                   Lbouche5, Lmillieu, Lsourcile61, Lsourcile62,
-                   Lsourcile63, Lsourcile7,
-                   Lsourcile8, Lsourcile9, Lsourcile10, Lsourcile1,
-                   Lsourcile2, Lsourcile3, Lsourcile4, Lsourcile5,
-                   eyesCascade):
-
-
-
-    face = faceCascade.detectMultiScale(gray,
+def face_config(faceCascade, gray):
+    faces = faceCascade.detectMultiScale(gray,
         scaleFactor=1.1,
         minNeighbors=5,
         minSize=(30, 30),
         flags=cv2.CASCADE_SCALE_IMAGE
     ) 
 
-    eyes = eyesCascade.detectMultiScale(gray,
+    return faces
+
+def eyes_config(eyesCascade, roi_gray):
+    eyes = eyesCascade.detectMultiScale(roi_gray,
         scaleFactor=1.1,
         minNeighbors=5,
         minSize=(30, 30),
         flags=cv2.CASCADE_SCALE_IMAGE
     ) 
 
-
-    for x, y, w, h in face:
-
-        cv2.rectangle(frame, (x, y), (x + w, y + h),(0, 0, 255), 2)
-
-        x = x.tolist()
-        y = y.tolist()
-        w = w.tolist()
-        h = h.tolist()
+    return eyes
 
 
-        initialisation_tempe(Ltempe_gauche, Ltempe_droite, x, y, h, w, frame)
+def parametres_plus(liste, nombre, pos):
 
+    counter = 0
+
+    for i in liste[-10:]:
+        if pos > i + nombre:
+            counter += 1
+
+    return counter
+
+
+def parametres_moins(liste, nombre, pos):
+
+    counter = 0
+
+    for i in liste[-11:-1]:
+        if pos < i - nombre:
+
+            counter += 1
+
+    return counter
+
+def trois_parametrages(parametre1, parametre2, parametre3, mot):
+
+    if parametre1 > 8 and parametre2 > 8 and parametre3 > 8:
+        print("ouiiiiiiiiiiiiiiiiiiiiiiii" + " " + mot)
+
+
+def sourciles_droit(frame, roi_color, x1, y1, w1, h1,
+                    Lsourcile61, Lsourcile62, Lsourcile63):
+
+    try:
+        Lsourcile61.append(frame[y1 + 5, x1 + 5][0])
+        Lsourcile62.append(frame[y1 + 5, x1 + 5][1])
+        Lsourcile63.append(frame[y1 + 5, x1 + 5][2])
         
-        initialisation_oreille_gauche(Loreille_gauche1, Loreille_gauche2,
-                                        Loreille_gauche3, Loreille_gauche4,
-                                        Loreille_gauche5, Loreille_gauche6,
-                                        Ltempe_droite, x, y, h, w, frame)
+        sourcile6 = cv2.circle(roi_color, (x1 + 5, y1 + 5), 1, (0,0,0), 2)
+        sourcile6 = frame[y1 + 5, x1 + 5]
 
+        couleur1 = parametres_plus(Lsourcile61, 20, sourcile6[0])
+        couleur2 = parametres_plus(Lsourcile62, 20, sourcile6[1])
+        couleur3 = parametres_plus(Lsourcile63, 20, sourcile6[2])
 
-        initialisation_oreille_droite(Loreille_droite1, Loreille_droite2,
-                                        Loreille_droite3, Loreille_droite4,
-                                        Loreille_droite5, Loreille_droite6,
-                                        x, y, h, w, frame)
+        trois_parametrages(couleur1, couleur2, couleur3, "ici")
 
+        couleur4 = parametres_moins(Lsourcile61, 20, sourcile6[0])
+        couleur5 = parametres_moins(Lsourcile62, 20, sourcile6[1])
+        couleur6 = parametres_moins(Lsourcile63, 20, sourcile6[2])
 
-        initialisation_cerne_droite(Lcerne_droite1, Lcerne_droite2,
-                                    Lcerne_droite3, Lcerne_droite4,
-                                    Lcerne_droite5,
-                                    x, y, h, w, frame)
-
-
-        initialisation_cerne_gauche(Lcerne_gauche1, Lcerne_gauche2,
-                                    Lcerne_gauche3, Loreille_droite4,
-                                    Loreille_droite5,
-                                    x, y, h, w, frame)
-
-
-        initialisation_pomette(Lpomette_droite, Lpomette_gauche, x, y, h, w, frame)
-
-
-        initialisation_front(Lfront1, Lfront2,
-                             Lfront3, Lfront4,
-                             x, y, h, w, frame)
-
-        initialisation_bouche(frame, Lbouche1, Lbouche2,
-                                  Lbouche3, Lbouche4, Lbouche5,
-                                  x, y, h, w)
-
-        initialisation_milieu(Lmillieu, x, y, h, w, frame)
+        trois_parametrages(couleur4, couleur5, couleur6, "ka")
         
+    except:
+        pass
 
+    #print(sourcile6[0], sourcile6[1], sourcile6[2])
+
+
+
+
+def yeux(frame, video, eyesCascade, faceCascade, gray,
+         Lsourcile61, Lsourcile62, Lsourcile63):
+
+    faces = face_config(faceCascade, gray)
+
+    for x, y, w, h in faces:
+        roi_gray = gray[y:y+h, x:x+w]
+        roi_color = frame[y:y+h, x:x+w]
+
+        eyes = eyes_config(eyesCascade, roi_gray)
+
+
+        oeil = 0
+        
+        pos1_x = 0
+        pos1_y = 0
+
+        pos2_x = 0
+        pos2_y = 0
+        
         for x1, y1, w1, h1 in eyes:
-            cv2.rectangle(frame, (x1, y1), (x1 + w1, y1 + h1),(0, 0, 255), 2)
             
-            x1 = x1.tolist()
-            y1 = y1.tolist()
-            w1 = w1.tolist()
-            h1 = h1.tolist()
+            if oeil == 0:
+                #cv2.rectangle(roi_color, (x1, y1), (x1 + w1, y1 + h1),(0, 0, 255), 2)
+                
+                pos1_x = x1.tolist() + w1.tolist()
+                pos1_y = y1.tolist()
 
-            initialisation_sourcile_droit(frame, Lsourcile61, Lsourcile62,
-                                          Lsourcile63, Lsourcile7,
-                                          Lsourcile8, Lsourcile9,
-                                          Lsourcile10,
-                                          x1, y1, h1, w1)
-
-            initialisation_sourcile_gauche(frame, Lsourcile1, Lsourcile2,
-                                               Lsourcile3, Lsourcile4,
-                                               Lsourcile5,
-                                               x1, y1, h1, w1)
-
-        cv2.imshow("frame", frame)
+                #SOURCILE DROIT
+                sourciles_droit(frame, roi_color, x1, y1, w1, h1,
+                                Lsourcile61, Lsourcile62, Lsourcile63
+                )
 
 
+            elif oeil == 1:
+                #cv2.rectangle(roi_color, (x1, y1), (x1 + w1, y1 + h1),(0, 0, 0), 2)
+                
+                pos2_x = x1.tolist()
+                pos2_y = y1.tolist()
 
-def tempes(frame, x, y ,w ,h):
-##    tempe_gauche = cv2.circle(frame,(x + w - 10 , y + 10), 1, (255,0,0), 2)
-##    tempe_droite = cv2.circle(frame,(x + 10, y + 10), 1, (255,0,0), 2)
-    pass
-    
+                
 
-def oreilles(frame, x, y ,w ,h):
-##    oreille_gauche1 = cv2.circle(frame,(x + w , y + 50), 1, (255,0,0), 2)
-##    oreille_gauche2 = cv2.circle(frame,(x + w , y + 60), 1, (255,0,0), 2)
-##    oreille_gauche3 = cv2.circle(frame,(x + w , y + 70), 1, (255,0,0), 2)
-##    oreille_gauche4 = cv2.circle(frame,(x + w , y + 80), 1, (255,0,0), 2)
-##    oreille_gauche5 = cv2.circle(frame,(x + w , y + 90), 1, (255,0,0), 2)
-##    oreille_gauche6 = cv2.circle(frame,(x + w , y + 100), 1, (255,0,0), 2)
-##    
-##    oreille_droite1 = cv2.circle(frame,(x , y + 50), 1, (255,0,0), 2)
-##    oreille_droite2 = cv2.circle(frame,(x , y + 60), 1, (255,0,0), 2)
-##    oreille_droite3 = cv2.circle(frame,(x , y + 70), 1, (255,0,0), 2)
-##    oreille_droite4 = cv2.circle(frame,(x , y + 80), 1, (255,0,0), 2)
-##    oreille_droite5 = cv2.circle(frame,(x , y + 90), 1, (255,0,0), 2)
-##    oreille_droite6 = cv2.circle(frame,(x , y + 100), 1, (255,0,0), 2)
-    pass
-
-def cernes(frame, x, y ,w ,h):
-##    cerne_droite1 = cv2.circle(frame, (x + 40, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##    cerne_droite2 = cv2.circle(frame, (x + 50, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##    cerne_droite3 = cv2.circle(frame, (x + 60, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##    cerne_droite4 = cv2.circle(frame, (x + 70, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##    cerne_droite5 = cv2.circle(frame, (x + 80, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##
-##    cerne_gauche1 = cv2.circle(frame, (x + w - 40, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##    cerne_gauche2 = cv2.circle(frame, (x + w - 50, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##    cerne_gauche3 = cv2.circle(frame, (x + w - 60, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##    cerne_gauche4 = cv2.circle(frame, (x + w - 70, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-##    cerne_gauche5 = cv2.circle(frame, (x + w - 80, int(round(y + h / 2 - 5))), 1, (255,0,0), 2)
-    pass
-
-def pomettes(frame, x, y ,w ,h):
-##    pomette_droite = cv2.circle(frame, (x + 40, int(round(y + h / 2 + 10))), 1, (255,0,0), 2)
-##    pomette_gauche = cv2.circle(frame, (x + w - 40, int(round(y + h / 2 + 10))), 1, (255,0,0), 2)
-    pass
-
-def front(frame, x, y ,w ,h):
-    
-##    front1 = cv2.line(img, (x + 40, y + 5), (x + w - 40, y + 5), (0,0,0), 2)
-##    front2 = cv2.line(img, (x + 40, y + 10), (x + w - 40, y + 10), (0,0,0), 2)
-##    front3 = cv2.line(img, (x + 40, y + 15), (x + w - 40, y + 15), (0,0,0), 2)
-##    front4 = cv2.line(img, (x + 40, y + 20), (x + w - 40, y + 20), (0,0,0), 2)
-    pass
-
-def bouche(frame, x, y ,w ,h):
-##    bouche1 = cv2.circle(frame, (int(round(x + w / 2)), y + h - 10), 1, (255,255,0), 2)
-##    bouche2 = cv2.circle(frame, (int(round(x + w / 2 - 10)), y + h - 10), 1, (255,255,0), 2)
-##    bouche3 = cv2.circle(frame, (int(round(x + w / 2 + 10)), y + h - 10), 1, (255,255,0), 2)
-##    bouche4 = cv2.circle(frame, (int(round(x + w / 2 - 15)), y + h - 10), 1, (255,255,0), 2)
-##    bouche5 = cv2.circle(frame, (int(round(x + w / 2 + 15)), y + h - 10), 1, (255,255,0), 2)
-    pass
-
-def milieu(frame, x, y ,w ,h):
-##milieu = cv2.line(frame, (int(round(x + w/2)), y), (int(round(x + w/2)), y + h), (0, 0, 255), 8)
-    pass
-    
-def point_figure(frame, x, y, w, h):
-    
-    x = x.tolist()
-    y = y.tolist()
-    w = w.tolist()
-    h = h.tolist()
-    
-    tempes(frame, x, y ,w ,h)
-    oreilles(frame, x, y ,w ,h)
-    cernes(frame, x, y ,w ,h)
-    pomettes(frame, x, y ,w ,h)
-    front(frame, x, y ,w ,h)
-    bouche(frame, x, y ,w ,h)
-    milieu(frame, x, y ,w ,h)
-    
-
-def figure(frame, video, faceCascade, gray):
-    
-    face = faceCascade.detectMultiScale(gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30),
-        flags=cv2.CASCADE_SCALE_IMAGE
-    ) 
-
-    for x, y, w, h in face:
-        #rect = cv2.rectangle(frame, (x,y), (x+w, y+h),(0, 0, 255), 2)
-        point_figure(frame, x, y, w, h)
+            oeil += 1
 
 
-def sourciles_droit(frame, x1, y1, w1, h1,
-                    Lsourcile61, Lsourcile62, Lsourcile63,
-                    Lsourcile7, Lsourcile8,
-                    Lsourcile9, Lsourcile10):
-    
-    #sourcile6 = cv2.circle(frame, (x1 + 5, y1 + 5), 1, (0,0,0), 2)
-    sourcile6 = frame[y1 + 5, x1 + 5]
-    print(sum(Lsourcile61)/len(Lsourcile61))
-    print(sum(Lsourcile62)/len(Lsourcile62))
-    print(sum(Lsourcile63)/len(Lsourcile63))
-    print(sourcile6[0], sourcile6[1], sourcile6[2])
-    #sourcile7 = cv2.circle(frame, (x1 + 15, y1 + 5), 1, (0,0,0), 2)
-    sourcile7 = frame[y1 + 5, x1 + 15]
-    #sourcile8 = cv2.circle(frame, (x1 + 25, y1 + 5), 1, (0,0,0), 2)
-    sourcile8 = frame[y1 + 5, x1 + 25]
-    #sourcile9 = cv2.circle(frame, (x1 + 35, y1 + 6), 1, (0,0,0), 2)
-    sourcile = frame[y1 + 6, x1 + 35]
-    #sourcile10 = cv2.circle(frame, (x1 + 45, y1 + 7), 1, (0,0,0), 2)
-    sourcile10 = frame[y1 + 7, x1 + 45]   
+        definition_oeil(roi_color, pos1_x, pos2_x, pos1_y, pos2_y)
 
 
 
 
 
-def sourciles_gauche(frame, x1, y1, w1, h1):
-##    sourcile1 = cv2.circle(frame, (x1 + 5, y1 + 5), 1, (0,0,0), 2)
-##    sourcile2 = cv2.circle(frame, (x1 + 15, y1 + 5), 1, (0,0,0), 2)
-##    sourcile3 = cv2.circle(frame, (x1 + 25, y1 + 5), 1, (0,0,0), 2)
-##    sourcile4 = cv2.circle(frame, (x1 + 35, y1 + 6), 1, (0,0,0), 2)
-##    sourcile5 = cv2.circle(frame, (x1 + 45, y1 + 7), 1, (0,0,0), 2)
-    pass
-
-def yeux(frame, video, eyesCascade,
-         Lsourcile61, Lsourcile62,
-         Lsourcile63,
-         Lsourcile7, Lsourcile8,
-         Lsourcile9, Lsourcile10):
-
-    
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    eyes = eyesCascade.detectMultiScale(gray,
-        scaleFactor=1.3,
-        minNeighbors=5,
-        minSize=(30, 30),
-        flags=cv2.CASCADE_SCALE_IMAGE)
-
-
-    oeil = 0
-    
-    pos1 = 0
-    pos1_y = 0
-
-    pos2 = 0
-    pos2_y = 0
-    
-    for x1, y1, w1, h1 in eyes:
-        
-        if oeil == 0:
-            pos1 = x1.tolist() + w1.tolist()
-            pos1_y = y1.tolist()
-            sourciles_droit(frame, x1, y1, w1, h1,
-                            Lsourcile61, Lsourcile62, Lsourcile63,
-                            Lsourcile7, Lsourcile8,
-                            Lsourcile9, Lsourcile10)
-
-        elif oeil == 1:
-
-            pos2 = x1.tolist()
-            pos2_y = y1.tolist()
-            sourciles_gauche(frame, x1, y1, w1, h1)
-            #cv2.rectangle(frame, (x1, y1), (x1 + w1, y1 + h1),(0, 0, 255), 2)
-
-        oeil += 1
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def definition_oeil(frame, pos1_x, pos2_x, pos1_y, pos2_y):
 
     un = 0
     deux = 0
+    unun = 0
+    deuxdeux = 0
     
     x = 0
     y = 0
     
-    if pos1 < pos2:
-        un = pos1
-        deux = pos2
+    if pos1_x < pos2_x:
+        un = pos1_x
+        deux = pos2_x
 
         unun = pos1_y
         deuxdeux = pos2_y
 
         x = (un + deux)/2
         y = (unun + deuxdeux)/2
-        
-    elif pos1 > pos2:
-        deux = pos1
-        un = pos2
+
+
+    elif pos1_x > pos2_x:
+        deux = pos1_x
+        un = pos2_x
 
         unun = pos2_y
         deuxdeux = pos1_y
@@ -431,15 +197,6 @@ def yeux(frame, video, eyesCascade,
         pass
     else:
         entre_oeil = cv2.circle(frame, (int(round(x)), int(round(y))), 1, (255,0,0), 2)
-
-
-
-
-
-
-
-
-
 
 
 
