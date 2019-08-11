@@ -11,9 +11,17 @@ from initialisation import *
 
 def video_capture():
 
+
+    CONFIG_OEIL_DROIT = [0]
+    CONFIG_INITIALISATION = []
+
     Lsourcile61 = []
     Lsourcile62 = []
     Lsourcile63 = []
+
+    Lsourcile71 = []
+    Lsourcile72 = []
+    Lsourcile73 = []
 
 
     video = cv2.VideoCapture(0)
@@ -29,14 +37,23 @@ def video_capture():
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+        if len(CONFIG_INITIALISATION) < 50:
+            initialisation(frame, video, faceCascade, eyesCascade, gray,
+                   CONFIG_INITIALISATION)
 
+            
+            
+        else:
 
-        yeux(frame, video, eyesCascade, faceCascade, gray,
-                Lsourcile61, Lsourcile62, Lsourcile63)
+            yeux(frame, video, eyesCascade, faceCascade, gray,
+                 Lsourcile61, Lsourcile62, Lsourcile63,
+                 Lsourcile71, Lsourcile72, Lsourcile73,
+                 CONFIG_OEIL_DROIT, CONFIG_INITIALISATION)
+            
             
         #figure(frame, video, faceCascade, gray)
             
-        cv2.imshow('FACE CAPTURE', frame)
+        cv2.imshow('FACE INITIALISATION', frame)
 
 
 
