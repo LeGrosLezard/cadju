@@ -2,6 +2,10 @@
 
 LIS TOUT
 
+c du recopiage de tuto + de l'huile de coude, est ce qu'un chirurgien a le droit de dire qu'un architecte est bete pcqu'il ne sait pas faire une opération du bras et a linverse un architecte a til le droit de dire qu'un chirurgien est con pcqu'il ne sait pas faire de croquis ? ben nan ben c pareil ! chacun son métier
+
+
+
 -------------------------------
 
 tout refaire selon ca ! pcque le skin detector sté pas ca ^^
