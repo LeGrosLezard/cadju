@@ -82,24 +82,27 @@ while(True):
 
     
     try:
-        if sum(BOX1)/len(BOX1) + 1000 < len(liste1):
+        if sum(BOX1)/len(BOX1) + 1000 < len(liste1) or\
+           sum(BOX1)/len(BOX1) - 1000 > len(liste1):
             cv2.rectangle(frame,(100,100), (150, 150), (255,0,255), 1)
             pos.append(1)
             time.append(c)
   
-        if sum(BOX2)/len(BOX2) + 1000 < len(liste2):
+        if sum(BOX2)/len(BOX2) + 1000 < len(liste2) or\
+           sum(BOX2)/len(BOX2) - 1000 > len(liste2):
             cv2.rectangle(frame,(300,100), (350, 150), (255,0,255), 1)
             pos.append(2)
             time.append(c)
 
-        if sum(BOX3)/len(BOX3) + 1000 < len(liste3):
+        if sum(BOX3)/len(BOX3) + 500 < len(liste3) or\
+           sum(BOX3)/len(BOX3) - 500 > len(liste3):
             cv2.rectangle(frame,(400,100), (450, 150), (255,0,255), 1)
             pos.append(3)
             time.append(c)
 
         
-
-        if sum(BOX4)/len(BOX4) + 1000 < len(liste4):
+        if sum(BOX4)/len(BOX4) + 80 < len(liste4) or\
+           sum(BOX4)/len(BOX4) - 80 > len(liste4):
             if tempo[-1] + 20 < c:
                 if START == False:
                     START = True
