@@ -2,17 +2,7 @@
 
 LIS TOUT
 
-ok y'a pleins de bug, les carre sentrechoqué, du coup mtn ils sont pas bien placé, (enleve tous les truk de reinitilisage)
-
-enleve tous les truk de reinitialisage ou fait une condition qui que deux carrés peuvent pas se toucher
-
-fait une condition droite/milieu mileu/gauche -> tu peux les remettre presque collé mtn (on les moyenne plus pour les placer ou condition peuvent pas se toucher et par apport au premier)
-
-et y'a d'autre truk chai plus mais ca marche a peu prés
-
-tu vas devoir mieux coder sa lag jcrois chai plus
-
-les carrés sont trop haut et trop gros et des fois apres initialisage ca marche plus ptin refais mais c ok
+pas besoin de 3 carrés, fait un gros carré a gauche de l'image et a droite, un petit au milieu de tete
 
 -------------------------------
 
