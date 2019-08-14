@@ -2,14 +2,15 @@
 
 LIS TOUT
 
-ok y'a pleins de bug, les carre sentrechoqué, du coup mtn ils sont pas bien placé,
+ok y'a pleins de bug, les carre sentrechoqué, du coup mtn ils sont pas bien placé, (enleve tous les truk de reinitilisage)
 
 enleve tous les truk de reinitialisage ou fait une condition qui que deux carrés peuvent pas se toucher
 
-fait une condition droite/milieu mileu/gauche
+fait une condition droite/milieu mileu/gauche -> tu peux les remettre presque collé mtn (on les moyenne plus pour les placer ou condition peuvent pas se toucher et par apport au premier)
 
 et y'a d'autre truk chai plus mais ca marche a peu prés
 
+tu vas devoir mieux coder sa lag jcrois chai plus
 
 
 -------------------------------
