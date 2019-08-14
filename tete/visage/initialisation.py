@@ -43,11 +43,12 @@ def init_tete_haut(frame, faceCascade, MILIEU_TETE):
 
     cv2.rectangle(frame, (cTm_x1, cTm_y1), (cTm_x2, cTm_y2), (coul_M), 2)
 
-    MILIEU_TETE[0].append(cTm_x1)
-    MILIEU_TETE[1].append(cTm_y1)
-    MILIEU_TETE[2].append(cTm_x2)
-    MILIEU_TETE[3].append(cTm_y2)
+    liste = [cTm_x1, cTm_y1, cTm_x2, cTm_y2]
 
+    c = 0
+    for i in liste:
+        MILIEU_TETE[c].append(i)
+        c+=1
 
 def init_milieu():
     pass
