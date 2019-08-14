@@ -2,7 +2,15 @@
 
 LIS TOUT
 
-pas besoin de 3 carrés, fait un gros carré a gauche de l'image et a droite, un petit au milieu de tete
+fait quand meme les detections au pire y'en a un qui t'aidera
+
+faire toutes les zones les zones (sourciles petits carrés)
+
+faires les substractes a part ne pas les montrer
+
+certaines zones vont se compléter
+
+
 
 -------------------------------
 
