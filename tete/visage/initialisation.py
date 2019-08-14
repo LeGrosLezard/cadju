@@ -14,153 +14,43 @@ def detection_face(frame, faceCascade):
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
-    for x, y, w, h in faces:
-        cv2.rectangle(frame, (x,y), (x+w, y+h),(0, 0, 0), 2)
-
-
     try:
-        x = x.tolist()
-        w = w.tolist()
+        faces = faces[0].tolist()
 
-        return x, w
-    
-    except:
+        return faces[0], faces[1], faces[2], faces[3]
+
+    except IndexError:
         pass
-    #pas de détection de tete
+ 
+
+def init_tete_haut(frame, faceCascade, MILIEU_TETE):
+
+    x, y, w, h = detection_face(frame, faceCascade)
 
 
-
-def position_haut_tete(faceCascade, frame,
-                        POSITION_HAUT_TETE_X,
-                        POSITION_HAUT_TETE_Y1,
-                        POSITION_HAUT_TETE_W,
-                        POSITION_HAUT_TETE_Y2,
-                        POSITION_HAUT_TETE_X_1,
-                        POSITION_HAUT_TETE_Y1_1,
-                        POSITION_HAUT_TETE_W_1,
-                        POSITION_HAUT_TETE_Y2_1,
-                        POSITION_HAUT_TETE_X_2,
-                        POSITION_HAUT_TETE_Y1_2, 
-                        POSITION_HAUT_TETE_W_2, 
-                        POSITION_HAUT_TETE_Y2_2,
-                        POSITION_HAUT_TETE_X_3,
-                        POSITION_HAUT_TETE_Y1_3, 
-                        POSITION_HAUT_TETE_W_3, 
-                        POSITION_HAUT_TETE_Y2_3):
-
+    dessus_milieu_1 = y - int(round(150 * 100 / h))
+    dessus_milieu_2 = y - int(round(60 * 100 / h))
     
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    carre = int(round(w/3))
 
 
-    faces = faceCascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30),
-        flags=cv2.CASCADE_SCALE_IMAGE
-    )
+    cTm_x1 = x + carre
+    cTm_x2 = x + carre * 2
+    cTm_y1 = dessus_milieu_1
+    cTm_y2 = dessus_milieu_2
 
-    
+    coul_M = 0, 0, 255
 
-    for x, y, w, h in faces:
-        
-        cv2.rectangle(frame, (x,y), (x+w, y+h),(0, 0, 255), 2)
-        
+    cv2.rectangle(frame, (cTm_x1, cTm_y1), (cTm_x2, cTm_y2), (coul_M), 2)
 
-        liste1 = []
-        x = x.tolist()
-        y = y.tolist()
-        h = h.tolist()
-        w = w.tolist()
-
-        dessus_visage1 = int(round(60 * 100 / h))
-        dessus_visage2 = int(round(150 * 100 / h))
-
-        carre = int(round(w/3))
-
-        cv2.rectangle(frame,(x-20 ,y-dessus_visage1), (x + carre-20, y - dessus_visage2),
-                      (0,255,0), 1)
-        
-        cv2.rectangle(frame,(x + carre, y-dessus_visage1),
-                      (x + carre*2, y - dessus_visage2), (255,0,0), 1)
-        
-        cv2.rectangle(frame,(x+ carre*2 + 15, y-dessus_visage1),
-                      ((x + carre*3) + 15, y - dessus_visage2), (0,0,255), 1)
+    MILIEU_TETE[0].append(cTm_x1)
+    MILIEU_TETE[1].append(cTm_y1)
+    MILIEU_TETE[2].append(cTm_x2)
+    MILIEU_TETE[3].append(cTm_y2)
 
 
-        POSITION_HAUT_TETE_X_1.append(x-20)
-        POSITION_HAUT_TETE_Y1_1.append(y-dessus_visage1)
-        POSITION_HAUT_TETE_W_1.append(x + carre-20)
-        POSITION_HAUT_TETE_Y2_1.append(y-dessus_visage2)
-        
-        POSITION_HAUT_TETE_X_2.append(x + carre)
-        POSITION_HAUT_TETE_Y1_2.append(y-dessus_visage1)
-        POSITION_HAUT_TETE_W_2.append(x + carre*2)
-        POSITION_HAUT_TETE_Y2_2.append(y-dessus_visage2)
-        
-        POSITION_HAUT_TETE_X_3.append(x + carre*2 + 15)
-        POSITION_HAUT_TETE_Y1_3.append(y-dessus_visage1)
-        POSITION_HAUT_TETE_W_3.append(x + carre*3 + 15)
-        POSITION_HAUT_TETE_Y2_3.append(y-dessus_visage2)      
-
-        
-
-def initialisation(frame, faceCascade, POSITION_TETE,
-                    POSITION_HAUT_TETE_X,
-                    POSITION_HAUT_TETE_Y1,
-                    POSITION_HAUT_TETE_W,
-                    POSITION_HAUT_TETE_Y2,
-                    POSITION_HAUT_TETE_X_1,
-                    POSITION_HAUT_TETE_Y1_1,
-                    POSITION_HAUT_TETE_W_1,
-                    POSITION_HAUT_TETE_Y2_1,
-                    POSITION_HAUT_TETE_X_2,
-                    POSITION_HAUT_TETE_Y1_2, 
-                    POSITION_HAUT_TETE_W_2, 
-                    POSITION_HAUT_TETE_Y2_2,
-                    POSITION_HAUT_TETE_X_3,
-                    POSITION_HAUT_TETE_Y1_3, 
-                    POSITION_HAUT_TETE_W_3, 
-                    POSITION_HAUT_TETE_Y2_3):
-
-    try:
-        x, w = detection_face(frame, faceCascade)
-
-        POSITION_TETE.append(x + w)
-        position_haut_tete(faceCascade, frame,
-                            POSITION_HAUT_TETE_X,
-                            POSITION_HAUT_TETE_Y1,
-                            POSITION_HAUT_TETE_W,
-                            POSITION_HAUT_TETE_Y2,
-                            POSITION_HAUT_TETE_X_1,
-                            POSITION_HAUT_TETE_Y1_1,
-                            POSITION_HAUT_TETE_W_1,
-                            POSITION_HAUT_TETE_Y2_1,
-                            POSITION_HAUT_TETE_X_2,
-                            POSITION_HAUT_TETE_Y1_2, 
-                            POSITION_HAUT_TETE_W_2, 
-                            POSITION_HAUT_TETE_Y2_2,
-                            POSITION_HAUT_TETE_X_3,
-                            POSITION_HAUT_TETE_Y1_3, 
-                            POSITION_HAUT_TETE_W_3, 
-                            POSITION_HAUT_TETE_Y2_3)
-        
-    except:
-        pass
-    #pas de détection de tete
-
-
-
-
-
-
-
-
-
-
-
-
-
+def init_milieu():
+    pass
 
 
 
