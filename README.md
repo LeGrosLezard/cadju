@@ -2,7 +2,13 @@
 
 LIS TOUT
 
-c du recopiage de tuto + de l'huile de coude, est ce qu'un chirurgien a le droit de dire qu'un architecte est bete pcqu'il ne sait pas faire une opération du bras et a linverse un architecte a til le droit de dire qu'un chirurgien est con pcqu'il ne sait pas faire de croquis ? ben nan ben c pareil ! chacun son métier
+ok y'a pleins de bug, les carre sentrechoqué, du coup mtn ils sont pas bien placé,
+
+enleve tous les truk de reinitialisage ou fait une condition qui que deux carrés peuvent pas se toucher
+
+fait une condition droite/milieu mileu/gauche
+
+et y'a d'autre truk chai plus mais ca marche a peu prés
 
 
 
