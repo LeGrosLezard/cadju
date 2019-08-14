@@ -2,127 +2,68 @@ import numpy as np
 import cv2
 
 
-def position_tete(x, w, POSITION_TETE):
-
-    if x + w > sum(POSITION_TETE) / len(POSITION_TETE) + 40:
-        print("le mec s'est rapproché")
-        return "reposition"
-
-    elif x + w < sum(POSITION_TETE) / len(POSITION_TETE) - 40:
-        print("le mec s'est éloigné")
-        return "reposition"
-
-    else:
-        POSITION_TETE.append(x+w)
 
 
+def milieu_haut_tete(frame, MILIEU_TETE):
 
+    cTm_x1 = int(round(sum(MILIEU_TETE[0]) / len(MILIEU_TETE[0])))
+    cTm_y1 = int(round(sum(MILIEU_TETE[1]) / len(MILIEU_TETE[1])))
+    cTm_x2 = int(round(sum(MILIEU_TETE[2]) / len(MILIEU_TETE[2])))
+    cTm_y2 = int(round(sum(MILIEU_TETE[3]) / len(MILIEU_TETE[3])))
 
-def detection_face(faceCascade, frame, BOX_ONE, POSITION_TETE):
-
-
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-
-    faces = faceCascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(30, 30),
-        flags=cv2.CASCADE_SCALE_IMAGE
-    )
+    coul_M = 0, 0, 255
+     
+    cv2.rectangle(frame, (cTm_x1, cTm_y1), (cTm_x2, cTm_y2), (coul_M), 2)
 
 
 
-    for x, y, w, h in faces:
 
-        cv2.rectangle(frame, (x,y), (x+w, y+h), (0, 0, 255), 2)
-        
-        x = x.tolist()
-        w = w.tolist()
-        
-        reposition = position_tete(x, w, POSITION_TETE)
-        
-        if reposition == "reposition":
-            out = "reposition"
-        else:
-            out = None
-
-        return out
+def cotes_tete(frame, x, y, w, h):
 
 
-def haut_tete(frame, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p,
-              subtractor, DEBUT, timmer, LISTE, PRE_INIT):
+    cTd_x1 = x - 20
+    cTd_x2 = x + 30
+    cTd_y1 = y - int(round(100 * 100 / h))
+    cTd_y2 = y - int(round(10 * 100 / h))
+
+    coul_D = 245,66,75
+
+    cv2.rectangle(frame, (cTd_x1, cTd_y1), (cTd_x2, cTd_y2), (coul_D), 2)
+
+
+    cTg_x1 = x + w - 20
+    cTg_x2 = x + w + 30
+    cTg_y1 = y - int(round(100 * 100 / h))
+    cTg_y2 = y - int(round(10 * 100 / h))
+
+    coul_G = 24,77,31
+
+    cv2.rectangle(frame, (cTg_x1, cTg_y1), (cTg_x2, cTg_y2), (coul_G), 2)
+
+
+
+def cotes_frame(frame, x, y, w, h):
+    
+    cTd_x1 = x - w - 10
+    cTd_x2 = x - 30
+    cTd_y1 = y
+    cTd_y2 = y + h
+
+    coul_D = 245,66,75
+
+    cv2.rectangle(frame, (cTd_x1, cTd_y1), (cTd_x2, cTd_y2), (coul_D), 3)
+
+    cTg_x1 = x + w + 30
+    cTg_x2 = x + w * 2
+    cTg_y1 = y
+    cTg_y2 = y + h
+
+    coul_G = 24,77,31
+
+    cv2.rectangle(frame, (cTg_x1, cTg_y1), (cTg_x2, cTg_y2), (coul_G), 3)
+
 
     
-
-    cv2.rectangle(frame, (e,g), (f, h),(0, 255, 255), 2)    
-    cv2.rectangle(frame, (i,k), (j, l),(255, 0, 255), 2)
-    cv2.rectangle(frame, (m,o), (n, p),(255, 255, 255), 2)
-
-    
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-
-    crop1 = gray[h:g, e:f]
-    crop2 = gray[l:k, i:j]
-    crop3 = gray[p:o, m:n]
-
-
-    mask1 = subtractor.apply(crop1)
-    mask2 = subtractor.apply(crop2)
-    mask3 = subtractor.apply(crop3)
-    
-
-    liste2 = []
-    liste3 = []
-    liste4 = []
-
-
-    for i in mask1:
-        for j in i:
-            liste2.append(j)
-    for i in mask2:
-        for j in i:
-            liste3.append(j)
-    for i in mask3:
-        for j in i:
-            liste4.append(j)
-
-    if DEBUT == 1:
-        pass
-    else:
-        
-        if sum(liste2) / len(liste2) > 100:
-            LISTE[0].append([1, timmer])
-            print("droite")
-
-        if sum(liste2) / len(liste2) > 50:
-            PRE_INIT.append(sum(liste2) / len(liste2))
-            
-        if sum(liste2) / len(liste2) == 0.0:
-            PRE_INIT = []
-        
-        if sum(liste3) / len(liste3) > 100:
-            LISTE[1].append([2, timmer])
-            print("milieu")
-        if sum(liste4) / len(liste4) > 100:
-            LISTE[2].append([3, timmer])
-            print("gauche")
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
