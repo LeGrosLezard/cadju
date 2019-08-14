@@ -5,7 +5,7 @@ LIS TOUT
 
 ensuite y'a full body,
 
-mais le truk c qu'il faut full ini et du coup faut réduir OU trouver comment mettre le bord transparent jlavais fais une fois
+mais le truk c qu'il faut full ini et du coup faut réduir en 1 pts mais du coup faut dire aurevoir au nez OU trouver comment mettre le bord transparent jlavais fais une fois
 
 certaines zones vont se compléter
 
