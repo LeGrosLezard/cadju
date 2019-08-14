@@ -2,11 +2,10 @@
 
 LIS TOUT
 
-fait quand meme les detections au pire y'en a un qui t'aidera
 
-faire toutes les zones les zones (sourciles petits carrés)
+ensuite y'a full body,
 
-faires les substractes a part ne pas les montrer
+mais le truk c qu'il faut full ini et du coup faut réduir OU trouver comment mettre le bord transparent jlavais fais une fois
 
 certaines zones vont se compléter
 
