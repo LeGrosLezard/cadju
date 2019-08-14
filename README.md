@@ -12,6 +12,7 @@ et y'a d'autre truk chai plus mais ca marche a peu prés
 
 tu vas devoir mieux coder sa lag jcrois chai plus
 
+les carrés sont trop haut et trop gros et des fois apres initialisage ca marche plus ptin refais mais c ok
 
 -------------------------------
 
