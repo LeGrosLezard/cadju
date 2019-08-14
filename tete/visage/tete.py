@@ -35,18 +35,14 @@ def detection_face(faceCascade, frame, BOX_ONE, POSITION_TETE):
 
 
     for x, y, w, h in faces:
-        
+
         cv2.rectangle(frame, (x,y), (x+w, y+h), (0, 0, 255), 2)
         
-        reposition = position_tete(x, w, POSITION_TETE)
-
-        liste1 = []
         x = x.tolist()
-        y = y.tolist()
-        h = h.tolist()
         w = w.tolist()
-
-
+        
+        reposition = position_tete(x, w, POSITION_TETE)
+        
         if reposition == "reposition":
             out = "reposition"
         else:
@@ -55,28 +51,65 @@ def detection_face(faceCascade, frame, BOX_ONE, POSITION_TETE):
         return out
 
 
-def haut_tete(frame, a, b, c, d, subtractor):
-    
-    cv2.rectangle(frame, (a,c), (b, d),(0, 0, 255), 2)
+def haut_tete(frame, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p,
+              subtractor, DEBUT, timmer, LISTE, PRE_INIT):
 
+    
+
+    cv2.rectangle(frame, (e,g), (f, h),(0, 255, 255), 2)    
+    cv2.rectangle(frame, (i,k), (j, l),(255, 0, 255), 2)
+    cv2.rectangle(frame, (m,o), (n, p),(255, 255, 255), 2)
+
+    
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    crop = gray[d:c, a:b]
 
-    mask = subtractor.apply(crop)
+    crop1 = gray[h:g, e:f]
+    crop2 = gray[l:k, i:j]
+    crop3 = gray[p:o, m:n]
 
-    liste1 = []
-    for i in mask:
+
+    mask1 = subtractor.apply(crop1)
+    mask2 = subtractor.apply(crop2)
+    mask3 = subtractor.apply(crop3)
+    
+
+    liste2 = []
+    liste3 = []
+    liste4 = []
+
+
+    for i in mask1:
         for j in i:
-            liste1.append(j)
+            liste2.append(j)
+    for i in mask2:
+        for j in i:
+            liste3.append(j)
+    for i in mask3:
+        for j in i:
+            liste4.append(j)
 
+    if DEBUT == 1:
+        pass
+    else:
+        
+        if sum(liste2) / len(liste2) > 100:
+            LISTE[0].append([1, timmer])
+            print("droite")
 
-    print(sum(liste1) / len(liste1))
+        if sum(liste2) / len(liste2) > 50:
+            PRE_INIT.append(sum(liste2) / len(liste2))
+            
+        if sum(liste2) / len(liste2) == 0.0:
+            PRE_INIT = []
+        
+        if sum(liste3) / len(liste3) > 100:
+            LISTE[1].append([2, timmer])
+            print("milieu")
+        if sum(liste4) / len(liste4) > 100:
+            LISTE[2].append([3, timmer])
+            print("gauche")
 
-
-  
-    return mask
-  
         
 
 
