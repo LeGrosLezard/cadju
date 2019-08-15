@@ -2,15 +2,9 @@
 
 LIS TOUT
 
+faut faire les combo de geste mtn
 
-mtn faire l'initialisation et ne pas print, 
-
-si y'a combo la print et dire la signification
-
-par contre faut trouver comment rendre le cadre de la figure overlay = 0
-
-et si le mec bouge trop la tete reinitialisation de tous les cadres et vide tout
-
+mais sans recopié essais de faire le detecteur de main et ensuite corrige selon l'inclaison de la main ptetre qu'on pourra différencié un index levé d'un pouce ou d'un doigt selon la position
 
 -------------------------------
 
