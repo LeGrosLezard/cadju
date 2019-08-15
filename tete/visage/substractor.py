@@ -15,7 +15,7 @@ def substractor_haut_tete(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("haut de la tete, concentration ou repositionement")
 
 
@@ -35,7 +35,7 @@ def substractor_cote_tete_droit(frame, y, y1, x, x1, subtractor):
             liste.append(j)
 
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("patte de mouche droit")
 
 
@@ -55,7 +55,7 @@ def substractor_cote_tete_gauche(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("patte de mouche gauche")
 
 
@@ -75,7 +75,7 @@ def substractor_cote_tete_frame_droit(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("bras droit")
 
 
@@ -96,7 +96,7 @@ def substractor_cote_tete_frame_gauche(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("bras gauche")
 
 
@@ -117,7 +117,7 @@ def substractor_bouche(frame, y, y1, x, x1, subtractor):
         for j in i:
             liste.append(j)
             
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("bouche")
 
 
@@ -156,7 +156,7 @@ def substractor_buste(frame, y, y1, x, x1, subtractor):
         for j in i:
             liste.append(j)
             
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("buste")
 
 
@@ -178,7 +178,7 @@ def substractor_epaul_droite(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("epaul droite")
 
 
@@ -200,7 +200,7 @@ def substractor_epaul_gauche(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("épaul gauche")
 
 
@@ -223,7 +223,7 @@ def substractor_front(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("front")
 
 
@@ -246,7 +246,7 @@ def substractor_tempe_droite(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("tempe droite")
 
 
@@ -268,7 +268,7 @@ def substractor_tempe_gauche(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("tempe gauche")
 
 
@@ -290,7 +290,7 @@ def substractor_oreille_droite(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("oreille droite")
 
 
@@ -313,7 +313,7 @@ def substractor_oreille_gauche(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
 
-    if sum(liste) / len(liste) > 20:
+    if sum(liste) / len(liste) > 30:
         print("oreille gauche")
 
 
