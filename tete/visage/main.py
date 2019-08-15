@@ -14,6 +14,7 @@ from initialisation import init_epaul
 from initialisation import init_front
 from initialisation import init_tempes
 from initialisation import init_oreille
+from initialisation import init_mouvement
 
 
 from tete import milieu_haut_tete
@@ -45,6 +46,24 @@ from config import SUBSTRACTOR13
 from config import SUBSTRACTOR14
 
 
+from tete_mouvement import tete_mouvement
+
+
+def reconfig(MILIEU_TETE, COTE_TETE, COTE_FRAME,
+             BOUCHE, MENTON, BUSTE, EPAUL, FRONT,
+             TEMPE, OREILLE, MOUVEMENT):
+    
+    MILIEU_TETE = [[], [], [], []]
+    COTE_TETE = [[], [], [], [], [], [], [], []]
+    COTE_FRAME = [[], [], [], [], [], [], [], []]
+    BOUCHE = [[], [], [], []]
+    MENTON = [[], [], [], []]
+    BUSTE = [[], [], [], []]
+    EPAUL = [[], [], [], [], [], [], [], []]
+    FRONT = [[], [], [], []]
+    TEMPE = [[], [], [], [], [], [], [], []]
+    OREILLE = [[], [], [], [], [], [], [], []]
+    MOUVEMENT = [[], []] 
 
 
 def video_capture():
@@ -60,6 +79,9 @@ def video_capture():
     FRONT = [[], [], [], []]
     TEMPE = [[], [], [], [], [], [], [], []]
     OREILLE = [[], [], [], [], [], [], [], []]
+
+    MOUVEMENT = [[], []]
+
     
     video = cv2.VideoCapture(0)
     faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
@@ -69,13 +91,14 @@ def video_capture():
 
     while(True):
 
+        init = False
 
         ret, frame = video.read()
         frame = cv2.resize(frame, (600, 600))
-
-
+        frame1 = cv2.resize(frame, (600, 600))
 
         if len(MILIEU_TETE[0]) < 1:
+            init_mouvement(frame, faceCascade, MOUVEMENT)
             init_tete_haut(frame, faceCascade, MILIEU_TETE)
             init_cotes_tete(frame, faceCascade, COTE_TETE)
             init_cotes_frame(frame, faceCascade, COTE_FRAME)
@@ -90,19 +113,30 @@ def video_capture():
 
             
         else:
-            milieu_haut_tete(frame, MILIEU_TETE, SUBSTRACTOR)
-            cotes_tete(frame, COTE_TETE, SUBSTRACTOR1, SUBSTRACTOR2)
-            cotes_frame(frame, COTE_FRAME, SUBSTRACTOR3, SUBSTRACTOR4)
-            bouche(frame, BOUCHE, SUBSTRACTOR5)
-            menton(frame, MENTON, SUBSTRACTOR6)
-            buste(frame, BUSTE, SUBSTRACTOR7)
-            epaul(frame, EPAUL, SUBSTRACTOR8, SUBSTRACTOR9)
-            front(frame, FRONT, SUBSTRACTOR10)
-            tempe(frame, TEMPE, SUBSTRACTOR11, SUBSTRACTOR12)
-            oreille(frame, OREILLE, SUBSTRACTOR13, SUBSTRACTOR14)
+            init = tete_mouvement(frame1, faceCascade, MOUVEMENT)
 
-    
+            if init is True:
+                reconfig(MILIEU_TETE, COTE_TETE, COTE_FRAME,
+                         BOUCHE, MENTON, BUSTE, EPAUL, FRONT,
+                         TEMPE, OREILLE, MOUVEMENT)
+            else:
+                milieu_haut_tete(frame, MILIEU_TETE, SUBSTRACTOR)
+                cotes_tete(frame, COTE_TETE, SUBSTRACTOR1, SUBSTRACTOR2)
+                cotes_frame(frame, COTE_FRAME, SUBSTRACTOR3, SUBSTRACTOR4)
+                bouche(frame, BOUCHE, SUBSTRACTOR5)
+                menton(frame, MENTON, SUBSTRACTOR6)
+                buste(frame, BUSTE, SUBSTRACTOR7)
+                epaul(frame, EPAUL, SUBSTRACTOR8, SUBSTRACTOR9)
+                front(frame, FRONT, SUBSTRACTOR10)
+                tempe(frame, TEMPE, SUBSTRACTOR11, SUBSTRACTOR12)
+                oreille(frame, OREILLE, SUBSTRACTOR13, SUBSTRACTOR14)
+
+
+
+        
+        
         cv2.imshow('FACE', frame)
+
 
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
