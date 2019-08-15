@@ -7,7 +7,6 @@ faut faire les combo de geste mtn
 faut faire les sourciles et les joues
 
 
-
 -------------------------------
 
 
@@ -27,5 +26,5 @@ le truk cool serai les bijoux aussi mais bon calme toi t'as juste fais 5 carrés
 -----------------------------
 
 
-
+essais sur des vidéo mais j'ai trop peur que ca marche que pour ma peau ou la taille de ma tete... si oui les cadre risque de se chevaucher...
 
