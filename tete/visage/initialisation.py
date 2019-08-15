@@ -16,12 +16,20 @@ def detection_face(frame, faceCascade):
 
     try:
         faces = faces[0].tolist()
-
         return faces[0], faces[1], faces[2], faces[3]
 
     except IndexError:
         return 1, 1, 1, 1
  
+
+def init_mouvement(frame, faceCascade, MOUVEMENT):
+    
+    x, y, w, h = detection_face(frame, faceCascade)
+    
+    MOUVEMENT[0].append(x)
+    MOUVEMENT[1].append(y)
+
+
 
 def init_tete_haut(frame, faceCascade, MILIEU_TETE):
 
