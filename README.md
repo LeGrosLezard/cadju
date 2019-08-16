@@ -4,6 +4,11 @@
 
 FINI les tests
 
+ca marche que dal pcque ton detecteur de skin est nul a chié juste avec le frame ca marche du tonerre pfffffffff
+
+pas grave tant que tu comprend et que  ca marche hihihi
+
+
 faut faire les combo de geste mtn
 
 faut faire les sourciles et les joues
