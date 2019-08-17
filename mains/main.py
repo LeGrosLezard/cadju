@@ -2,11 +2,22 @@ import cv2
 import time
 import datetime
 import imutils
+import numpy as np
+
+
+from traitement_hand import delete_visage
+from traitement_hand import first_window
+from traitement_hand import seconde_window
+from traitement_hand import contour_image
+from traitement_hand import hull_function
+
 
 
 def motion_detection():
+    
+    faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
+    
     video_capture = cv2.VideoCapture(0) 
-    time.sleep(2)
 
     first_frame = None
 
@@ -14,41 +25,29 @@ def motion_detection():
 
         
         _, frame = video_capture.read()
-        
-        greyscale_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        gaussian_frame = cv2.GaussianBlur(greyscale_frame, (21,21),0)
-        blur_frame = cv2.blur(gaussian_frame, (5,5)) 
 
-        greyscale_image = blur_frame
 
-        
+        blur_frame1 = first_window(frame)
+
         if first_frame is None:
-            first_frame = greyscale_image 
+            first_frame = blur_frame1 
 
 
-        frame = imutils.resize(frame, width=500)
+        dilate_image = seconde_window(first_frame, blur_frame1)
+
+        delete_visage(frame, dilate_image, faceCascade)
+
+        contours, thresh, hierarchy = contour_image(dilate_image)
+        drawing = hull_function(contours, thresh, hierarchy)
+    
+
+        cv2.imshow("main", drawing)
+        cv2.imshow('frame', frame)
+        cv2.imshow('mask', dilate_image)
+
+
+
         
-        frame_delta = cv2.absdiff(first_frame, greyscale_image) 
-        thresh = cv2.threshold(frame_delta, 100, 255, cv2.THRESH_BINARY)[1]
-
-        dilate_image = cv2.dilate(thresh, None, iterations=2)
-
-
-        cnt,_ = cv2.findContours(dilate_image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2:]
-
-        for c in cnt:
-            if cv2.contourArea(c) > 800: 
-                (x, y, w, h) = cv2.boundingRect(c)
-
-                cv2.rectangle(frame, (x,y), (x+w, y+h), (0, 255, 0), 2)
-
-
-        cv2.imshow('Security Feed', frame)
-        cv2.imshow('Threshold(foreground mask)', dilate_image)
-        cv2.imshow('Frame_delta', frame_delta)
-
-
-
 
         key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
