@@ -7,6 +7,11 @@ FINI les tests
 
 essais de lire pluss de truk y'a 9 techniques t'en a vu que 2 ou une chai plus
 
+faut les blur et les inv ou pas inv ou pas ptetre pas puis y'a pas la meme lumiere le jour
+
+et si le mec fait un pouce contre sa tete c fini
+
+sinon y'a toujours l'haarcascade
 
 faut faire les combo de geste mtn
 
