@@ -1,14 +1,11 @@
 # cadju
 
+ok mtn comprendre + faire disparaitre la figure du milieu genre passer les main devant ok
 
 
 FINI les tests
 
-
-
-compléter l'haarcascade
-
-faut faire les combo de geste mtn
+mtn faire disparaitre la figure...
 
 faut faire les sourciles et les joues
 
