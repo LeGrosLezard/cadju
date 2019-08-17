@@ -5,11 +5,11 @@
 FINI les tests
 
 
-faut récupérer les contours dans un init et les supprimer mais ca marche pas
+histogramme j'ai la meme couleur que les murs
 
-histogramme j'ai pas envie
+faut trouve comment supprimer définitivement larriere plan des fois il apparait des fois il disparait,
 
-ben j'ai compris faut faire un histogramme a la skin detection en cropant la gueule ! boua ca a l'air dur pause
+ca match avec le bras faut cacher les bras aussi mais chui torse nue donc peut etre que ca y joue
 
 
 faut faire les combo de geste mtn
