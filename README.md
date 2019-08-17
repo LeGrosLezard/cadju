@@ -5,11 +5,7 @@
 FINI les tests
 
 
-histogramme j'ai la meme couleur que les murs
-
-faut trouve comment supprimer définitivement larriere plan des fois il apparait des fois il disparait,
-
-ca match avec le bras faut cacher les bras aussi mais chui torse nue donc peut etre que ca y joue
+essais de lire pluss de truk y'a 9 techniques t'en a vu que 2 ou une chai plus
 
 
 faut faire les combo de geste mtn
