@@ -38,4 +38,12 @@ pour les expression facilaes => (le truk vert avec les truks rouge) le truk qui 
 faut faire du neutral network 
 
 
+-------------------------------
 
+site web le mec met la vidéo
+
+un tchat c encore mieux !!
+
+appli mobile comme ca le type peut se trimballer avec !
+
+lunette vr mais t'as le temps encore hihihih
