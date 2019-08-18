@@ -87,7 +87,7 @@ def hull_function(contours, thresh, hierarchy):
     drawing = np.zeros((thresh.shape[0], thresh.shape[1], 3), np.uint8)
 
     for i in range(len(contours)):
-        if len(contours[i]) < 300:
+        if len(contours[i]) < 150:
             pass
         else:
             color_contours = (0, 255, 0) 
