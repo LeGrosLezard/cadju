@@ -10,7 +10,7 @@ from traitement_hand import first_window
 from traitement_hand import seconde_window
 from traitement_hand import contour_image
 from traitement_hand import hull_function
-
+from traitement_hand import time
 
 
 def motion_detection():
@@ -26,14 +26,28 @@ def motion_detection():
         
         _, frame = video_capture.read()
 
+        heure = time()
+         
+        if 20 > heure > 10:
+            blur_frame1 = first_window(frame, 3, 3, 3, 3)
 
-        blur_frame1 = first_window(frame)
+            if first_frame is None:
+                first_frame = blur_frame1
 
-        if first_frame is None:
-            first_frame = blur_frame1 
+            dilate_image = seconde_window(first_frame, blur_frame1, 20)
 
 
-        dilate_image = seconde_window(first_frame, blur_frame1)
+        else:
+            blur_frame1 = first_window(frame, 21, 21, 5, 5)
+
+            if first_frame is None:
+                first_frame = blur_frame1
+
+            dilate_image = seconde_window(first_frame, blur_frame1, 100)
+
+
+
+        
 
         delete_visage(frame, dilate_image, faceCascade)
 
