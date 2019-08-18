@@ -44,6 +44,8 @@ site web le mec met la vidéo
 
 un tchat c encore mieux !!
 
-appli mobile comme ca le type peut se trimballer avec !
+appli mobile comme ca le type peut se trimballer avec ! -> on peut baisser la luminosité addweight
+
+au pire le type regle lui meme les parametres
 
 lunette vr mais t'as le temps encore hihihih
