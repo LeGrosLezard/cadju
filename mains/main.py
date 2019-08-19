@@ -11,6 +11,9 @@ from traitement_hand import seconde_window
 from traitement_hand import contour_image
 from traitement_hand import hull_function
 from traitement_hand import time
+from traitement_hand import points_main
+from traitement_hand import points
+
 
 
 def motion_detection():
@@ -25,7 +28,7 @@ def motion_detection():
 
         
         _, frame = video_capture.read()
-
+   
         heure = time()
          
         if 20 > heure > 10:
@@ -34,7 +37,7 @@ def motion_detection():
             if first_frame is None:
                 first_frame = blur_frame1
 
-            dilate_image = seconde_window(first_frame, blur_frame1, 20)
+            dilate_image = seconde_window(first_frame, blur_frame1, 15)
 
 
         else:
@@ -43,7 +46,7 @@ def motion_detection():
             if first_frame is None:
                 first_frame = blur_frame1
 
-            dilate_image = seconde_window(first_frame, blur_frame1, 100)
+            dilate_image = seconde_window(first_frame, blur_frame1, 90)
 
 
 
@@ -52,12 +55,12 @@ def motion_detection():
         delete_visage(frame, dilate_image, faceCascade)
 
         contours, thresh, hierarchy = contour_image(dilate_image)
-        drawing = hull_function(contours, thresh, hierarchy)
-    
-
+        drawing, hull = hull_function(contours, thresh, hierarchy)
+        pts_x, pts_y = points_main(drawing, hull)
+        drawing = points(pts_x, pts_y, drawing)
+        
         cv2.imshow("main", drawing)
-        cv2.imshow('frame', frame)
-        cv2.imshow('mask', dilate_image)
+
 
 
 
