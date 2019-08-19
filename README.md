@@ -1,6 +1,13 @@
 # cadju
 
 
+faire de profil 
+
+faire avec les lunettes
+
+y m'aprennent pleins de truk ^^ mais des fois c chiant a faire
+
+
 -------------------------------
 
 mtn récupérer un ènieme code et l'implémenter ^^
