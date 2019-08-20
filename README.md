@@ -1,9 +1,19 @@
 # cadju
 
 
-se renseigner sur le lag pcqu'avec langage et tout ca lagera...
+met tout dans un fichier chaque truk j'ai tout test mais si zone lag pas alors rien ne lag
 
-jsp c pas les boucles ni les listes je sais faire que ca
+par ordre croissant alors on ne fait pas le reste
+
+
+1) position tete            // langage
+
+2) position yeux
+
+3) zone
+
+4) mouvement
+
 
 -------------------------------------
 
