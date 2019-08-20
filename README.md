@@ -1,20 +1,26 @@
 # cadju
 
 
+se renseigner sur le lag pcqu'avec langage et tout ca lagera...
+
+jsp c pas les boucles ni les listes je sais faire que ca
+
+-------------------------------------
+
+
+
 faire de profil 
 
 faire avec les lunettes
 
-y m'aprennent pleins de truk ^^ mais des fois c chiant a faire
+
 
 
 -------------------------------
 
 mtn récupérer un ènieme code et l'implémenter ^^
 
-faut enelever le visage 
-
-y'a encore des pts qui se collent 
+au pire l'enlever et tu fais un site avec un mode digital
 
 ------------------------------
 
