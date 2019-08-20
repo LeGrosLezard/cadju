@@ -3,16 +3,6 @@ import numpy as np
 import imutils
 from datetime import datetime
 
-def time():
-    """We import time. The light isn't the same
-    during a day. So we can adapt light for threshold
-    background. Could work for you or not. We must adapt
-    treshold parameters. It the base of this file."""
-
-    heure = datetime.now()
-    heure = heure.hour
-
-    return heure
 
 
 def first_window(grayscale_frame, val1, val2):
@@ -30,8 +20,6 @@ def seconde_window(first_frame, blur_frame1, val):
     dilate_image = cv2.dilate(thresh, None, iterations=1)
 
     return dilate_image
-
-
 
 
 def delete_visage(grayscale_frame, dilate_image, faceCascade):
@@ -54,8 +42,6 @@ def delete_visage(grayscale_frame, dilate_image, faceCascade):
         pass
 
 
-
-
 def contour_image(dilate_image):
     
     cv2.imwrite("detector.jpg", dilate_image)
@@ -71,20 +57,17 @@ def contour_image(dilate_image):
 
 
 
-
 def hull_function(contours, thresh, hierarchy):
     
     hull = []
-     
-    for i in range(len(contours)):
-        hull.append(cv2.convexHull(contours[i], False))
 
     drawing = np.zeros((thresh.shape[0], thresh.shape[1], 3), np.uint8)
-
+    
     for i in range(len(contours)):
-        if len(contours[i]) < 200:
-            pass
-        else:
+        hull.append(cv2.convexHull(contours[i], False))
+        
+    for i in range(len(contours)):
+        if len(contours[i]) > 200:
             cv2.drawContours(drawing, contours, i, (0, 255, 0), 1, 8, hierarchy)
             cv2.drawContours(drawing, hull, i, (255, 0, 0), 1, 8)
             
@@ -100,8 +83,7 @@ def points_main(drawing, hull):
     dico = {}
 
     for i in hull:
-        i = i.tolist()
-        for j in i:
+        for j in i.tolist():
             dico[j[0][0]] = j[0][1]
             pts_x[0].append(j[0][0])
             pts_y[0].append(j[0][1])
@@ -115,7 +97,7 @@ def points(pts_x, pts_y, drawing):
     image = cv2.imread("detector.jpg")
 
     l = image.shape[1]
-    h = int(round(image.shape[0] - h * 20 / 100))
+    h = int(round(image.shape[0] - (image.shape[0] * 20 / 100)))
 
     for i in range(2):
         for i in range(len(pts_x[0])):
@@ -143,9 +125,6 @@ def points(pts_x, pts_y, drawing):
 
 
 
-
-
-
 def hand_function(frame, grayscale_frame, first_frame, faceCascade):
     """We want detect hand and their significations.
     For that, we must first of all define the current hour.
@@ -153,7 +132,13 @@ def hand_function(frame, grayscale_frame, first_frame, faceCascade):
     So we need to ajust parameter of thresholding.
     """
 
-    heure = time()
+    """We import time. The light isn't the same
+    during a day. So we can adapt light for threshold
+    background. Could work for you or not. We must adapt
+    treshold parameters. It the base of this file."""
+
+    heure = datetime.now()
+    heure = heure.hour
     
     def hour_depending(frame, heure, v1, v2, v3, first_frame):
         #we make it flou, it delete some contrasts, details.
@@ -168,14 +153,12 @@ def hand_function(frame, grayscale_frame, first_frame, faceCascade):
         return blur_frame1, first_frame, dilate_image
 
 
-  
     if 20 > heure > 10:
         blur_frame1, first_frame, dilate_image =\
                      hour_depending(frame, heure, 3, 3, 15, first_frame)
     else:
         blur_frame1, first_frame, dilate_image =\
                      hour_depending(frame, heure, 21, 5, 90, first_frame)
-
 
     delete_visage(grayscale_frame, dilate_image, faceCascade)
 
@@ -185,17 +168,3 @@ def hand_function(frame, grayscale_frame, first_frame, faceCascade):
     drawing = points(pts_x, pts_y, drawing)
 
     return drawing, first_frame
-
-
-
-
-
-
-
-
-
-
-
-
-
-
