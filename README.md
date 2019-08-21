@@ -1,5 +1,15 @@
 # cadju
 
+----------------------------------------------------------------------
+
+You want visite a foraine party ?
+
+use background !
+
+----------------------------------------------------------------------
+
+
+
 sté horrible, faire langage sans camera ca devrai ptetre le faire et le truk d'en bas
 
 faire les combo
