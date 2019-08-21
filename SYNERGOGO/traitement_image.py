@@ -119,30 +119,37 @@ def position_tete_angle(frame, faceCascade, eyesCascade, LISTE):
                 counter += 1
 
 
-        position_oeil(gauche, droite, ok, LISTE, x_droite)
-    
+        pos = position_oeil(gauche, droite, ok, LISTE, x_droite)
+        if pos != None:
+            return pos
 
 
                 
 def position_oeil(gauche, droite, ok, LISTE, x_droite):
     """Now we search eyes position comparing to mean initialisation list"""
+
+    #If dude move his head, we return it
+    #We can cancel head area (who return without pos area movement)
+    pos = ""
+
     #If we have no detection of eyes we pass
     if gauche == 0 or droite == 0:
         pass
     else:
         #if left < right ....   and x_right > .......
         if gauche < droite - 10 and x_droite > (sum(LISTE) / len(LISTE)) + 15:
-            print("gauche")
+            pos = "gauche"
             ok = True#left and we define True.
                      #(Because eyes movements go right to left, round trip)
         if ok is True:
             pass
         else:
             if gauche < droite - 10:
-                print("droite")
+                pos = "droite"
 
-
-
+    if pos:
+        print(pos)
+        return pos
 
 
 
