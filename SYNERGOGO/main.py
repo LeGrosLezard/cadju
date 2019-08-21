@@ -83,28 +83,36 @@ def face_area(frame_visage, frame_positionnement, faceCascade):
         INIT, POS = tete_mouvement(frame_positionnement, faceCascade, MOUVEMENT)
 
         if INIT is True:
+            print("reconfig")
             reconfig(MILIEU_TETE, COTE_TETE, COTE_FRAME,
                      BOUCHE, MENTON, BUSTE, EPAUL, FRONT,
                      TEMPE, OREILLE, MOUVEMENT)
 
         else:
-            milieu_haut_tete(frame_visage, MILIEU_TETE, SUBSTRACTOR)
-            cotes_tete(frame_visage, COTE_TETE, SUBSTRACTOR1, SUBSTRACTOR2)
-            cotes_frame(frame_visage, COTE_FRAME, SUBSTRACTOR3, SUBSTRACTOR4)
-            bouche(frame_visage, BOUCHE, SUBSTRACTOR5)
-            menton(frame_visage, MENTON, SUBSTRACTOR6)
-            buste(frame_visage, BUSTE, SUBSTRACTOR7)
-            epaul(frame_visage, EPAUL, SUBSTRACTOR8, SUBSTRACTOR9)
-            front(frame_visage, FRONT, SUBSTRACTOR10)
-            tempe(frame_visage, TEMPE, SUBSTRACTOR11, SUBSTRACTOR12)
-            oreille(frame_visage, OREILLE, SUBSTRACTOR13, SUBSTRACTOR14)
+            a = milieu_haut_tete(frame_visage, MILIEU_TETE, SUBSTRACTOR)
+            b, c = cotes_tete(frame_visage, COTE_TETE, SUBSTRACTOR1, SUBSTRACTOR2)
+            d, e = cotes_frame(frame_visage, COTE_FRAME, SUBSTRACTOR3, SUBSTRACTOR4)
+            f = bouche(frame_visage, BOUCHE, SUBSTRACTOR5)
+            g = menton(frame_visage, MENTON, SUBSTRACTOR6)
+            h = buste(frame_visage, BUSTE, SUBSTRACTOR7)
+            i, j = epaul(frame_visage, EPAUL, SUBSTRACTOR8, SUBSTRACTOR9)
+            k = front(frame_visage, FRONT, SUBSTRACTOR10)
+            l, m = tempe(frame_visage, TEMPE, SUBSTRACTOR11, SUBSTRACTOR12)
+            n, o = oreille(frame_visage, OREILLE, SUBSTRACTOR13, SUBSTRACTOR14)
 
+            area = [a, b, c, d, e, f, g, h ,i, j, k, l, m, n, o]
+            for i in area:
+                if a and b and c and d and e and f and g and h and i and\
+                   j and k and l and m and n and o:
+                    pass
+                elif i != None:
+                    print(i)
 
     cv2.imshow('FACE AREA', frame_visage)
-##    try:
-##        cv2.imshow('FACE POSITIONEMENT', POS)
-##    except:
-##        pass
+    try:
+        cv2.imshow('FACE POSITIONEMENT', POS)
+    except:
+        pass
 
 
 
@@ -126,13 +134,15 @@ def head_position(LISTE, frame, eyesCascade, faceCascade):
     
     if len(LISTE) < 10:
         initialisation_pos(frame, faceCascade, eyesCascade, LISTE)
+        position1 = None
             
     else:
         position1 = position_tete_angle(frame, faceCascade, eyesCascade, LISTE)
 
-    cv2.imshow('FACE POSITION', frame)
+    #cv2.imshow('FACE POSITION', frame)
 
-
+    if not None:
+        return position1
 
 
 
@@ -179,7 +189,8 @@ def video():
     video = cv2.VideoCapture(0)
     faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
     eyesCascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-    
+
+
     while(True):
         
         INIT = False
@@ -188,11 +199,19 @@ def video():
         frame1 = cv2.resize(frame, (600, 600))
         frame2 = cv2.resize(frame, (600, 600))
         frame3 = cv2.resize(frame, (600, 600))
-        
-        face_area(frame, frame1, faceCascade)
-        head_position(LISTE, frame2, eyesCascade, faceCascade)
-        eyes_position(eyesCascade, frame3, LISTE_AJUSTEMENT,
-                      LISTE_DROITE_GAUCHE, LISTE_QUALIBRAGE)
+
+
+        pos_head = head_position(LISTE, frame2, eyesCascade, faceCascade)
+        if not pos_head:
+            try:
+                face_area(frame, frame1, faceCascade)
+            except TypeError:
+                pass
+            
+        #eyes_position(eyesCascade, frame3, LISTE_AJUSTEMENT,
+        #              LISTE_DROITE_GAUCHE, LISTE_QUALIBRAGE)
+
+
 
         
         if cv2.waitKey(1) & 0xFF == ord('q'):
