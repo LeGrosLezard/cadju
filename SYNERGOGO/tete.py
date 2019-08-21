@@ -16,8 +16,8 @@ def detection_face(frame, faceCascade):
     faces = faceCascade.detectMultiScale(
         gray,
         scaleFactor=1.1,
-        minNeighbors=1,
-        minSize=(30, 30),
+        minNeighbors=5,
+        minSize=(50, 50),
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
@@ -355,9 +355,9 @@ def milieu_haut_tete(frame, MILIEU_TETE, subtractor):
      
     cv2.rectangle(frame, (cTm_x1, cTm_y1), (cTm_x2, cTm_y2), (coul_M), 2)
 
-    substractor_haut_tete(frame, cTm_y2, cTm_y1, cTm_x1, cTm_x2, subtractor)
+    retour = substractor_haut_tete(frame, cTm_y2, cTm_y1, cTm_x1, cTm_x2, subtractor)
 
-
+    return retour
 
 def cotes_tete(frame, COTE_TETE, subtractor1, subtractor2):
 
@@ -370,7 +370,7 @@ def cotes_tete(frame, COTE_TETE, subtractor1, subtractor2):
     coul_D = 0,0,255
 
     cv2.rectangle(frame, (cTd_x1, cTd_y1), (cTd_x2, cTd_y2), (coul_D), 2)
-    substractor_cote_tete_droit(frame, cTd_y2, cTd_y1, cTd_x1, cTd_x2,
+    retour1 = substractor_cote_tete_droit(frame, cTd_y2, cTd_y1, cTd_x1, cTd_x2,
                                  subtractor1)
     
     cTg_x1 = int(round(sum(COTE_TETE[4]) / len(COTE_TETE[4])))
@@ -382,9 +382,10 @@ def cotes_tete(frame, COTE_TETE, subtractor1, subtractor2):
     coul_G = 24,77,31
 
     cv2.rectangle(frame, (cTg_x1, cTg_y1), (cTg_x2, cTg_y2), (coul_G), 2)
-    substractor_cote_tete_gauche(frame, cTg_y2, cTg_y1, cTg_x1, cTg_x2, subtractor2)
+    retour2 = substractor_cote_tete_gauche(frame, cTg_y2, cTg_y1, cTg_x1,
+                                 cTg_x2, subtractor2)
 
-
+    return retour1, retour2
 
 def cotes_frame(frame, COTE_FRAME, subtractor1, subtractor2):
     
@@ -396,7 +397,7 @@ def cotes_frame(frame, COTE_FRAME, subtractor1, subtractor2):
     coul_D = 245,66,75
 
     cv2.rectangle(frame, (cTd_x1, cTd_y1), (cTd_x2, cTd_y2), (coul_D), 3)
-    substractor_cote_tete_frame_droit(frame, cTd_y2, cTd_y1, cTd_x1, cTd_x2,
+    retour1 = substractor_cote_tete_frame_droit(frame, cTd_y2, cTd_y1, cTd_x1, cTd_x2,
                                       subtractor1)
 
 
@@ -409,10 +410,10 @@ def cotes_frame(frame, COTE_FRAME, subtractor1, subtractor2):
     coul_G = 24,77,31
 
     cv2.rectangle(frame, (cTg_x1, cTg_y1), (cTg_x2, cTg_y2), (coul_G), 3)
-    substractor_cote_tete_frame_gauche(frame, cTg_y2, cTg_y1, cTg_x1, cTg_x2,
+    retour2 = substractor_cote_tete_frame_gauche(frame, cTg_y2, cTg_y1, cTg_x1, cTg_x2,
                                        subtractor2)
 
-
+    return retour1, retour2
 
 def bouche(frame, BOUCHE, subtractor):
     
@@ -424,9 +425,9 @@ def bouche(frame, BOUCHE, subtractor):
     coul_M = 0, 0, 255
 
     cv2.rectangle(frame, (cTb_x1, cTb_y1), (cTb_x2, cTb_y2), (coul_M), 2)
-    substractor_bouche(frame, cTb_y2, cTb_y1, cTb_x1, cTb_x2, subtractor)
+    retour = substractor_bouche(frame, cTb_y2, cTb_y1, cTb_x1, cTb_x2, subtractor)
 
-
+    return retour
 
 
 def menton(frame, MENTON, subtractor):
@@ -439,9 +440,9 @@ def menton(frame, MENTON, subtractor):
     coul_M = 0, 0, 255
 
     cv2.rectangle(frame, (cTm_x1, cTm_y1), (cTm_x2, cTm_y2), (coul_M), 2)
-    substractor_menton(frame, cTm_y2, cTm_y1, cTm_x1, cTm_x2, subtractor)
+    retour = substractor_menton(frame, cTm_y2, cTm_y1, cTm_x1, cTm_x2, subtractor)
 
-    
+    return retour
 
 def buste(frame, BUSTE, subtractor):
     
@@ -453,9 +454,9 @@ def buste(frame, BUSTE, subtractor):
     coul_M = 0, 0, 255
 
     cv2.rectangle(frame, (cTb_x1, cTb_y1), (cTb_x2, cTb_y2), (coul_M), 2)
-    substractor_buste(frame, cTb_y2, cTb_y1, cTb_x1, cTb_x2, subtractor)
+    retour = substractor_buste(frame, cTb_y2, cTb_y1, cTb_x1, cTb_x2, subtractor)
 
-    
+    return retour
 
 def epaul(frame, EPAUL, subtractor1, subtractor2):
 
@@ -474,15 +475,15 @@ def epaul(frame, EPAUL, subtractor1, subtractor2):
     coul_G = 24,77,31
 
     cv2.rectangle(frame, (cTed_x1, cTed_y1), (cTed_x2, cTed_y2), (coul_D), 1)
-    substractor_epaul_droite(frame, cTed_y2, cTed_y1, cTed_x1, cTed_x2,
+    retour1 = substractor_epaul_droite(frame, cTed_y2, cTed_y1, cTed_x1, cTed_x2,
                              subtractor1)
 
     
     cv2.rectangle(frame,(cTeg_x1, cTeg_y1), (cTeg_x2, cTeg_y2), (coul_G), 1)
-    substractor_epaul_gauche(frame, cTeg_y2, cTeg_y1, cTeg_x1, cTeg_x2,
+    retour2 = substractor_epaul_gauche(frame, cTeg_y2, cTeg_y1, cTeg_x1, cTeg_x2,
                              subtractor2)
     
-
+    return retour1, retour2
 
 def front(frame, FRONT, subtractor):
 
@@ -495,8 +496,9 @@ def front(frame, FRONT, subtractor):
     coul_M = 0, 0, 255
     
     cv2.rectangle(frame, (cTf_x1, cTf_y1), (cTf_x2, cTed_y2), (coul_M), 1)
-    substractor_front(frame, cTed_y2, cTf_y1, cTf_x1, cTf_x2, subtractor)
+    retour = substractor_front(frame, cTed_y2, cTf_y1, cTf_x1, cTf_x2, subtractor)
 
+    return retour
     
 
 def tempe(frame, TEMPE, subtractor1, subtractor2):
@@ -516,15 +518,15 @@ def tempe(frame, TEMPE, subtractor1, subtractor2):
     coul_G = 24,77,31
 
     cv2.rectangle(frame, (cTtd_x1, cTtd_y1), (cTtd_x2, cTtd_y2), (coul_D), 1)
-    substractor_tempe_droite(frame, cTtd_y2, cTtd_y1, cTtd_x1, cTtd_x2,
-                             subtractor1)
+    retour1 = substractor_tempe_droite(frame, cTtd_y2, cTtd_y1, cTtd_x1, cTtd_x2,
+                                     subtractor1)
 
     
     cv2.rectangle(frame,(cTtg_x1, cTtg_y1), (cTtg_x2, cTtg_y2), (coul_G), 1)
-    substractor_tempe_gauche(frame, cTtg_y1, cTtg_y2, cTtg_x1, cTtg_x2,
-                             subtractor2)
+    retour2 = substractor_tempe_gauche(frame, cTtg_y1, cTtg_y2, cTtg_x1, cTtg_x2,
+                                         subtractor2)
 
-
+    return retour1, retour2
 
 def oreille(frame, OREILLE, subtractor1, subtractor2):
 
@@ -543,16 +545,16 @@ def oreille(frame, OREILLE, subtractor1, subtractor2):
     coul_G = 24,77,31
 
     cv2.rectangle(frame, (cTod_x1, cTod_y1), (cTod_x2, cTod_y2), (coul_D), 1)
-    substractor_oreille_droite(frame, cTod_y1, cTod_y2, cTod_x1, cTod_x2,
+    retour1 = substractor_oreille_droite(frame, cTod_y1, cTod_y2, cTod_x1, cTod_x2,
                                subtractor1)
 
 
     cv2.rectangle(frame,(cTog_x1, cTog_y1), (cTog_x2, cTog_y2), (coul_G), 1)
-    substractor_oreille_gauche(frame, cTog_y1, cTog_y2, cTog_x1, cTog_x2,
-                               subtractor2)
+    retour2 = substractor_oreille_gauche(frame, cTog_y1, cTog_y2, cTog_x1, cTog_x2,
+                                        subtractor2)
 
 
-
+    return retour1, retour2
 
 
 """We mesuring len(str(of the crop area)
@@ -577,9 +579,8 @@ def substractor_haut_tete(frame, y, y1, x, x1, subtractor):
         for j in i:
             liste.append(j)
             
-
     if sum(liste) / len(liste) > 30:
-        print("haut de la tete, concentration ou repositionement")
+        return "haut tete"
 
 
 
@@ -599,7 +600,7 @@ def substractor_cote_tete_droit(frame, y, y1, x, x1, subtractor):
 
 
     if sum(liste) / len(liste) > 30:
-        print("patte de mouche droit")
+        return "patte de mouche droit"
 
 
 def substractor_cote_tete_gauche(frame, y, y1, x, x1, subtractor):
@@ -619,7 +620,7 @@ def substractor_cote_tete_gauche(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("patte de mouche gauche")
+        return "patte de mouche gauche"
 
 
 def substractor_cote_tete_frame_droit(frame, y, y1, x, x1, subtractor):
@@ -639,7 +640,7 @@ def substractor_cote_tete_frame_droit(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("bras droit")
+        return "bras droit"
 
 
     
@@ -660,7 +661,7 @@ def substractor_cote_tete_frame_gauche(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("bras gauche")
+        return "bras gauche"
 
 
 
@@ -681,7 +682,7 @@ def substractor_bouche(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
     if sum(liste) / len(liste) > 30:
-        print("bouche")
+        return "bouche"
 
 
 def substractor_menton(frame, y, y1, x, x1, subtractor):
@@ -701,7 +702,7 @@ def substractor_menton(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 20:
-        print("menton")
+        return "menton"
 
 
 
@@ -720,7 +721,7 @@ def substractor_buste(frame, y, y1, x, x1, subtractor):
             liste.append(j)
             
     if sum(liste) / len(liste) > 30:
-        print("buste")
+        return "buste"
 
 
 
@@ -742,7 +743,7 @@ def substractor_epaul_droite(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("epaul droite")
+        return "epaul droite"
 
 
 
@@ -764,7 +765,7 @@ def substractor_epaul_gauche(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("épaul gauche")
+        return "épaul gauche"
 
 
 
@@ -787,7 +788,7 @@ def substractor_front(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("front")
+        return "front"
 
 
 
@@ -810,7 +811,7 @@ def substractor_tempe_droite(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("tempe droite")
+        return "tempe droite"
 
 
 
@@ -832,7 +833,7 @@ def substractor_tempe_gauche(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("tempe gauche")
+        return "tempe gauche"
 
 
 
@@ -854,7 +855,7 @@ def substractor_oreille_droite(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("oreille droite")
+        return "oreille droite"
 
 
 
@@ -877,7 +878,7 @@ def substractor_oreille_gauche(frame, y, y1, x, x1, subtractor):
             
 
     if sum(liste) / len(liste) > 30:
-        print("oreille gauche")
+        return "oreille gauche"
 
 
 
@@ -922,9 +923,9 @@ def tete_mouvement(frame, faceCascade, MOUVEMENT):
 
     faces = faceCascade.detectMultiScale(
         gray,
-        scaleFactor=1.1,
+        scaleFactor=1.3,
         minNeighbors=5,
-        minSize=(30, 30),
+        minSize=(50, 50),
         flags=cv2.CASCADE_SCALE_IMAGE
     ) 
 
