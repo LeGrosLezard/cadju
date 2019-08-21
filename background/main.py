@@ -5,7 +5,7 @@ import imutils
 import numpy as np
 
 
-from traitement_hand import *
+from background import *
 
 
 
