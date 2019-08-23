@@ -44,7 +44,7 @@ permet de faire un "eyes tracking"
 
 # EMOTIONS
 
-permet de voir les expression facile via une soubstration de fond, nous récupérons certain élement qui bouge en ne detectant que le visage
+permet de voir les expression facile via une soubstration de fond, nous récupérons certain élement qui bouge en ne detectant que le visage, sourciles zone mouvement, bouche mouvement vers le haut alors joie ou surprise en cours
 en cours
 
 -------------------------------------------------------------------
