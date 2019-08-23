@@ -25,7 +25,7 @@ Nous récupérons ensuite les angles convexes
 
 -----------------------------------------------------------------
 
-# tete
+# TETE
 
 permet de récupérer l'angle de la tete (penche a droite ou gauche)
 
@@ -40,6 +40,12 @@ Nous avons aussi mis des detecting box afin de savoir ou l'utilisateur met les m
 permet de faire un "eyes tracking"
 
 
+-------------------------------------------------------------------
+
+# EMOTIONS
+
+permet de voir les expression facile via une soubstration de fond, nous récupérons certain élement qui bouge en ne detectant que le visage
+en cours
 
 -------------------------------------------------------------------
 
