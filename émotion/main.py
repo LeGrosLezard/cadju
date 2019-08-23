@@ -14,7 +14,7 @@ camera = cv2.VideoCapture(0)
 master = None
 while True:
 
-    _,frame = camera.read()
+    _,frame = camera.rsead()
     
     gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 
