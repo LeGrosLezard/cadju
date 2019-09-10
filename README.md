@@ -1,8 +1,12 @@
 # cadju
 
+bon tout préparer pour dans deux semaines + ce que tu diras, supprime android studio, essaie d'ajouter d'autres fonctionnalités,
+
+en meme temps réécris tout sur le pro, pour les sites web refais avec l'orm... les média (en setting c'est plus facile)... et les fonctions qui servent a rien aussi.. 
+
+faire le truk du langage
+
 finir la doc au cas ou des recruteurs tombent dessus et mettre le truk ou tu touches et ca met quel carré ta touché
-
-
 
 Site web Synergo en cours
 
