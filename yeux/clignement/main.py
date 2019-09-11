@@ -1,134 +1,86 @@
 import numpy as np
 import cv2
-from PIL import Image
-import os
-
-from traitement import *
 
 
+from image_processing import pre_initialisation
+from image_processing import y_eye_position
+from image_processing import qualibrage
+from image_processing import x_eye_position
+from image_processing import association
+from image_processing import pre_initialisation
 
 
+def video_capture_yeux():
+    """Here we lunch the video display (pc cam) with VideoCapture"""
 
-def video_capture():
+    #We initialize list
+    FIT_LIST = []
+    LIST_RIGHT_LEFT = []
+    QUALIFER_LIST = []
 
-    LISTE = []
+    video = cv2.VideoCapture("video/yeux.mp4")
 
-    Ltempe_gauche = []
-    Ltempe_droite = []
-    
-    Loreille_gauche1 = []
-    Loreille_gauche2 = []
-    Loreille_gauche3 = []
-    Loreille_gauche4 = []
-    Loreille_gauche5 = []
-    Loreille_gauche6 = []
-    
-    Loreille_droite1 = []
-    Loreille_droite2 = []
-    Loreille_droite3 = []
-    Loreille_droite4 = []
-    Loreille_droite5 = []
-    Loreille_droite6 = []
-
-    Lcerne_droite1 = []
-    Lcerne_droite2 = []
-    Lcerne_droite3 = []
-    Lcerne_droite4 = []
-    Lcerne_droite5 = [] 
-
-    Lcerne_gauche1 = []
-    Lcerne_gauche2 = []
-    Lcerne_gauche3 = []
-    Lcerne_gauche4 = []
-    Lcerne_gauche5 = []
-
-    Lpomette_droite = []
-    Lpomette_gauche = []
-
-    Lfront1 = []
-    Lfront2 = []
-    Lfront3 = []
-    Lfront4 = []
-
-    Lbouche1 = []
-    Lbouche2 = []
-    Lbouche3 = []
-    Lbouche4 = []
-    Lbouche5 = []
-
-
-    Lmillieu = []
-
-    Lsourcile61 = []
-    Lsourcile62 = []
-    Lsourcile63 = []
-    Lsourcile7 = []
-    Lsourcile8 = []
-    Lsourcile9 = []
-    Lsourcile10 = []
-
-
-    Lsourcile1 = []
-    Lsourcile2 = []
-    Lsourcile3 = []
-    Lsourcile4 = []
-    Lsourcile5 = []
-
-
-
-    video = cv2.VideoCapture(0)
-    faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
-    eyesCascade = cv2.CascadeClassifier('haarcascade_eye.xml')
-
-    
     while(True):
 
+        #Eyes haarcascade
+        left_eye = cv2.CascadeClassifier('haar/haarcascade_lefteye_2splits.xml')
+        facesa = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
 
+        #We define the current frame and resize it
         ret, frame = video.read()
         frame = cv2.resize(frame, (600, 600))
-
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        if len(Lsourcile1) < 50:
-            initialisation(frame, video, faceCascade, gray,
-                           Ltempe_gauche, Ltempe_droite,
-                           Loreille_gauche1, Loreille_gauche2,
-                           Loreille_gauche3, Loreille_gauche4,
-                           Loreille_gauche5, Loreille_gauche6,
-                           Loreille_droite1, Loreille_droite2,
-                           Loreille_droite3, Loreille_droite4,
-                           Loreille_droite5, Loreille_droite6,
-                           Lcerne_droite1, Lcerne_droite2,
-                           Lcerne_droite3, Lcerne_droite4,
-                           Lcerne_droite5, Lcerne_gauche1,
-                           Lcerne_gauche2, Lcerne_gauche3,
-                           Lcerne_gauche4, Lcerne_gauche5,
-                           Lpomette_droite, Lpomette_gauche,
-                           Lfront1, Lfront2, Lfront3, Lfront4,
-                           Lbouche1, Lbouche2, Lbouche3, Lbouche4,
-                           Lbouche5, Lmillieu, Lsourcile61, Lsourcile62,
-                           Lsourcile63, Lsourcile7,
-                           Lsourcile8, Lsourcile9, Lsourcile10, Lsourcile1,
-                           Lsourcile2, Lsourcile3, Lsourcile4, Lsourcile5,
-                           eyesCascade)
+        faces = facesa.detectMultiScale(
+            gray, 1.3, 5)
 
+        for (x,y,w,h) in faces:
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = frame[y:y+h, x:x+w]
+
+        #We try to detect eyes into the frame 
+        eyes = left_eye.detectMultiScale(roi_gray,
+                                         minSize=(40, 40),
+                                         minNeighbors=2)
+
+        #we fill in our list of the current position
+        #of the eyes in order to make an average of
+        #them and then to be able to continue them.
+        if len(FIT_LIST) < 50:
+            pre_initialisation(eyes, FIT_LIST, roi_color)
+            print("initialisation")
+
+        #Now we catch the current position and
+        #if the eyes move by -5 pixels for example
+        #(on the y-axis) it is because the person looked up.
         else:
+            pos_y = y_eye_position(eyes, FIT_LIST, roi_color)
+            pos_x = x_eye_position(eyes, LIST_RIGHT_LEFT, roi_color)
 
-            yeux(frame, video, eyesCascade,
-                 Lsourcile61, Lsourcile62,
-                 Lsourcile63,
-                 Lsourcile7, Lsourcile8,
-                 Lsourcile9, Lsourcile10)
-            
-            figure(frame, video, faceCascade, gray)
-            
-            cv2.imshow('FACE CAPTURE', frame)
+            association(pos_y, pos_x, FIT_LIST)
 
+            if pos_y!= None:
+                QUALIFER_LIST.append(pos_y)
+            qualibration = qualibrage(QUALIFER_LIST)
+            if qualibration == "qualibration":
+                FIT_LIST = []
+
+
+            #If the person bent down, got up ...
+            #We empty the list to re-initialize
+            if pos_y in ("the person bent down",
+                         "the person got up",
+                         "the person lifted his head",
+                         "the person has dropped his head"):
+
+                FIT_LIST = []
+
+
+        cv2.imshow('EYES CAPTURE', frame)
 
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
 
     video.release()
     cv2.destroyAllWindows()
@@ -138,21 +90,5 @@ def video_capture():
 
 
 
-
-
-
 if __name__ == "__main__":
-
-    video_capture()
-
-
-
-
-
-
-
-
-
-
-
-
+    video_capture_yeux()
