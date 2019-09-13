@@ -8,7 +8,7 @@ le faire directement dans la detection
 
 le faire le jour (lampe coté gauche == super rond)
 
-comprendre a utilisé tresh dans n'importe quelle situation...
+comprendre a utilisé tresh dans n'importe quelle situation... (faire une boucle qui parcours 0-255 pour les deux et si on arrive a detecter un rond garder ste qualibration et ca a chaque init)
 
 ----------------------------------------------------------------------
 
