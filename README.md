@@ -8,7 +8,7 @@ le faire directement dans la detection
 
 le faire le jour (lampe coté gauche == super rond)
 
-
+comprendre a utilisé tresh dans n'importe quelle situation...
 
 ----------------------------------------------------------------------
 
