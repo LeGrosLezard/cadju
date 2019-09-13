@@ -2,13 +2,13 @@
 
 finir tous les trucks et finir synergo, finir le github pro
 
-ok trouver un moyen de récupérer un pts fixe de l'oeil
+ok trouver un moyen de récupérer un pts fixe dans le rond noir
 
 recuperer les mouvement de la tete
 
 si la tete va vers le haut alors on récuperer y + h avant y+h mtn
 
-on fait ca sur l'oeil
+on fait ca sur l'oeil ce qui nous file un indice du movement du cadrage - le rematchage un truk comme ca
 
 si la tete bouge pas mais que l'oeil ou alors il a bouger l'oeil
 
