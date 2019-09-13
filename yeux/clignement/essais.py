@@ -87,22 +87,71 @@ def video_capture():
 
             #----------------------------------------
 
-            c = 0
-            while True:
-                if c >= 255:
-                    False
+            counter = 0
+            ocontinuer = True
+            while ocontinuer:
+                if counter >= 255:
+                    ocontinuer = False
+
+
                 gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
                 gray = cv2.GaussianBlur(gray, (11, 11), 0)
-                _, thresh = cv2.threshold(gray, c, 255, 0)
+                _, thresh = cv2.threshold(gray, counter, 255, 0)
 
+
+                try:
+                    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+                    print(len(contours))
+                    img = cv2.drawContours(crop, contours, 1, (0,255,0), 3)
+                    for c in contours:
+                        print(cv2.contourArea(c))
+                        if cv2.contourArea(c) >= 1200:
+                            ocontinuer = False
+                except:
+                    pass
+
+                
+##                img = cv2.drawContours(crop, contours, 1, (0,255,0), 3)
+##
+##
+##                ok = 10000000000000
+##                for c in contours:
+##                    if cv2.contourArea(c) < ok:
+##                        ok = cv2.contourArea(c)
+##                
+##                for c in contours:
+##                    if cv2.contourArea(c) == ok:
+##                        M = cv2.moments(c)
+##                        cX = int(M["m10"] / M["m00"])
+##                        cY = int(M["m01"] / M["m00"])
+##                        cv2.circle(crop, (cX, cY), 1, (0, 0, 255), 1)
+##
+##
+##                    
+
+
+
+                
                 cv2.imshow("p111oj11", thresh)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
 
 
-                c += 1
+                counter += 1
 
-##
+
+
+
+
+
+
+
+
+
+
+
+
+
 ##            gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
 ##            gray = cv2.GaussianBlur(gray, (11, 11), 0)
 ##            _, thresh = cv2.threshold(gray, 70, 255, 0)
@@ -110,13 +159,13 @@ def video_capture():
 ##            gray1 = cv2.cvtColor(crop_g, cv2.COLOR_BGR2GRAY)
 ##            gray1 = cv2.GaussianBlur(gray1, (11, 11), 0)
 ##            _, thresh1 = cv2.threshold(gray1, 70, 255, 0)
-##
-##            #----------------------------------------
-##
-##
-##
-##            #----------------------------------------
-##
+
+            #----------------------------------------
+
+
+
+            #----------------------------------------
+
 ##
 ##            try:
 ##                contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
@@ -139,7 +188,7 @@ def video_capture():
 ##                    
 ##                contours1, hierarchy1 = cv2.findContours(thresh1,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 ##                img1 = cv2.drawContours(crop_g, contours1, 1, (0,255,0), 3)
-##
+
 ##
 ##                ok = 10000000000000
 ##                for c in contours1:
@@ -153,13 +202,13 @@ def video_capture():
 ##                        cY = int(M["m01"] / M["m00"])
 ##                        cv2.circle(crop_g, (cX, cY), 1, (0, 0, 255), 1)
 ##
-##
+
 ##
 ##            except:
 ##                pass
-##
-##
-##
+
+
+
 ##            cv2.imshow("p111oj11", thresh)
 ##            cv2.imshow("p111oj", thresh1)
         cv2.imshow("frame", frame)
