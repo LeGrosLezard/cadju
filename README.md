@@ -2,7 +2,9 @@
 
 finir tous les trucks et finir synergo, finir le github pro
 
-bon ré écrire, mais avant faudrait que ca marche pour les deux parametres et ptetre avec le floutage pcque ca prend meme pas 5 sec 
+finir la premeire version (pep8 eet doc)
+
+on ne doit pas avoir de cheveux devant...
 
 ----------------------------------------------------------------------
 
