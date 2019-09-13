@@ -12,6 +12,7 @@ def video_capture():
 
     video = cv2.VideoCapture(0)
     liste = [[], [], [], []]
+    counter = 0
     
     while(True):
 
@@ -26,7 +27,6 @@ def video_capture():
                 scaleFactor=1.1,
                 minNeighbors=2,
                 minSize=(40, 40),
-                flags=cv2.CASCADE_SCALE_IMAGE
             )
             
 
@@ -47,7 +47,7 @@ def video_capture():
                 c+=1
 
                 
-        if len(liste[0]) < 50:
+        if len(liste[0]) < 10:
             detection(gray, frame, facecascade, eyescascade, liste)
 
             
@@ -60,11 +60,43 @@ def video_capture():
                 c = int(round(sum(liste[2]) / len(liste[2])))
                 d = int(round(sum(liste[3]) / len(liste[3])))
 
-                crop = frame[b:d, a:c]
+                crop = frame[b+10:d-10, a+5:c-5]
+                return crop
 
-                cv2.imshow("frame1", crop)
 
-            eyes(frame)
+  
+            crop = eyes(frame)
+
+            
+            gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            gray = cv2.bilateralFilter(gray, 11, 17, 17)
+            edged = cv2.Canny(gray, 50, 200)
+
+
+            gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+            _, thresh = cv2.threshold(gray,127,200,cv2.THRESH_BINARY)
+
+            cv2.imshow("p111oj11", thresh)
+            cv2.imshow("p111oj", edged)
+
+
+
+                
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             
 
