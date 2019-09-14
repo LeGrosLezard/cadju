@@ -2,9 +2,11 @@
 
 finir tous les trucks et finir synergo, finir le github pro
 
-finir la premeire version (pep8 eet doc)
+- commencer prestashop : les formulaires d'inscription pour commencer
 
-on ne doit pas avoir de cheveux devant...
+- finir immo ce soir
+
+- apres finir les positions de l'oeil
 
 ----------------------------------------------------------------------
 
