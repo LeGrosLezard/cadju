@@ -13,17 +13,15 @@ def detection_initialization(frame, gray, facecascade, eyescascade,
                              eye_list_one, eye_list_two):
     """First we detect the eyes thanks
         to a haarcascade in xml.
-
         Second we add each new position
         on a list.
-
         After we make a sum for have an average
         of the last points detected.
     """
 
     eyes = eyescascade.detectMultiScale(
         gray,
-        scaleFactor=1.3,
+        scaleFactor=1.1,
         minNeighbors=4,
         minSize=(30, 30),
         maxSize=(50, 50),
@@ -81,25 +79,26 @@ def automatic_thresh(crop):
     We have got an potential eye.
     We add + 20 to the min tresh for a better detection.
     """
-    
+
     counter = 0
-    ocontinuer = True
-    while ocontinuer:
+    area_seuil = 1200
+
+    while True:
 
         if counter == 255:
-            counter = 0
-        
+            return True, None
+
         gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (11, 11), 0)
         _, thresh = cv2.threshold(gray, counter, 255, 0)
-
 
         try:
             contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
             img = cv2.drawContours(crop, contours, 1, (0,255,0), 3)
             for c in contours:
-                if cv2.contourArea(c) >= 1200:
-                    thresh_min = counter + 20
+                if cv2.contourArea(c) >= area_seuil:
+                    thresh_min = counter + 10
+                    print("thresh_min find")
                     return True, thresh_min
         except:
             pass
@@ -116,9 +115,12 @@ def detecting_eye(crop, thresh_min):
     moved.
     """
 
+    kernel = np.ones((5,5), np.uint8) 
+
     gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (11, 11), 0)
-    _, thresh = cv2.threshold(gray, thresh_min, 255, 0)
+    erosion = cv2.erode(gray, kernel, iterations=1) 
+    _, thresh = cv2.threshold(erosion, thresh_min, 255, 0)
 
 
     try:
@@ -134,8 +136,7 @@ def detecting_eye(crop, thresh_min):
         pass
 
 
-                    
-                
+
 def video_capture():
 
 
@@ -152,8 +153,8 @@ def video_capture():
     while(True):
 
         ret, frame = video.read()
+        frame = cv2.resize(frame, (800, 600))
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
 
         #INITIALIZATION SITUATION EYES
         if len(eye_list_two[0]) < 30:
@@ -170,6 +171,8 @@ def video_capture():
 
                 _, tresh_min_right = automatic_thresh(crop_eye_right)
                 STOP_INIT, tresh_min_left = automatic_thresh(crop_eye_left)
+                if tresh_min_left == None:
+                    tresh_min_left = tresh_min_right
 
                 print(tresh_min_right, tresh_min_left)
 
@@ -181,7 +184,7 @@ def video_capture():
                 detecting_eye(crop_eye_left, tresh_min_left)
 
 
-                
+
         cv2.imshow("frame", frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
