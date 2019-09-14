@@ -2,7 +2,7 @@
 
 finir tous les trucks et finir synergo, finir le github pro
 
-- commencer prestashop : les formulaires d'inscription pour commencer
+jle sens pas jprefere matter une serie a la place et finir ce que je dois faire pour ettofer mon github et avoir un vrai métier
 
 - finir immo ce soir
 
