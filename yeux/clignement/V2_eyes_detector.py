@@ -5,13 +5,11 @@ import imutils
 
 
 
-eyescascade_right = cv2.CascadeClassifier('haar/right_eyes.xml')
-eyescascade_left = cv2.CascadeClassifier('haar/haarcascade_lefteye_2splits.xml')
-facecascade = cv2.CascadeClassifier('haar/haarcascade_eye.xml')
+eyescascade = cv2.CascadeClassifier('haar/eyes.xml')
+facecascade = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
 
 
-def detection_initialization(frame, gray, eyescascade_right,
-                             eyescascade_left,
+def detection_initialization(frame, gray, facecascade, eyescascade,
                              eye_list_one, eye_list_two):
     """First we detect the eyes thanks
         to a haarcascade in xml.
@@ -21,63 +19,33 @@ def detection_initialization(frame, gray, eyescascade_right,
         of the last points detected.
     """
 
-    eyes_right = eyescascade_right.detectMultiScale(
-        gray,
-        scaleFactor=1.2,
-        minNeighbors=5,
-        minSize=(80, 50),
-        maxSize=(85, 55),
-        flags=cv2.CASCADE_SCALE_IMAGE
-    )
-
-    
-    eyes = eyescascade_left.detectMultiScale(
+    eyes = eyescascade.detectMultiScale(
         gray,
         scaleFactor=1.1,
-        minNeighbors=3,
+        minNeighbors=4,
         minSize=(30, 30),
         maxSize=(50, 50),
-        flags=cv2.CASCADE_SCALE_IMAGE
     )
 
-
-    for x, y, w, h in eyes_right:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 255), 3)
-        break
-
     #eye = 0 for right and 1 for left
-    counter = 0
+    eye = 0 
     for x, y, w, h in eyes:
-        if counter == 0:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 3)
-        elif counter == 1:
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 255), 3)
-        counter += 1
 
+        if eye == 0:
+            eye_list_one[0].append(x)
+            eye_list_one[1].append(y)
+            eye_list_one[2].append(x+w)
+            eye_list_one[3].append(y+h)
+            cv2.rectangle(frame, (x, y), (x+w, y+h), 3)
 
+        elif eye == 1:
+            eye_list_two[0].append(x)
+            eye_list_two[1].append(y)
+            eye_list_two[2].append(x+w)
+            eye_list_two[3].append(y+h)
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 0), 3)
 
-
-
-##
-##    for x, y, w, h in eyes_right:
-##        cv2.rectangle(frame, (x, y), (x+w, y+h), 3)
-##        break
-
-##        if eye == 0:
-##            eye_list_one[0].append(x)
-##            eye_list_one[1].append(y)
-##            eye_list_one[2].append(x+w)
-##            eye_list_one[3].append(y+h)
-##            cv2.rectangle(frame, (x, y), (x+w, y+h), 3)
-##
-##        elif eye == 1:
-##            eye_list_two[0].append(x)
-##            eye_list_two[1].append(y)
-##            eye_list_two[2].append(x+w)
-##            eye_list_two[3].append(y+h)
-##            cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 0), 3)
-##
-##        eye += 1
+        eye += 1
 
 
 def eyes(frame, liste1, liste2):
@@ -172,7 +140,6 @@ def no_detection(tresh_min_right, tresh_min_left):
     """if we havn't got any detection from the threshold
     filter we return False and re start an initialization
     in case right and left are None.
-
     If only left is none we make left filter = right filter.
     """
 
@@ -182,13 +149,11 @@ def no_detection(tresh_min_right, tresh_min_left):
     elif tresh_min_right == None and tresh_min_left == None:
         return False, tresh_min_right, tresh_min_left
 
-    elif tresh_min_left == None and tresh_min_right!= None:
+    elif tresh_min_left == None:
         tresh_min_left = tresh_min_right
         return True, tresh_min_right, tresh_min_left
 
-    elif tresh_min_right == None and tresh_min_left!= None:
-        tresh_min_right = tresh_min_left
-        return True, tresh_min_right, tresh_min_left
+
 
 def video_capture():
 
@@ -210,9 +175,8 @@ def video_capture():
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         #INITIALIZATION SITUATION EYES
-        if len(eye_list_two[0]) < 50:
-            detection_initialization(frame, gray, eyescascade_right,
-                                     eyescascade_left,
+        if len(eye_list_two[0]) < 30:
+            detection_initialization(frame, gray, facecascade, eyescascade,
                                      eye_list_one, eye_list_two)
 
         #INITIALIZATION FINISH
@@ -226,18 +190,17 @@ def video_capture():
 
                 _, tresh_min_right = automatic_thresh(crop_eye_right)
                 STOP_INIT, tresh_min_left = automatic_thresh(crop_eye_left)
-
                 print(STOP_INIT, tresh_min_right, tresh_min_left)
 
                 STOP_INIT, tresh_min_right, tresh_min_left =\
                            no_detection(tresh_min_right, tresh_min_left)
 
-                print(STOP_INIT, tresh_min_right, tresh_min_left)
-
                 #INITIALIZATION THRESHOLD FAILED
                 if STOP_INIT is False:
                         eye_list_one = [[], [], [], []]
                         eye_list_two = [[], [], [], []]
+
+
 
 
             #WE HAVE MATCH WITH THRESHOLD
