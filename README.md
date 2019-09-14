@@ -1,10 +1,10 @@
 # cadju
 
 finir tous les trucks et finir synergo, finir le github pro
+ 
+- bon faire la premeire étape presta puis 
 
-jle sens pas jprefere matter une serie a la place et finir ce que je dois faire pour ettofer mon github et avoir un vrai métier
-
-- finir immo ce soir
+- finir immo ce soir puis
 
 - apres finir les positions de l'oeil
 
