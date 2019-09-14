@@ -136,6 +136,25 @@ def detecting_eye(crop, thresh_min):
         pass
 
 
+def no_detection(tresh_min_right, tresh_min_left):
+    """if we havn't got any detection from the threshold
+    filter we return False and re start an initialization
+    in case right and left are None.
+
+    If only left is none we make left filter = right filter.
+    """
+
+    if tresh_min_right != None and tresh_min_left != None:
+        return True, tresh_min_right, tresh_min_left
+
+    elif tresh_min_right == None and tresh_min_left == None:
+        return False, tresh_min_right, tresh_min_left
+
+    elif tresh_min_left == None:
+        tresh_min_left = tresh_min_right
+        return True, tresh_min_right, tresh_min_left
+
+
 
 def video_capture():
 
@@ -161,6 +180,7 @@ def video_capture():
             detection_initialization(frame, gray, facecascade, eyescascade,
                                      eye_list_one, eye_list_two)
 
+        #INITIALIZATION FINISH
         else:
             crop_eye_right, crop_eye_left = eyes(frame,eye_list_one,
                                                  eye_list_two)
@@ -171,18 +191,24 @@ def video_capture():
 
                 _, tresh_min_right = automatic_thresh(crop_eye_right)
                 STOP_INIT, tresh_min_left = automatic_thresh(crop_eye_left)
-                if tresh_min_left == None:
-                    tresh_min_left = tresh_min_right
+                print(STOP_INIT, tresh_min_right, tresh_min_left)
 
-                print(tresh_min_right, tresh_min_left)
+                STOP_INIT, tresh_min_right, tresh_min_left =\
+                           no_detection(tresh_min_right, tresh_min_left)
+
+                #INITIALIZATION THRESHOLD FAILED
+                if STOP_INIT is False:
+                        eye_list_one = [[], [], [], []]
+                        eye_list_two = [[], [], [], []]
 
 
 
+
+            #WE HAVE MATCH WITH THRESHOLD
             if STOP_INIT is True:
 
                 detecting_eye(crop_eye_right, tresh_min_right)
                 detecting_eye(crop_eye_left, tresh_min_left)
-
 
 
         cv2.imshow("frame", frame)
