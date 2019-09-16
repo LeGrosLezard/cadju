@@ -4,9 +4,11 @@ finir tous les trucks et finir synergo, finir le github pro
 
 - finir immo design
 
-- finir position des yeux puis faire v1 et v2 de touch head
+- finir position des yeux tout a l'heure puis faire v1 et v2 de touch head -> essais de voir si ok
 
-- reesaie dlib la
+- ensuite js speeck recog si pas dlib avec dlib ca serait dingue
+
+- reesaie dlib la -> faut un compilateur chai pas quoi (ce soir) y trouve pas visual alors que j'ai toutes les versions de 2012 a 2019...
 
 ----------------------------------------------------------------------
 
