@@ -1,22 +1,20 @@
 # cadju
 
 
-- truk area
+- truk area -> mettre les carrés visibles
 
 - main domiannte droite, gauche (vite fait)
 
 - full body area
 
-- esquisse lunette, profil
+
 
 --------------------------------------------- esquisse
 
 - ensuite js speeck recog si pas dlib avec dlib ca serait dingue (chai pas si on peut sans internet lancé un serveur local)
   
-  - tick langage + les mot marqueur => interet + schéma de vie
+  - tick langage + les mots marqueurs => interet + schéma de vie
   
- 
-
 
 - reesaie dlib la -> faut un compilateur chai pas quoi (ce soir) y trouve pas visual alors que j'ai toutes les versions de 2012 a 2019...
   ca y me le faut
@@ -24,6 +22,8 @@
   - dlib = emotion + touche visage
 
 --------------------------------------------- esquisse
+
+- esquisse lunette, profil
 
 - finir immo design
 
