@@ -5,9 +5,6 @@ import imutils
 
 
 
-eyescascade = cv2.CascadeClassifier('haar/eyes.xml')
-facecascade = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
-
 
 def detection_initialization(frame, gray, facecascade, eyescascade,
                              eye_list_one, eye_list_two):
@@ -128,6 +125,7 @@ def detecting_eye(crop, thresh_min):
         img = cv2.drawContours(crop, contours, 1, (0,255,0), 3)
 
         for c in contours:
+            area = cv2.contourArea(c)
             M = cv2.moments(c)
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
@@ -154,7 +152,53 @@ def no_detection(tresh_min_right, tresh_min_left):
         return True, tresh_min_right, tresh_min_left
 
 
+def head_movement(frame, gray, facecascade, liste_position):
+    """Here we detect the head. Thank to this
+    we can re initializing in cas where the personn
+    moves his head.
+    """
 
+    init = False
+
+    faces = facecascade.detectMultiScale(
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=4,
+        minSize=(30, 30),
+    )
+
+
+    for x, y, w, h in faces:
+
+        #x movements and y movements
+        try:
+            if x > liste_position[0][-1] + 15:
+                print("person moves to left")
+                init = True
+            elif x < liste_position[0][-1] - 15:
+                print("person moves to right")
+                init = True
+            if y > liste_position[1][-1] + 15:
+                print("person moves to bot")
+                init = True
+            elif y < liste_position[1][-1] - 15:
+                print("person moves to top")
+                init = True
+        except IndexError:
+            pass
+
+
+        liste_position[0].append(x)
+        liste_position[1].append(y)
+
+        cv2.rectangle(frame, (x, y), (x+w, y+h), 3)
+
+        return init
+
+
+
+eyescascade = cv2.CascadeClassifier('haar/eyes.xml')
+facecascade = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
 def video_capture():
 
 
@@ -162,6 +206,8 @@ def video_capture():
     
     eye_list_one = [[], [], [], []]
     eye_list_two = [[], [], [], []]
+    head_position = [[], [], [], []]
+
 
     counter = 0
     
@@ -206,8 +252,14 @@ def video_capture():
             #WE HAVE MATCH WITH THRESHOLD
             if STOP_INIT is True:
 
+                faces = head_movement(frame, gray, facecascade,
+                                      head_position)
+
                 detecting_eye(crop_eye_right, tresh_min_right)
                 detecting_eye(crop_eye_left, tresh_min_left)
+
+
+
 
 
         cv2.imshow("frame", frame)
