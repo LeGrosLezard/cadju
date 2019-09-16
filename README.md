@@ -1,12 +1,9 @@
 # cadju
 
-calme toi gros, n'empeche ca pourrait en vrai ! bon pause
 
-finir tous les trucks et finir synergo, finir le github pro
+- truk area
 
 - finir immo design
-
-- finir position des yeux tout a l'heure puis faire v1 et v2 de touch head -> essais de voir si ok
 
 - ensuite js speeck recog si pas dlib avec dlib ca serait dingue
 
