@@ -1,6 +1,6 @@
 # cadju
 
-calme toi gros
+calme toi gros, n'empeche ca pourrait en vrai ! bon pause
 
 finir tous les trucks et finir synergo, finir le github pro
 
