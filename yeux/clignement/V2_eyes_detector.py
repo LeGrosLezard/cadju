@@ -24,7 +24,6 @@ def eyes(frame, gray, facecascade, eyescascade):
     )
 
     for x1, y1, w1, h1 in faces:
-        cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0,0,255), 5)
         roi_gray = gray[y1:y1+h1, x1:x1+w1]
         roi_color = frame[y1:y1+h1, x1:x1+w1]
 
@@ -48,7 +47,7 @@ def eyes(frame, gray, facecascade, eyescascade):
                 cv2.rectangle(roi_color, (x, y), (x+w, y+h), (255, 0, 0), 5)
             eye += 1
 
-        return crop1, crop2
+        return crop1, crop2, faces
 
 
 
@@ -66,7 +65,7 @@ def automatic_thresh(crop):
     while True:
 
         if counter == 255:
-            return True, None
+            return None
 
         gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (11, 11), 0)
@@ -75,83 +74,33 @@ def automatic_thresh(crop):
         try:
             contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
             img = cv2.drawContours(crop, contours, 1, (0,255,0), 3)
+            center_detection(crop, contours)
             for c in contours:
                 if cv2.contourArea(c) >= area_seuil_min:
                     thresh_min = counter + 20
-                    return True, thresh_min
+                    return thresh_min, contours
         except:
             pass
 
         counter += 1
 
 
+def center_detection(frame, contours):
+    """Here we detection the center of our last detections"""
 
-def detecting_eye(crop, thresh_min):
-    """Here we detecting by treshold
-    the eye. We display on the current frame
-    the contour and take the center of this
-    contour.
-    This center will say to us if the eye has
-    moved.
-    """
-
-    kernel = np.ones((5,5), np.uint8) 
-
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (11, 11), 0)
-    erosion = cv2.erode(gray, kernel, iterations=1) 
-    _, thresh = cv2.threshold(erosion, thresh_min, 255, 0)
-
-
-    try:
-        contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-        img = cv2.drawContours(crop, contours, 1, (0,255,0), 3)
-
-        for c in contours:
-            area = cv2.contourArea(c)
-            M = cv2.moments(c)
-            cX = int(M["m10"] / M["m00"])
-            cY = int(M["m01"] / M["m00"])
-            cv2.circle(crop, (cX, cY), 1, (0, 0, 255), 1)
-    except:
-        pass
+    for contour in contours:
+        M = cv2.moments(contour)
+        cX = int(M["m10"] / M["m00"])
+        cY = int(M["m01"] / M["m00"])
+        cv2.circle(frame, (cX, cY), 1, (0, 0, 255), 5)
 
 
 
-def no_detection(tresh_min_right, tresh_min_left):
-    """if we havn't got any detection from the threshold
-    filter we return False and re start an initialization
-    in case right and left are None.
-    If only left is none we make left filter = right filter.
-    """
-
-    if tresh_min_right != None and tresh_min_left != None:
-        return True, tresh_min_right, tresh_min_left
-
-    elif tresh_min_right == None and tresh_min_left == None:
-        return False, tresh_min_right, tresh_min_left
-
-    elif tresh_min_left == None:
-        tresh_min_left = tresh_min_right
-        return True, tresh_min_right, tresh_min_left
-
-
-
-def head_movement(frame, gray, facecascade, liste_position):
+def head_movement(frame, faces, liste_position):
     """Here we detect the head. Thank to this
     we can re initializing in cas where the personn
     moves his head.
     """
-
-    init = False
-
-    faces = facecascade.detectMultiScale(
-        gray,
-        scaleFactor=1.1,
-        minNeighbors=4,
-        minSize=(30, 30),
-    )
-
 
     for x, y, w, h in faces:
 
@@ -159,16 +108,12 @@ def head_movement(frame, gray, facecascade, liste_position):
         try:
             if x > liste_position[0][-1] + 15:
                 print("person moves to left")
-                init = True
             elif x < liste_position[0][-1] - 15:
                 print("person moves to right")
-                init = True
             if y > liste_position[1][-1] + 15:
                 print("person moves to bot")
-                init = True
             elif y < liste_position[1][-1] - 15:
                 print("person moves to top")
-                init = True
         except IndexError:
             pass
 
@@ -178,9 +123,6 @@ def head_movement(frame, gray, facecascade, liste_position):
 
         cv2.rectangle(frame, (x, y), (x+w, y+h), 3)
 
-        return init
-
-
 
 
 eyescascade = cv2.CascadeClassifier('haar/haarcascade_eye.xml')
@@ -189,16 +131,7 @@ def video_capture():
 
 
     video = cv2.VideoCapture(0)
-    
-    eye_list_one = [[], [], [], []]
-    eye_list_two = [[], [], [], []]
     head_position = [[], [], [], []]
-
-
-    counter = 0
-    
-    STOP_INIT = False
-
 
     while(True):
 
@@ -207,40 +140,19 @@ def video_capture():
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         try:
-            crop_eye_right, crop_eye_left = eyes(frame, gray, facecascade,
-                                                 eyescascade)
+            crop_eye_right, crop_eye_left,\
+                            faces = eyes(frame, gray, facecascade,
+                                         eyescascade)
 
             #INITIALIZATION THRESHOLD
-            _, tresh_min_right = automatic_thresh(crop_eye_right)
-            STOP_INIT, tresh_min_left = automatic_thresh(crop_eye_left)
+            tresh_min_right, contours = automatic_thresh(crop_eye_right)
+            tresh_min_left, contours = automatic_thresh(crop_eye_left)
 
+            faces = head_movement(frame, faces, head_position)
         except:
             pass
 
-
-##            STOP_INIT, tresh_min_right, tresh_min_left =\
-##                       no_detection(tresh_min_right, tresh_min_left)
-
-##                #INITIALIZATION THRESHOLD FAILED
-##                if STOP_INIT is False:
-##                        eye_list_one = [[], [], [], []]
-##                        eye_list_two = [[], [], [], []]
-##
-##
-##
-##
-##            #WE HAVE MATCH WITH THRESHOLD
-##            if STOP_INIT is True:
-##
-##                faces = head_movement(frame, gray, facecascade,
-##                                      head_position)
-##
-##                detecting_eye(crop_eye_right, tresh_min_right)
-##                detecting_eye(crop_eye_left, tresh_min_left)
-
-
-
-
+   
 
         cv2.imshow("frame", frame)
 
