@@ -1,6 +1,6 @@
 # cadju
 
-ok avant doublier le plan d'attaque c'est: non pas dans 100 tout le monde se comprendra et tout, faut le vendre maintenant, la comprhéension et la capacité de se mettre a la place des autres et voir leur perspective augmente l'intelligence, donc mon truk peut augmenter le qi de 20 point qui n'a jamais révé d'etre plus intelligent + blabla histoire physique vers intelligence -> l'utilisateur apres avoir essayer le programme fini pendant 1 mois et ca c'est vendeur ! mais chai pas si c'est vrai
+ok avant doublier le plan d'attaque c'est: non pas dans 100 tout le monde se comprendra et tout, faut le vendre maintenant, la comprhéension et la capacité de se mettre a la place des autres et voir leur perspective augmente l'intelligence, donc mon truk peut augmenter le qi de 20 point qui n'a jamais révé d'etre plus intelligent + blabla histoire physique vers intelligence -> l'utilisateur apres avoir essayer le programme fini pendant 1 mois et ca c'est vendeur ! 
 
 finir tous les trucks et finir synergo, finir le github pro
 
