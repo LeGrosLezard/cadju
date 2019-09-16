@@ -1,12 +1,12 @@
 # cadju
 
 finir tous les trucks et finir synergo, finir le github pro
- 
-- bon faire la premeire étape presta puis 
 
-- finir immo ce soir puis
+- finir immo design
 
-- apres finir les positions de l'oeil
+- finir position des yeux puis faire v1 et v2 de touch head
+
+- reesaie dlib la
 
 ----------------------------------------------------------------------
 
