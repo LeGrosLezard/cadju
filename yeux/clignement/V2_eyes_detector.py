@@ -51,7 +51,7 @@ def eyes(frame, gray, facecascade, eyescascade):
 
 
 
-def automatic_thresh(crop):
+def automatic_thresh(crop, eyes_position):
     """We increment a variable of +1
     and verify the area into the last crop. If the area
     if > 1200 we stop the loop (max value i can got).
@@ -74,27 +74,50 @@ def automatic_thresh(crop):
         try:
             contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
             img = cv2.drawContours(crop, contours, 1, (0,255,0), 3)
-            center_detection(crop, contours)
+
+            eyes_posX, eyes_posY = center_detection(crop, contours, eyes_position)
             for c in contours:
                 if cv2.contourArea(c) >= area_seuil_min:
                     thresh_min = counter + 20
-                    return thresh_min, contours
+                    return thresh_min, contours, eyes_posX, eyes_posY
         except:
             pass
 
         counter += 1
 
 
-def center_detection(frame, contours):
+def center_detection(frame, contours, eyes_position):
     """Here we detection the center of our last detections"""
 
+    out_x = ""
+    out_y = ""
+    counter = 0
     for contour in contours:
-        M = cv2.moments(contour)
-        cX = int(M["m10"] / M["m00"])
-        cY = int(M["m01"] / M["m00"])
-        cv2.circle(frame, (cX, cY), 1, (0, 0, 255), 5)
+        if counter == 1:
+            M = cv2.moments(contour)
+            cX = int(M["m10"] / M["m00"])
+            cY = int(M["m01"] / M["m00"])
+            cv2.circle(frame, (cX, cY), 1, (0, 0, 255), 5)
+            
+            try:
+                if cX > eyes_position[0][-1] + 5:
+                    out_x = "right"
+                elif cX < eyes_position[0][-1] - 5:
+                    out_x = "left"
+                if cY > eyes_position[1][-1] + 5:
+                    out_y = "bot"
+                elif cY < eyes_position[1][-1] - 5:
+                    out_y = "top"
+            except IndexError:
+                pass
 
+            eyes_position[0].append(cX)
+            eyes_position[1].append(cY)
 
+            return out_x, out_y
+        counter += 1
+
+    
 
 def head_movement(frame, faces, liste_position):
     """Here we detect the head. Thank to this
@@ -107,21 +130,43 @@ def head_movement(frame, faces, liste_position):
         #x movements and y movements
         try:
             if x > liste_position[0][-1] + 15:
-                print("person moves to left")
+                print("person MOVES to right")
             elif x < liste_position[0][-1] - 15:
-                print("person moves to right")
+                print("person MOVES to left")
             if y > liste_position[1][-1] + 15:
-                print("person moves to bot")
+                print("person MOVES to bot")
             elif y < liste_position[1][-1] - 15:
-                print("person moves to top")
+                print("person MOVES to top")
         except IndexError:
             pass
-
 
         liste_position[0].append(x)
         liste_position[1].append(y)
 
         cv2.rectangle(frame, (x, y), (x+w, y+h), 3)
+
+
+
+def dectetion_message(right_eyeX, right_eyeY, left_eyeX, left_eyeY):
+    """Here we verify left and right eyes"""
+
+    liste = ["left", "right", "top", "bot"]
+
+    if right_eyeX not in("", None) and left_eyeX not in("", None)\
+       and right_eyeX == left_eyeX:
+        print(right_eyeX)
+
+
+
+    #if right_eyeY != None and left_eyeY != None:
+    #    print(right_eyeY, left_eyeY)
+
+
+
+##    print("Personn WATCH left")
+##    print("Personn WATCH right")
+##    print("Personn WATCH bot")
+##    print("Personn WATCH top")
 
 
 
@@ -131,6 +176,8 @@ def video_capture():
 
 
     video = cv2.VideoCapture(0)
+    eyes_position_right = [[], []]
+    eyes_position_left = [[], []]
     head_position = [[], [], [], []]
 
     while(True):
@@ -145,14 +192,18 @@ def video_capture():
                                          eyescascade)
 
             #INITIALIZATION THRESHOLD
-            tresh_min_right, contours = automatic_thresh(crop_eye_right)
-            tresh_min_left, contours = automatic_thresh(crop_eye_left)
+            tresh_min_right, contours,\
+                             right_posX, right_posY = automatic_thresh(crop_eye_right,
+                                                                       eyes_position_right)
+            tresh_min_left, contours,\
+                            left_posX, left_posY = automatic_thresh(crop_eye_left,
+                                                                    eyes_position_left)
 
             faces = head_movement(frame, faces, head_position)
+            dectetion_message(right_posX, right_posY, left_posX, left_posY)
         except:
             pass
 
-   
 
         cv2.imshow("frame", frame)
 
