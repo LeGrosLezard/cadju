@@ -78,12 +78,13 @@ def automatic_thresh(crop, eyes_position):
             eyes_posX, eyes_posY = center_detection(crop, contours, eyes_position)
             for c in contours:
                 if cv2.contourArea(c) >= area_seuil_min:
-                    thresh_min = counter + 20
+                    thresh_min = counter
                     return thresh_min, contours, eyes_posX, eyes_posY
         except:
             pass
 
         counter += 1
+
 
 
 def center_detection(frame, contours, eyes_position):
@@ -92,22 +93,23 @@ def center_detection(frame, contours, eyes_position):
     out_x = ""
     out_y = ""
     counter = 0
+
     for contour in contours:
         if counter == 1:
             M = cv2.moments(contour)
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
             cv2.circle(frame, (cX, cY), 1, (0, 0, 255), 5)
-            
+
             try:
-                if cX > eyes_position[0][-1] + 5:
-                    out_x = "right"
-                elif cX < eyes_position[0][-1] - 5:
-                    out_x = "left"
-                if cY > eyes_position[1][-1] + 5:
-                    out_y = "bot"
-                elif cY < eyes_position[1][-1] - 5:
-                    out_y = "top"
+                if cX > eyes_position[0][-1] + 2:
+                    out_x = "person WATCHES right"
+                elif cX < eyes_position[0][-1] - 2:
+                    out_x = "person WATCHES left"
+                if cY > eyes_position[1][-1] + 1:
+                    out_y = "person WATCHES top"
+                elif cY < eyes_position[1][-1] - 1:
+                    out_y = "person WATCHES bot"
             except IndexError:
                 pass
 
@@ -150,23 +152,21 @@ def head_movement(frame, faces, liste_position):
 def dectetion_message(right_eyeX, right_eyeY, left_eyeX, left_eyeY):
     """Here we verify left and right eyes"""
 
-    liste = ["left", "right", "top", "bot"]
-
+    x = False
+    y = False
     if right_eyeX not in("", None) and left_eyeX not in("", None)\
        and right_eyeX == left_eyeX:
+        x = True
+
+    if right_eyeY not in("", None) and left_eyeY not in("", None)\
+       and right_eyeY == left_eyeY:
+        y = True
+
+    if x == True and y == True:
+        print(right_eyeX, right_eyeY)
+
+    elif x == True:
         print(right_eyeX)
-
-
-
-    #if right_eyeY != None and left_eyeY != None:
-    #    print(right_eyeY, left_eyeY)
-
-
-
-##    print("Personn WATCH left")
-##    print("Personn WATCH right")
-##    print("Personn WATCH bot")
-##    print("Personn WATCH top")
 
 
 
