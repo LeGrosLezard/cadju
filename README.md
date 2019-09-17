@@ -1,7 +1,7 @@
 # cadju
 
 
-- truk area -> rentre le doigt dans l'oreille (longtemps) ou se tire l'oreille (ascendant puis descendant)<- temps dans le cadre et ascend + descendant revoir pk on se gratte les pattes
+- truk area -> refaire v1 sans l'interieur enfete + l'initialisation de la v2
 
 
 
