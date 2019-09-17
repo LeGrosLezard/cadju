@@ -62,14 +62,28 @@ def video_capture():
                 #no head detection
 
         #Skin detection
-        if counter == 5 and NO_DETECTION is False :
-            frame_skin_detector, _, _, _, _ = face_detection(faceCascade, gray, frame)
-            UPPER, LOWER = most_pixel(frame, frame_skin_detector)
 
+            
+
+        if counter >= 5 and NO_DETECTION is False :
+            try:
+                frame_skin_detector, _, _, _, _ = face_detection(faceCascade, gray, frame)
+                UPPER, LOWER = most_pixel(frame, frame_skin_detector)
+            except TypeError:
+                pass
+            #no head detection
 
         if len(TEMPE[0]) >= 5 and counter > 5:
-            skinMask = cv2.inRange(frame, np.array([UPPER], dtype = "uint8"),
-                            np.array([LOWER], dtype = "uint8"))
+            try:
+                skinMask = cv2.inRange(frame, np.array([UPPER], dtype = "uint8"),
+                                np.array([LOWER], dtype = "uint8"))
+            except:
+                pass
+            #no head detection
+
+
+
+
 
 ##        #Area  detection
 ##        elif len(TEMPE[0]) >= 5 and counter >= 10:
