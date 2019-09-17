@@ -36,7 +36,7 @@ def video_capture():
     HEAR = [[], [], [], [], [], [], [], []]
     MID = [[], [], [], []]
 
-    MOVEMENT = []
+    MOVEMENT = 0
     MESSAGES = ["", ""]
 
     cap=cv2.VideoCapture(0)
@@ -46,6 +46,7 @@ def video_capture():
     counter = 0
     while True:
 
+        NO_DETECTION = False
         ret, frame =cap.read()
         frame = cv2.resize(frame, (800, 600))
         gray=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -53,49 +54,58 @@ def video_capture():
 
         #Initialization
         if len(TEMPE[0]) < 5:
-            _, x, y, w, h = face_detection(faceCascade, gray, frame)
-            appending(TEMPE, PATTE, HEAR, MID, x, y, w, h)
-
-
-        #Skin detection
-        if counter == 10:
-            frame_skin_detector, _, _, _, _ = face_detection(faceCascade, gray, frame)
-            UPPER, LOWER = most_pixel(frame_skin_detector)
-            
-
-
-        #Area  detection
-        elif len(TEMPE[0]) >= 5 and counter >= 10:
-
             try:
                 _, x, y, w, h = face_detection(faceCascade, gray, frame)
-
-                skinMask = cv2.inRange(frame, np.array([LOWER], dtype = "uint8"),
-                                       np.array([UPPER], dtype = "uint8"))
-                print(LOWER, UPPER)
-                if MOVEMENT[-1] > x + 5 or MOVEMENT[-1] < x - 5:
-                    TEMPE = [[], [], [], [], [], [], [], []]
-                    HEAR = [[], [], [], [], [], [], [], []]
-                    PATTE = [[], [], [], [], [], [], [], []]
-                    MID = [[], [], [], []]
-
-                else:
-                    MOVEMENT_detector(frame, TEMPE, HEAR, PATTE, MID, MESSAGES, skinMask)
-                    cv2.imshow("skinMask1", skinMask)
-
+                appending(TEMPE, PATTE, HEAR, MID, x, y, w, h)
             except:
-                pass
+                NO_DETECTION = True
+                #no head detection
 
-            
+        #Skin detection
+        if counter == 5 and NO_DETECTION is False :
+            frame_skin_detector, _, _, _, _ = face_detection(faceCascade, gray, frame)
+            UPPER, LOWER = most_pixel(frame, frame_skin_detector)
 
-        cv2.imshow("skinMask", frame)
+
+        if len(TEMPE[0]) >= 5 and counter > 5:
+            skinMask = cv2.inRange(frame, np.array([UPPER], dtype = "uint8"),
+                            np.array([LOWER], dtype = "uint8"))
+
+##        #Area  detection
+##        elif len(TEMPE[0]) >= 5 and counter >= 10:
+##
+##            try:
+##                _, x, y, w, h = face_detection(faceCascade, gray, frame)
+##
+##                skinMask = cv2.inRange(frame, np.array([LOWER], dtype = "uint8"),
+##                                       np.array([UPPER], dtype = "uint8"))
+##                print(LOWER, UPPER)
+##                if MOVEMENT > x + 5 or MOVEMENT < x - 5:
+##                    TEMPE = [[], [], [], [], [], [], [], []]
+##                    HEAR = [[], [], [], [], [], [], [], []]
+##                    PATTE = [[], [], [], [], [], [], [], []]
+##                    MID = [[], [], [], []]
+##
+##                else:
+##                    MOVEMENT_detector(frame, TEMPE, HEAR, PATTE, MID, MESSAGES, skinMask)
+##                    cv2.imshow("skinMask1", skinMask)
+##
+##            except:
+##                pass
+
+            cv2.imshow("skinMask22", skinMask)
+
+        #cv2.imshow("skinMask", frame)
+        
         
 
 
-
         counter+=1
-        MOVEMENT.append(x)
-
+        try:
+            MOVEMENT = x
+        except UnboundLocalError:
+            pass
+        #no head detection
 
 
         key=cv2.waitKey(1)&0xFF
