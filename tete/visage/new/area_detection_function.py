@@ -23,10 +23,8 @@ def face_detection(faceCascade, gray, frame):
 
     #Points of the detecting face
     for x, y, w, h in faces:
-        frame_skin_detector = frame[y+70:y+h-40, x+35:x+w-35]
-        frame_skin_detector = cv2.GaussianBlur(frame_skin_detector,
-                                               (11, 11),
-                                               cv2.BORDER_DEFAULT)
+        #METTRE EN POURCENTAGE
+        frame_skin_detector = frame[y+65:y+h-30, x+40:x+w-40]
         cv2.rectangle(frame, (x, y), (x+w, y+h), 3)
         return frame_skin_detector, x, y, w, h
 
