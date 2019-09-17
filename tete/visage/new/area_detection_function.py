@@ -15,8 +15,8 @@ def face_detection(faceCascade, gray, frame):
     faces = faceCascade.detectMultiScale(
         gray,
         scaleFactor=1.3,
-        minNeighbors=1,
-        minSize=(60, 100),
+        minNeighbors=5,
+        minSize=(50, 50),
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
@@ -24,8 +24,9 @@ def face_detection(faceCascade, gray, frame):
     #Points of the detecting face
     for x, y, w, h in faces:
         #METTRE EN POURCENTAGE
-        frame_skin_detector = frame[y+65:y+h-30, x+40:x+w-40]
-        cv2.rectangle(frame, (x, y), (x+w, y+h), 3)
+        y1 = y + int(round(200 * 100 / y))
+        
+        frame_skin_detector = frame[y1:y+h-30, x+40:x+w-40]
         return frame_skin_detector, x, y, w, h
 
 
@@ -64,7 +65,7 @@ def appending(tempe, patte, hear, mid, x, y, w, h):
 
     #temples
     append_list(tempe,
-                x, y - 20, x - 40, y + 40,
+                x-40, y - 20, x, y + 40,
                 x+w, y - 20, x+w+40, y + 40,
                 2)
 
@@ -135,12 +136,8 @@ def most_pixel(frame, frame_skin_detector):
 
 
 
-    UPPER = best_color
-    LOWER = lower_color
-
-
-    
-
+    UPPER = best_color[0], best_color[1], best_color[2]
+    LOWER = lower_color[0], lower_color[1], lower_color[2]
 
     return LOWER, UPPER
 
@@ -197,7 +194,7 @@ def detections(frame, y1, yh1, x1, xw1,
                 if area_one[i, j] == 255:
                     counter_pixel += 1
 
-        if counter_pixel > 100:
+        if counter_pixel > 50:
             displaying_message(MESSAGES, message)
             MESSAGES.append(message)
 
@@ -206,8 +203,7 @@ def detections(frame, y1, yh1, x1, xw1,
 
     
 
-    #NB tempe droite is right temples
-    #NB tempe gauche is left temples
+
 
 
 def displaying_message(MESSAGES, message):
