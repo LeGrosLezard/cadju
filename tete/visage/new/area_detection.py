@@ -40,7 +40,7 @@ def video_capture():
     MESSAGES = ["", ""]
 
     cap=cv2.VideoCapture(0)
-    faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")#face detection
+    faceCascade = cv2.CascadeClassifier("haar/haarcascade_frontalface_alt2.xml")#face detection
 
 
     counter = 0
@@ -48,8 +48,8 @@ def video_capture():
 
         NO_DETECTION = False
         ret, frame =cap.read()
+        frame_no_gauss = cv2.resize(frame, (800, 600))
         frame = cv2.resize(frame, (800, 600))
-        frame = cv2.GaussianBlur(frame,(11, 11), 0)
         gray=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 
@@ -68,7 +68,7 @@ def video_capture():
 
         if counter >= 5 and NO_DETECTION is False :
             try:
-                frame_skin_detector, _, _, _, _ = face_detection(faceCascade, gray, frame)
+                frame_skin_detector, x, _, _, _ = face_detection(faceCascade, gray, frame)
                 UPPER, LOWER = most_pixel(frame, frame_skin_detector)
             except TypeError:
                 pass
@@ -78,39 +78,22 @@ def video_capture():
             try:
                 skinMask = cv2.inRange(frame, np.array([UPPER], dtype = "uint8"),
                                 np.array([LOWER], dtype = "uint8"))
+
+
+                if MOVEMENT > x + 10 or MOVEMENT < x - 10:
+                    TEMPE = [[], [], [], [], [], [], [], []]
+                    HEAR = [[], [], [], [], [], [], [], []]
+                    PATTE = [[], [], [], [], [], [], [], []]
+                    MID = [[], [], [], []]
+
+                else:
+                    MOVEMENT_detector(frame, TEMPE, HEAR, PATTE, MID, MESSAGES, skinMask)
+                    cv2.imshow("skinMask1", skinMask)
+
             except:
                 pass
-            #no head detection
 
-
-
-
-
-##        #Area  detection
-##        elif len(TEMPE[0]) >= 5 and counter >= 10:
-##
-##            try:
-##                _, x, y, w, h = face_detection(faceCascade, gray, frame)
-##
-##                skinMask = cv2.inRange(frame, np.array([LOWER], dtype = "uint8"),
-##                                       np.array([UPPER], dtype = "uint8"))
-##                print(LOWER, UPPER)
-##                if MOVEMENT > x + 5 or MOVEMENT < x - 5:
-##                    TEMPE = [[], [], [], [], [], [], [], []]
-##                    HEAR = [[], [], [], [], [], [], [], []]
-##                    PATTE = [[], [], [], [], [], [], [], []]
-##                    MID = [[], [], [], []]
-##
-##                else:
-##                    MOVEMENT_detector(frame, TEMPE, HEAR, PATTE, MID, MESSAGES, skinMask)
-##                    cv2.imshow("skinMask1", skinMask)
-##
-##            except:
-##                pass
-
-            cv2.imshow("skinMask22", skinMask)
-
-        #cv2.imshow("skinMask", frame)
+        cv2.imshow("skinMask", frame)
         
         
 
