@@ -1,7 +1,13 @@
 # cadju
 
 
-- truk area -> mettre les carrés visibles
+- truk area -> rentre le doigt dans l'oreille (longtemps) ou se tire l'oreille (ascendant puis descendant)<- temps dans le cadre et ascend + descendant revoir pk on se gratte les pattes
+
+
+
+
+
+
 
 - main domiannte droite, gauche (vite fait)
 
