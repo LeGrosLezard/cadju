@@ -49,6 +49,7 @@ def video_capture():
         NO_DETECTION = False
         ret, frame =cap.read()
         frame = cv2.resize(frame, (800, 600))
+        frame = cv2.GaussianBlur(frame,(11, 11), 0)
         gray=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 
