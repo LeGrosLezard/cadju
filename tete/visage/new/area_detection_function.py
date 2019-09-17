@@ -23,8 +23,11 @@ def face_detection(faceCascade, gray, frame):
 
     #Points of the detecting face
     for x, y, w, h in faces:
-
-        frame_skin_detector = frame[y+50:y+h - 20, x+20:x+w-20]
+        frame_skin_detector = frame[y+60:y+h - 20, x+20:x+w-20]
+        frame_skin_detector = cv2.GaussianBlur(frame_skin_detector,
+                                               (11, 11),
+                                               cv2.BORDER_DEFAULT)
+        cv2.imshow("dzdzadzadazdaz", frame_skin_detector)
         return frame_skin_detector, x, y, w, h
 
 
@@ -86,11 +89,13 @@ def appending(tempe, patte, hear, mid, x, y, w, h):
 
 
 
-def most_pixel(frame_skin_detector):
+def most_pixel(frame, frame_skin_detector):
     """Here we collect all pixels
     from the face detection
     and return the highter presence of pixel"""
 
+    #while True:
+    cv2.imshow("po,n", frame_skin_detector)
     dico = {}
     img = Image.fromarray(frame_skin_detector)
     for value in img.getdata():
@@ -102,10 +107,42 @@ def most_pixel(frame_skin_detector):
     sorted_x = sorted(dico.items(),
                       key=operator.itemgetter(1), reverse=True)
 
-    upper = sorted_x[0][0][0], sorted_x[0][0][1], sorted_x[0][0][2] + 40
-    lower = sorted_x[-1][0][0], sorted_x[-1][0][1], sorted_x[-1][0][2]
 
-    return upper, lower
+    color_dico = {}
+    for i in sorted_x:
+        if i[1] < 10:
+            break
+        else:
+            if i[0][2] > i[0][1] + 10:
+                color_dico[i[0]] = i[1]
+
+    best = 0
+    best_color = 0
+
+    lower = 1000
+    lower_color = 0
+
+    for key, value in color_dico.items():
+        if value > best:
+            best = value
+            best_color = key
+
+        if value < lower:
+            lower = value
+            lower_color = key
+
+
+
+    UPPER = best_color
+    LOWER = lower_color
+
+
+    print(UPPER, LOWER)
+
+
+    
+
+    return UPPER, LOWER
 
 
 
