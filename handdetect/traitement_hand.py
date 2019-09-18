@@ -4,6 +4,9 @@ import threading
 
 
 def original_frame(originale, kernel_blur):
+    """Make a first 'picture' for define the
+    what we must raise and what we must take in consideration.
+    We raise the background"""
 
     originale = cv2.resize(originale, (800, 600))
     originale=cv2.cvtColor(originale, cv2.COLOR_BGR2GRAY)
@@ -14,6 +17,7 @@ def original_frame(originale, kernel_blur):
 
 
 def face_detections(cascade, frame, gray):
+    """We make a face detection"""
 
     detection = cascade.detectMultiScale(
         gray,
@@ -28,6 +32,9 @@ def face_detections(cascade, frame, gray):
         
 
 def detections(cascade, frame, gray, mode):
+    """We make a general function for detect palm and fist.
+    We make a rectangle and fill it for accelerate
+    the detection into the movement detection."""
 
     detection = cascade.detectMultiScale(
         gray,
@@ -48,6 +55,8 @@ def detections(cascade, frame, gray, mode):
 def all_detections(handCascade, gestCascade,
                    palmCascade, closeCascade,
                    closedCascade, frame, gray):
+    """We call detections function for
+    run all this haar"""
 
     detections(handCascade, frame, gray, 0)
     detections(gestCascade, frame, gray, 0)
@@ -60,6 +69,9 @@ def all_detections(handCascade, gestCascade,
 
 def movements_detection(gray, originale, kernel_blur, seuil,
                         kernel_dilate, frame):
+    """This is our current frame in comparaison with
+    original frame. We make a threshold, dilate it for
+    and find the contours."""
 
     gray = cv2.GaussianBlur(gray, (kernel_blur, kernel_blur), 0)
     mask = cv2.absdiff(originale, gray)
@@ -72,8 +84,23 @@ def movements_detection(gray, originale, kernel_blur, seuil,
     return contours, frame_contour, gray
 
 
+def detect(message):
+    """We displaying right or left hand/fist"""
+
+    if x1 < 350:
+        print("right " + message)
+    elif x1 > 450:
+        print("left "  + message) 
+
+
+
 def drawing_movements(contours, frame_contour, frame,
                       x, y, w, h):
+    """We drawing in a rectangle the movement.
+    This movement area beetween 10 000 and 500000.
+    In this rectangle we search 255, 0, 0 and
+    255, 255, 0 pixels."""
+
 
     stop = False
     for c in contours:
@@ -94,28 +121,7 @@ def drawing_movements(contours, frame_contour, frame,
                 find_fist = str(liste).find("255 255   0")
 
                 if find_hand >= 0:
-
-                    cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
-
-                    if x1 < 350:
-                        print("right hand")
-                    elif x1 > 450:
-                        print("left hand")
-
+                    detect("hand")
 
                 elif find_fist >= 0:
-
-                    cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
-
-                    if x1 < 350:
-                        print("right fist")
-                    elif x1 > 450:
-                        print("left fist")
-
-
-
-
-
-
-
-
+                    detect("fist")
