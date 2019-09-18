@@ -16,9 +16,9 @@ from traitement_hand import *
 
 
 def video_capture():
-    kernel_blur=43
-    seuil=10
-    surface=3000
+
+    kernel_blur=63
+    seuil=30
 
     _, originale = cap.read()
     originale, kernel_dilate = original_frame(originale, kernel_blur)
@@ -31,21 +31,25 @@ def video_capture():
         frame = cv2.resize(frame, (800, 600))
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        face_detections(faceCascade, frame, gray)
+        try:
+            x, y, w, h = face_detections(faceCascade, frame, gray)
+        except:
+            pass
 
-        thread(handCascade, gestCascade,
-               palmCascade, closeCascade,
-               closedCascade, frame, gray)
+        all_detections(handCascade, gestCascade,
+                       palmCascade, closeCascade,
+                       closedCascade, frame, gray)
 
 
         contours, frame_contour, gray\
                   = movements_detection(gray, originale,
                                         kernel_blur, seuil,
                                         kernel_dilate, frame)
+        try:
+            drawing_movements(contours, frame_contour, frame, x, y, w, h)
+        except:
+            pass
 
-        drawing_movements(contours, frame_contour, frame, surface)
-
-        
         originale = gray
 
         
