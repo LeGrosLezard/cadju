@@ -17,7 +17,7 @@ from traitement_hand import *
 
 def video_capture():
 
-    kernel_blur=43
+    kernel_blur=33
     seuil=30
 
     _, originale = cap.read()
@@ -49,6 +49,11 @@ def video_capture():
             drawing_movements(contours, frame_contour, frame, x, y, w, h)
         except:
              pass
+
+
+
+
+
 
         originale = gray
 
