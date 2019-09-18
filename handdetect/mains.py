@@ -17,7 +17,7 @@ from traitement_hand import *
 
 def video_capture():
 
-    kernel_blur=63
+    kernel_blur=43
     seuil=30
 
     _, originale = cap.read()
@@ -26,7 +26,6 @@ def video_capture():
 
     while True:
 
-        
         ret, frame=cap.read()
         frame = cv2.resize(frame, (800, 600))
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -45,10 +44,11 @@ def video_capture():
                   = movements_detection(gray, originale,
                                         kernel_blur, seuil,
                                         kernel_dilate, frame)
+
         try:
             drawing_movements(contours, frame_contour, frame, x, y, w, h)
         except:
-            pass
+             pass
 
         originale = gray
 
