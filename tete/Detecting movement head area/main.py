@@ -12,7 +12,15 @@ from config.config import SUBSTRACTOR5
 from config.config import SUBSTRACTOR6
 from config.config import SUBSTRACTOR7
 
-
+from config.config import msg1
+from config.config import msg2
+from config.config import msg3
+from config.config import msg4
+from config.config import msg5
+from config.config import msg6
+from config.config import msg7
+from config.config import msg8
+from config.config import msg9
 
 def face_detection(frame, gray, faceCascade):
     """We detecting the face by haarcascade"""
@@ -62,15 +70,18 @@ def initialization(HEAD_MID, HEAD_SIDE, HEARS, TEMPLES,
 
 
     #MIDDLE OF THE HEAD
-    area_buiding(HEAD_MID, x + int(round(w/3)), y - int(round(200 * 100 / h)),
-                 x + int(round(w/3)) * 2, y - int(round(80 * 100 / h)),
+    area_buiding(HEAD_MID, x + int(round(w/3)), y - int(round(180 * 100 / h)),
+                 x + int(round(w/3)) * 2, y - int(round(100 * 100 / h)),
                  "", "", "", "", 1)
 
     #HEAD_SIDE
-    area_buiding(HEAD_SIDE, x - 20, y - int(round(110 * 100 / h)),
-                 x + 30, y - int(round(50 * 100 / h)), x+w-20,
-                 y - int(round(110 * 100 / h)), x+w+30,
-                 y-int(round(50 * 100 / h)), 2)
+    area_buiding(HEAD_SIDE, x - 20,
+                 y - int(round(130 * 100 / h)),
+                 x + 30,
+                 y - int(round(70 * 100 / h)),
+                 x+w-20,
+                 y - int(round(130 * 100 / h)), x+w+30,
+                 y-int(round(70 * 100 / h)), 2)
 
     #HEARS
     area_buiding(HEARS, x - 60, y + 70, x-20, y + 150,
@@ -113,7 +124,7 @@ def crop_substrator(gray, y1, yh1, x1, xw1, subtractor):
     background. If movements are detected it will
     make appear some pixels. Without movement
     the area is egal to 0. With a minimum of movement
-    the area have more than sum + 30 pixels."""
+    the area have more than sum + 50 pixels."""
 
     crop = gray[y1:yh1, x1:xw1]
     mask = subtractor.apply(crop)
@@ -124,27 +135,17 @@ def crop_substrator(gray, y1, yh1, x1, xw1, subtractor):
         for j in i:
             liste.append(j)
 
-    if sum(liste) / len(liste) > 30 and\
+    if sum(liste) / len(liste) > 50 and\
        sum(liste) / len(liste) != 127.0:
         return True
 
 
 def analysing_touch(middle, right_side, left_side, right_temple,
                     left_temple, right_hear, left_hear,
-                    DONT_DISPLAY_MESSAGE):
+                    DISPLAY_MESSAGE):
+    """We define the area to a message"""
 
-
-    out = ""
-    msg1 = "Mid head by right hand: concentration, localisation of the situation or himself"
-    msg2 = "Mid head by left hand: concentration, localisation of the situation or himself"
-    msg3 = "Mid head by: concentration, localisation of the situation or himself"
-    msg4 = "right side"
-    msg5 = "left side"
-    msg6 = "Right Temple, use long memory, he remembers something"
-    msg7 = "Left Temple, use learning, he just learn something"
-    msg8 = "right hear"
-    msg9 = "left hear"
-
+    out = False
 
     if middle is True:
         if right_side is True or right_temple is True or right_hear is True:
@@ -172,9 +173,42 @@ def analysing_touch(middle, right_side, left_side, right_temple,
     elif left_hear is True:
         out = msg9
 
-    if DONT_DISPLAY_MESSAGE[-1] != out and out != "":
-        DONT_DISPLAY_MESSAGE[-1] = out
-        print(out)
+    DISPLAY_MESSAGE.append(out)
+
+
+
+def analysing_display_message(DISPLAY_MESSAGE):
+    """Here we choose the message to display.
+    for touch mid head we must pass
+    by hear and temples. For that we define
+    mid head to 0 value. If personn touch hear (who's egal to 2)
+    and touch temples (who's egal to 1)
+    and finnaly mid (who's egal to 0), we take the lower
+    value who's here 0.
+
+    We return true if nothing is detecte it raise the list"""
+
+    dico = {msg1:0, msg2:0, msg3:0,
+            msg4:1, msg5:1,
+            msg6:2, msg7:2,
+            msg8:3, msg9:3}
+
+    if DISPLAY_MESSAGE[-1] == False and len(DISPLAY_MESSAGE) > 2:
+
+        lower_value = 10
+        lower_msg = ""
+
+        DISPLAY_MESSAGE = set(DISPLAY_MESSAGE)
+        for i in DISPLAY_MESSAGE:
+            if i not in("", False):
+                for key, value in dico.items():
+                    if i == key and value < lower_value :
+                        lower_value = value
+                        lower_msg = key
+
+        if lower_msg != "":
+            print(lower_msg)
+        return True
 
 
 
@@ -182,7 +216,7 @@ def area_detection(frame, gray,
                    HEAD_MID, HEAD_SIDE, TEMPLES, HEARS,
                    SUBSTRACTOR1, SUBSTRACTOR2, SUBSTRACTOR3,
                    SUBSTRACTOR4, SUBSTRACTOR5, SUBSTRACTOR6,
-                   SUBSTRACTOR7, DONT_DISPLAY_MESSAGE):
+                   SUBSTRACTOR7, DISPLAY_MESSAGE):
     """Here we have built our area, now we apply the substractor in
     the crop"""
 
@@ -216,22 +250,35 @@ def area_detection(frame, gray,
 
     analysing_touch(middle, right_side, left_side, right_temple,
                     left_temple, right_hear, left_hear,
-                    DONT_DISPLAY_MESSAGE)
-
+                    DISPLAY_MESSAGE)
 
 
 
 
 
 def video_capture():
-    """Lunch all functions and the camera capture"""
+    """Lunch all functions and the camera capture
+
+        INITIALIZATION = face_detection(),
+                        initialization(),
+                        area_buiding()
+
+        Re initialization = face_detection()
+
+        area_detection = area_built(),
+                        crop_substrator(),
+                        analysing_touch(),
+                        area_detection(),
+                        analysing_display_message()
+    """
 
     HEAD_MID = [[], [], [], []]
     HEAD_SIDE = [[], [], [], [], [], [], [], []]
     TEMPLES = [[], [], [], [], [], [], [], []]
     HEARS = [[], [], [], [], [], [], [], []]
     HEAD_MOVEMENT = 0
-    DONT_DISPLAY_MESSAGE = [""]
+    DISPLAY_MESSAGE = [""]
+    
 
     video = cv2.VideoCapture(0)
     faceCascade = cv2.CascadeClassifier("haar/haarcascade_frontalface_alt2.xml")
@@ -274,9 +321,9 @@ def video_capture():
                                     HEAD_MID, HEAD_SIDE, TEMPLES, HEARS,
                                     SUBSTRACTOR1, SUBSTRACTOR2, SUBSTRACTOR3,
                                     SUBSTRACTOR4, SUBSTRACTOR5, SUBSTRACTOR6,
-                                    SUBSTRACTOR7, DONT_DISPLAY_MESSAGE)
+                                    SUBSTRACTOR7, DISPLAY_MESSAGE)
 
-            except:
+            except TypeError:
                 pass
             #no face detection
        
@@ -286,13 +333,10 @@ def video_capture():
         except:
             pass
 
-        if DONT_DISPLAY_MESSAGE[-1] != "":
-            counter += 1
-
-        if counter == 25:
-            counter = 0
-            DONT_DISPLAY_MESSAGE = [""]
-
+        #Traiting message to display
+        raise_list = analysing_display_message(DISPLAY_MESSAGE)
+        if raise_list is True:
+            DISPLAY_MESSAGE = [""]
 
 
         cv2.imshow('FACE', frame)
