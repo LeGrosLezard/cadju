@@ -91,20 +91,10 @@ def drawing_movements(contours, frame_contour, frame,
                            crop[i, j][2] == 0:
                             cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
 
-
-                            if x1+w1 > y1 + h1 + 50:
-                                a = x1 - 400
-                                b = x1+w1 - 400
-                                if abs(a) > abs(b):
-                                    print("left on right")
-                                elif abs(a) < abs(b):
-                                    print("right on left")
-
-                            elif x1 < 400:
+                            if x1 < 350:
                                 print("right hand")
-                            elif x1 > 400:
+                            elif x1 > 450:
                                 print("left hand")
-
 
                             stop = True
                             break
