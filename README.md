@@ -6,9 +6,8 @@
                 - faut tout mettre dans une liste si on touche oreille puis side puis mid ne pas dire les truk avant
                   
                 - la meme si on descend le bras et c bon
-
-
-
+                
+                - mais la c trop compliqué ji arrive pas
 
 
 
