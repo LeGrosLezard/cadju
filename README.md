@@ -1,7 +1,7 @@
 # cadju
 
 
-- main domiannte droite, gauche (vite fait)
+- main domiannte droite, gauche faut trouver un truk pour les poingts dire aussi sa position bas haut les mains qui se reunisse et vori si on peut dire main gauceh sur main droite  
 
 - full body area
 
