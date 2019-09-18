@@ -18,20 +18,20 @@ def face_detections(cascade, frame, gray):
     detection = cascade.detectMultiScale(
         gray,
         scaleFactor=1.3,
-        minNeighbors=5,
-        minSize=(50, 50),
+        minNeighbors=4,
+        minSize=(40, 40),
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
     for x, y, w, h in detection:
-        frame[y:y+h, x:x+w] = (0, 0, 0)
-
+        return x, y, w, h
+        
 
 def detections(cascade, frame, gray):
 
     detection = cascade.detectMultiScale(
         gray,
-        scaleFactor=1.2,
+        scaleFactor=1.3,
         minNeighbors=1,
         minSize=(30, 30),
         maxSize=(100, 100),
@@ -43,9 +43,9 @@ def detections(cascade, frame, gray):
 
 
 
-def thread(handCascade, gestCascade,
-           palmCascade, closeCascade,
-           closedCascade, frame, gray):
+def all_detections(handCascade, gestCascade,
+                   palmCascade, closeCascade,
+                   closedCascade, frame, gray):
 
     detections(handCascade, frame, gray)
     detections(gestCascade, frame, gray)
@@ -70,21 +70,29 @@ def movements_detection(gray, originale, kernel_blur, seuil,
     return contours, frame_contour, gray
 
 
-def drawing_movements(contours, frame_contour, frame, surface):
+def drawing_movements(contours, frame_contour, frame,
+                      x, y, w, h):
     
     for c in contours:
-        if cv2.contourArea(c) < 100000:
 
-            cv2.drawContours(frame_contour, [c], 0, (0, 255, 0), 5)
-            if cv2.contourArea(c) < surface:
-                continue
-            
-            x, y, w, h = cv2.boundingRect(c)
-            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
+        if cv2.contourArea(c) > 10000 and\
+           cv2.contourArea(c) < 50000:
+            x1, y1, w1, h1 = cv2.boundingRect(c)
 
-
-
-
+            if x1 > x and y1 > y and x1+w1 < x+w:
+                pass
+            else:
+                crop = frame[y1:y1+w1, x1:x1+w1]
+                for i in range(crop.shape[0]):
+                    for j in range(crop.shape[1]):
+                        if crop[i, j][0] == 255 and\
+                           crop[i, j][1] == 0 and\
+                           crop[i, j][2] == 0:
+                            cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
+                            cv2.putText(frame, "Main 100% garanted", (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),
+                                        lineType=cv2.LINE_AA) 
+                            break
+               
 
 
 
