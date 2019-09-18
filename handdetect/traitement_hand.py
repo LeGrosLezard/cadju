@@ -89,7 +89,7 @@ def drawing_movements(contours, frame_contour, frame,
                            crop[i, j][1] == 0 and\
                            crop[i, j][2] == 0:
                             cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
-                            cv2.putText(frame, "Main 100% garanted", (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),
+                            cv2.putText(frame, "Main 80% garanted", (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),
                                         lineType=cv2.LINE_AA) 
                             break
                
