@@ -1,7 +1,11 @@
 # cadju
 
 
-- truk area -> refaire v1 sans l'interieur enfete + l'initialisation de la v2
+- truk area -> faut monter les zone du haut
+
+                - faut tout mettre dans une liste si on touche oreille puis side puis mid ne pas dire les truk avant
+                  
+                - la meme si on descend le bras et c bon
 
 
 
