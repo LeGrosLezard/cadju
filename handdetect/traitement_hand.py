@@ -72,7 +72,8 @@ def movements_detection(gray, originale, kernel_blur, seuil,
 
 def drawing_movements(contours, frame_contour, frame,
                       x, y, w, h):
-    
+
+    stop = False
     for c in contours:
 
         if cv2.contourArea(c) > 10000 and\
@@ -89,10 +90,31 @@ def drawing_movements(contours, frame_contour, frame,
                            crop[i, j][1] == 0 and\
                            crop[i, j][2] == 0:
                             cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
-                            cv2.putText(frame, "Main 80% garanted", (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255),
-                                        lineType=cv2.LINE_AA) 
+
+
+                            if x1+w1 > y1 + h1 + 50:
+                                a = x1 - 400
+                                b = x1+w1 - 400
+                                if abs(a) > abs(b):
+                                    print("left on right")
+                                elif abs(a) < abs(b):
+                                    print("right on left")
+
+                            elif x1 < 400:
+                                print("right hand")
+                            elif x1 > 400:
+                                print("left hand")
+
+
+                            stop = True
                             break
-               
+
+                    if stop is True:
+                        break
+
+
+
+
 
 
 
