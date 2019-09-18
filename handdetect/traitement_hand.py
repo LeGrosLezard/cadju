@@ -27,7 +27,7 @@ def face_detections(cascade, frame, gray):
         return x, y, w, h
         
 
-def detections(cascade, frame, gray):
+def detections(cascade, frame, gray, mode):
 
     detection = cascade.detectMultiScale(
         gray,
@@ -39,20 +39,22 @@ def detections(cascade, frame, gray):
     )
 
     for x, y, w, h in detection:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 3)
-
+        if mode == 0:
+            frame[y:y+h, x:x+w] = 255,0,0
+        elif mode == 1:
+            frame[y:y+h, x:x+w] = 255,255,0
 
 
 def all_detections(handCascade, gestCascade,
                    palmCascade, closeCascade,
                    closedCascade, frame, gray):
 
-    detections(handCascade, frame, gray)
-    detections(gestCascade, frame, gray)
-    detections(palmCascade, frame, gray)
+    detections(handCascade, frame, gray, 0)
+    detections(gestCascade, frame, gray, 0)
+    detections(palmCascade, frame, gray, 0)
 
-    detections(closeCascade, frame, gray)
-    detections(closedCascade, frame, gray)
+    detections(closeCascade, frame, gray, 1)
+    detections(closedCascade, frame, gray, 1)
 
 
 
@@ -83,26 +85,32 @@ def drawing_movements(contours, frame_contour, frame,
             if x1 > x and y1 > y and x1+w1 < x+w:
                 pass
             else:
+                cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
+
+                liste = []
                 crop = frame[y1:y1+w1, x1:x1+w1]
-                for i in range(crop.shape[0]):
-                    for j in range(crop.shape[1]):
-                        if crop[i, j][0] == 255 and\
-                           crop[i, j][1] == 0 and\
-                           crop[i, j][2] == 0:
-                            cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
+                liste.append(str(crop))
+                find_hand = str(liste).find("255   0   0")
+                find_fist = str(liste).find("255 255   0")
 
-                            if x1 < 350:
-                                print("right hand")
-                            elif x1 > 450:
-                                print("left hand")
+                if find_hand >= 0:
 
-                            stop = True
-                            break
+                    cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
 
-                    if stop is True:
-                        break
+                    if x1 < 350:
+                        print("right hand")
+                    elif x1 > 450:
+                        print("left hand")
 
 
+                elif find_fist >= 0:
+
+                    cv2.rectangle(frame, (x1, y1), (x1+w1, y1+h1), (0, 0, 255), 2)
+
+                    if x1 < 350:
+                        print("right fist")
+                    elif x1 > 450:
+                        print("left fist")
 
 
 
