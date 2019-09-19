@@ -1,13 +1,15 @@
-import speech_recognition as sr
+import speech_recognition  as sr
 
-r=sr.Recognizer()
 
-with sr.AudioFile("dictée.wav") as source:
-    audio = r.record(source)
+r = sr.Recognizer()
+with sr.Microphone() as source:
+    print("say something")
     audio = r.listen(source)
-
-    
 text = r.recognize_google(audio)
-for i in text:
-    print(i)
+try:
+   print("You said: {}",format(text))
+
+except:
+   print("Sorry I couldn't understand you")
+
 
