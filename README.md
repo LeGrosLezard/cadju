@@ -1,13 +1,22 @@
 # cadju
 
 
-j'ai enfin speeeeeech !! bouaaaaaaaa mtn faut delib
+ok faut que je redige un truk comme dans startup
+
+une fois fini essayer les points
+
+faire le truk de detection du toit du mec
+
+
+
 
 - full body area
 
 
 
 --------------------------------------------- esquisse
+
+
 
 - ensuite js speeck recog si pas dlib avec dlib ca serait dingue (chai pas si on peut sans internet lancé un serveur local)
   
