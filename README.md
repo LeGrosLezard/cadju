@@ -1,7 +1,7 @@
 # cadju
 
 
-grrrrrrrrrr jy arrive pas !
+j'ai enfin speeeeeech !! bouaaaaaaaa mtn faut delib
 
 - full body area
 
