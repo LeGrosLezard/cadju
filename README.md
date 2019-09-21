@@ -1,7 +1,7 @@
 # cadju
 
 
-ok faut que je redige un truk comme dans startup
+putin jme la pétais avec mon découpage de la figure... je jure que valence aouste a patte jlai senti, et tout c putin de reflet blanc...
 
 une fois fini essayer les points
 
