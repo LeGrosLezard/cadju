@@ -1,11 +1,14 @@
 # cadju
 
+on peut faire la detection du levé de sourcile du coup
 
-putin jme la pétais avec mon découpage de la figure... je jure que valence aouste a patte jlai senti, et tout c putin de reflet blanc...
+on a aussi les mains
 
-une fois fini essayer les points
+mais mtn pour les zones du visage faut effacer les mains pour qu'elle deviennt noires
 
-faire le truk de detection du toit du mec
+
+
+faire le truk de detection du toit du mec (demain)
 
 
 
