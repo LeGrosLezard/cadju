@@ -4,20 +4,31 @@ from PIL import Image
 
 from config import alpha_numeric
 
+def adjust_gamma(image, gamma):
+    """We add light to the video, we play with gamma"""
+
+    invGamma = 1.0 / gamma
+    table = np.array([((i / 255.0) ** invGamma) * 255
+            for i in np.arange(0, 256)]).astype("uint8")
+
+    return cv2.LUT(image, table)
+
+
 
 def detections(frame, gray, faceCascade, eyes_cascade):
     faces = faceCascade.detectMultiScale(
         gray,
         scaleFactor=1.3,
-        minNeighbors=1,
+        minNeighbors=5,
         minSize=(60, 100),
         flags=cv2.CASCADE_SCALE_IMAGE
     )
 
     for x, y, w, h in faces:
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
-        crop = frame[y:y+h, x+20:x+w-20]
-        gray_crop = gray[y:y+h, x+20:x+w-20]
+
+        crop = frame[y:y+h, x:x+w]
+        gray_crop = gray[y:y+h, x:x+w]
         
         eyes = eyes_cascade.detectMultiScale(
             gray_crop,
@@ -33,7 +44,7 @@ def detections(frame, gray, faceCascade, eyes_cascade):
 def sourcile(eyes, crop, alpha_numeric):
 
     new = 0
-
+    c = 0
     for x1, y1, w1, h1 in eyes:
 
         #cv2.rectangle(crop, (x1, y1-20), (x1+w1, y1+20), (0, 0, 0), 2)
@@ -49,10 +60,6 @@ def sourcile(eyes, crop, alpha_numeric):
 
                 if thresh[i, j] == 0:
                     alpha_numeric[new].append([i, j])
-
-        cv2.imshow("thresh", thresh)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
 
         len_x = 0
         ligne = []
@@ -82,6 +89,7 @@ def video_capture():
 
         ret, frame = video.read()
         frame = cv2.resize(frame, (800, 600))
+
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         try:
@@ -95,8 +103,8 @@ def video_capture():
         cv2.imshow("frame", frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            cv2.imwrite("yoyoy.jpg")
             break
-
 
     video.release()
     cv2.destroyAllWindows()
