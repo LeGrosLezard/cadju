@@ -1,7 +1,8 @@
 # cadju
 
-sourcile ajustement mtn
+essais canny sinon la couleur
 
+ca detecte le cil
 
 
 
