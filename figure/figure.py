@@ -28,17 +28,18 @@ def detections(frame, gray, faceCascade, eyes_cascade):
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
         crop = frame[y:y+h, x:x+w]
-        gray_crop = gray[y:y+h, x:x+w]
+        gray_crop = gray[y:y+h-50, x:x+w]
         
         eyes = eyes_cascade.detectMultiScale(
             gray_crop,
             scaleFactor=1.3,
-            minNeighbors=2,
+            minNeighbors=4,
             minSize=(30, 30),
+
             flags=cv2.CASCADE_SCALE_IMAGE
         )
 
-        return eyes, crop
+        return eyes, crop, faces
 
 
 def sourcile(eyes, crop, alpha_numeric):
@@ -63,7 +64,6 @@ def sourcile(eyes, crop, alpha_numeric):
 
         len_x = 0
         ligne = []
-
         for i in alpha_numeric:
             if i != []:
                 if len(i) > len_x:
@@ -77,6 +77,16 @@ def sourcile(eyes, crop, alpha_numeric):
         alpha_numeric = []
         for i in range(500):
             alpha_numeric.append([])
+
+
+def mouth(faces, frame):
+
+    for x, y, w, h in faces:
+        square = int(w/3)
+        cv2.rectangle(frame, (x+square-20, y+h-70), (x+square*2 + 20, y+h),
+                      (0, 0, 255), 2)
+    #soit canny
+    #soit color
 
 
 
@@ -93,12 +103,15 @@ def video_capture():
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         try:
-            eyes, crop = detections(frame, gray, facecascade, eyescascade)
+            eyes, crop, faces = detections(frame, gray, facecascade, eyescascade)
             sourcile(eyes, crop, alpha_numeric)
+            mouth(faces, frame)
+
+            
         except:
             pass
 
-
+        mouth(faces, frame)
 
         cv2.imshow("frame", frame)
 
