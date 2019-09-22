@@ -1,87 +1,106 @@
 import cv2
+import numpy as np
+from PIL import Image
+
+from config import alpha_numeric
 
 
-def face_detection(frame, gray, faceCascade):
-    """We detecting the face by haarcascade"""
-
+def detections(frame, gray, faceCascade, eyes_cascade):
     faces = faceCascade.detectMultiScale(
         gray,
-        scaleFactor=1.1,
-        minNeighbors=5,
-        minSize=(50, 50),
+        scaleFactor=1.3,
+        minNeighbors=1,
+        minSize=(60, 100),
         flags=cv2.CASCADE_SCALE_IMAGE
     )
+
     for x, y, w, h in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 10)
-        return x, y, w, h
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
+        crop = frame[y:y+h, x+20:x+w-20]
+        gray_crop = gray[y:y+h, x+20:x+w-20]
+        
+        eyes = eyes_cascade.detectMultiScale(
+            gray_crop,
+            scaleFactor=1.3,
+            minNeighbors=2,
+            minSize=(30, 30),
+            flags=cv2.CASCADE_SCALE_IMAGE
+        )
+
+        return eyes, crop
 
 
-def recup_points(frame, x, y, w, h, liste_couleur):
+def sourcile(eyes, crop, alpha_numeric):
 
-    point = frame[y+100:y+101, x+50:x+51]
+    new = 0
 
-    point = point.tolist()
-    point = point[0][0]
+    for x1, y1, w1, h1 in eyes:
 
-    liste_couleur.append([point[0], point[1], point[2]])
-    cv2.rectangle(frame, (x+50, y+100), (x+51, y+101), (255, 0, 0), 5)
-    
-    return  x+50, y+100, x+51, y+101
+        #cv2.rectangle(crop, (x1, y1-20), (x1+w1, y1+20), (0, 0, 0), 2)
+        eyes_crop = crop[y1-20:y1+20, x1:x1+w1]
+        gray=cv2.cvtColor(eyes_crop, cv2.COLOR_BGR2GRAY)
+        _, thresh = cv2.threshold(gray, 150, 255,cv2.THRESH_BINARY)
 
+        for i in range(thresh.shape[0]):
+            for j in range(thresh.shape[1]):
 
-def put_points(frame, liste_couleur, pts1, pts2, pts3, pts4,
-               x, y):
-    print("initialement", liste_couleur)
-    print("suposé", frame[y:y+1, x:x+1])
-    print("")
+                if j == thresh.shape[1] - 1:
+                    new += 1
 
-    cv2.rectangle(frame, (pts1, pts2), (pts3, pts4), (255, 0, 0), 5)
-    cv2.rectangle(frame, (x, y), (x+1, y+1), (0, 0, 255), 5)
-    
+                if thresh[i, j] == 0:
+                    alpha_numeric[new].append([i, j])
+
+        cv2.imshow("thresh", thresh)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+        len_x = 0
+        ligne = []
+
+        for i in alpha_numeric:
+            if i != []:
+                if len(i) > len_x:
+                    len_x = len(i)
+                    ligne.append(i)
+
+        for i in ligne[-1]:
+            cv2.circle(eyes_crop, (i[1],i[0]), 1, (0,0,255), -1)
+
+        
+        alpha_numeric = []
+        for i in range(500):
+            alpha_numeric.append([])
+
 
 
 def video_capture():
-    liste_couleur = []
 
-    X = 0
-    Y = 0
-    W = 0
-    H = 0
+    eyescascade = cv2.CascadeClassifier('haar/haarcascade_eye.xml')
+    facecascade = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
+    video = cv2.VideoCapture(0)
+    while(True):
 
-    faceCascade = cv2.CascadeClassifier("haar/haarcascade_frontalface_alt2.xml")
-    video_capture = cv2.VideoCapture(0) 
-
-    while True:
-        _, frame = video_capture.read()
+        ret, frame = video.read()
         frame = cv2.resize(frame, (800, 600))
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+        try:
+            eyes, crop = detections(frame, gray, facecascade, eyescascade)
+            sourcile(eyes, crop, alpha_numeric)
+        except:
+            pass
 
-        x, y, w, h = face_detection(frame, gray, faceCascade)
 
-
-        if len(liste_couleur) < 1:
-            pts1, pts2, pt3, pt4 = recup_points(frame, x, y, w, h,
-                                                liste_couleur)
-
-        else:
-
-            x, y, w, h = face_detection(frame, gray, faceCascade)
-            put_points(frame, liste_couleur, pts1, pts2, pt3, pt4,
-                       x+50+(X-x), y+100+(Y-y))
-        
 
         cv2.imshow("frame", frame)
 
-        key = cv2.waitKey(200) & 0xFF
-        if key == ord('q'):
-            cv2.destroyAllWindows()
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-                
-        X = x
-        Y = y
-        W = x+w
-        H = y+w
+
+
+    video.release()
+    cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     video_capture()
