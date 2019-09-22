@@ -1,14 +1,10 @@
 # cadju
 
-on peut faire la detection du levé de sourcile du coup
-
-on a aussi les mains
-
-mais mtn pour les zones du visage faut effacer les mains pour qu'elle deviennt noires
+sourcile ajustement mtn
 
 
 
-faire le truk de detection du toit du mec (demain)
+
 
 
 
