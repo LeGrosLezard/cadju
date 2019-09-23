@@ -114,6 +114,12 @@ def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
                       eyes_center_xG, eyes_center_yG):
 
     counter = 0
+    mean = 0
+    if len(eyes) == 2:
+        for x1, y1, h1, w1 in eyes:
+            mean += int(x1+w1/2)
+        mean = int(mean /2)
+
     for x1, y1, h1, w1 in eyes:
 
         eyes_crop = crop[y1+h1-35:y1+h1-10, x1:x1+w1]
@@ -128,22 +134,15 @@ def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
             cv2.circle(crop, (eyes_center_xG, eyes_center_yG), 1, (255,0,0), 5)
 
         else:
-            if counter == 0:
-                if int(x1+w1/2) > eyes_center_xD + 20:
-                    eyes_center_xG = int(x1+w1/2)
-                    eyes_center_yG = int(y1+h1/2)
-                else:
-                    eyes_center_xD = int(x1+w1/2)
-                    eyes_center_yD = int(y1+h1/2)
- 
-            elif counter == 1:
-                if int(x1+w1/2) > eyes_center_xG - 20:
-                    eyes_center_xD = int(x1+w1/2)
-                    eyes_center_yD = int(y1+h1/2)
-                else:
-                    eyes_center_xG = int(x1+w1/2)
-                    eyes_center_yG = int(y1+h1/2)
-    
+
+            if int(x1+w1/2) > mean:
+                eyes_center_xG = int(x1+w1/2)
+                eyes_center_yG = int(y1+h1/2)
+            else:
+                eyes_center_xD = int(x1+w1/2)
+                eyes_center_yD = int(y1+h1/2)
+
+
             cv2.drawContours(eyes_crop, cnts, -1, (0, 0, 255), 3)
 
         counter += 1
