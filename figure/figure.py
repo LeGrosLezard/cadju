@@ -231,7 +231,7 @@ def smyling(frame, faces):
 
     for x, y, w, h in faces:
 
-        crop1 = frame[y+h-40:y+h-25, x+50:x+w-50]
+        crop1 = frame[y+h-50:y+h-15, x+50:x+w-50]
         crop_frame = crop1
         crop1 = adjust_gamma(crop1, 0.6)
 
@@ -249,17 +249,16 @@ def smyling(frame, faces):
                     y_liste.append(j)
 
 
-
-        
         coin_dx = min(x_liste)
-        coin_dy = x_liste.index(min(x_liste))
+        coin_dy = y_liste[x_liste.index(min(x_liste))]
+
 
         coin_gx = max(y_liste)
-        coin_gy = y_liste.index(max(y_liste))
+        coin_gy = x_liste[y_liste.index(max(y_liste))]
 
    
-        cv2.circle(crop_frame, (coin_dx, coin_dy), 1, (0, 0, 0), 5)
-        cv2.circle(crop_frame, (coin_gx, coin_gy), 1, (0, 0, 0), 5)
+        cv2.circle(crop_frame, (coin_dx, coin_dy), 1, (0, 0, 0), 10)
+        cv2.circle(crop_frame, (coin_gx, coin_gy), 1, (0, 0, 0), 10)
 
 
   
