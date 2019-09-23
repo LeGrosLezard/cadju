@@ -1,6 +1,6 @@
 # cadju
 
-jbricole... 3 ia avec arbres dedescisions chai pas c quoi moi ca
+pour la bouche faire un detecteur de couleur ou un truk qui met en evidance la bouche et faire un contour et si y'a un arc dire sourire en plus des pts srx faut que ca pete les haar cascade sont révolu depuis 10 ans y'a écrit pffff et ca marche que dal hors conditions
 
 ca detecte le cil
 
