@@ -4,6 +4,7 @@ from PIL import Image
 
 from config import alpha_numeric
 
+
 def adjust_gamma(image, gamma):
     """We add light to the video, we play with gamma"""
 
@@ -50,6 +51,7 @@ def face_ride(faces, gray):
     cv2.imshow("aaaa", edge)
 
 
+
 def sourcile(eyes, crop):
 
     rowD = 0
@@ -90,7 +92,7 @@ def sourcile(eyes, crop):
                 if thresh[i, j] == 0:
                     alpha_numeric[new].append([i, j])
 
-
+        #cv2.imshow("azevcnbv,", thresh)
         len_x = 0
         ligne = []
         for i in alpha_numeric:
@@ -131,47 +133,12 @@ def sourcile_position(crop, rowD, rowG, mean, mean_y):
     
     if rowD != 0 or rowG != 0 or centerD != 0 or centerG != 0:
 
-        if rowD < 20 and rowG < 20:
+        if rowD < 22 and rowG < 22:
            print("levé")
 
     crop = crop[mean_y-40:mean_y, mean-30:mean+30]
     cv2.imshow("dzacxwc", crop)
     #
-
-
-def mouth(faces, frame, mouthcascade):
-
-    for x, y, w, h in faces:
-        
-        crop1 = frame[y+h-70:y+h, x:x+w]
-        crop_g = cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
-
-        square = int(w/3)
-        crop = frame[y+h-50:y+h, x+square:x+w-square]
-        #cv2.imshow("popopopo", crop)
-
-
-        mouth = mouthcascade.detectMultiScale(
-            crop_g,
-            scaleFactor=1.3,
-            minNeighbors=6,
-            flags=cv2.CASCADE_SCALE_IMAGE
-        )
-
-        for x1, y1, w1, h1 in mouth:
-
-            cv2.circle(crop1, (x1-5,y1+5), 1, (0,0,255), 5)
-            cv2.circle(crop1, (x1+w1-5,y1+5), 1, (0,0,255), 5) 
-            break
-        
-        nose(frame, x, y, w, h)
-
-
-
-def nose(frame, x, y, w, h):
-    square = int(w/3)
-    crop = frame[y+h-80:y+h-50, x+square:x+w-square]
-    #cv2.imshow("azeze1", crop)
 
 
 
@@ -222,6 +189,51 @@ def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
 
 
 
+def mouth(faces, frame, mouthcascade, mouth_pts1_x):
+
+    for x, y, w, h in faces:
+        
+        crop1 = frame[y+h-55:y+h, x+30:x+w-30]
+        crop_g = cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
+
+        square = int(w/3)
+        crop = frame[y+h-40:y+h, x+square:x+w-square]
+        #cv2.imshow("popopopo", crop)
+
+
+        mouth = mouthcascade.detectMultiScale(
+            crop_g,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            flags=cv2.CASCADE_SCALE_IMAGE
+        )
+
+        for x1, y1, w1, h1 in mouth:
+
+            cv2.circle(crop1, (x1,y1), 1, (0,0,255), 5)
+            cv2.circle(crop1, (x1+w1,y1), 1, (0,0,255), 5)
+            cv2.rectangle(crop1, (x1, y1), (x1+w1, y1+h1), 3)
+
+
+            if x1+w1 < mouth_pts1_x - 10:
+                print("ooooooh")
+            else:
+                mouth_pts1_x = x1+w1
+
+            cv2.imshow("zzz", crop_g)
+        
+        nose(frame, x, y, w, h)
+
+    return mouth_pts1_x
+
+
+def nose(frame, x, y, w, h):
+    square = int(w/3)
+    crop = frame[y+h-80:y+h-50, x+square:x+w-square]
+    #cv2.imshow("azeze1", crop)
+
+
+    
 
 def video_capture():
 
@@ -237,6 +249,9 @@ def video_capture():
     listeD = []
     listeG = []
 
+
+    mouth_pts1_x = -10000
+
     video = cv2.VideoCapture(0)
     while(True):
 
@@ -250,7 +265,9 @@ def video_capture():
             face_ride(faces, gray)
 
             rowD, rowG, mean, mean_y = sourcile(eyes, crop)
-            mouth(faces, frame, mouthcascade)
+
+            mouth_pts1_x = mouth(faces, frame, mouthcascade,
+                                 mouth_pts1_x)
 
             eyes_center_xD, eyes_center_yD,\
             eyes_center_xG, eyes_center_yG\
@@ -261,7 +278,7 @@ def video_capture():
             #si fermeture yeux alors affiche pas sourcile
         except:
             pass
-        
+
         cv2.imshow("frame", frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
