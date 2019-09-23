@@ -2,7 +2,7 @@
 
 peut etre mettre une image en arreire plan définir  ce que tu veux, et faire les réglage de seuil dessus
 
-
+bouche -> thresh 60 - 255
 
 
 
