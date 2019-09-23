@@ -1,9 +1,12 @@
 import cv2
 import numpy as np
 from PIL import Image
+import operator
+from collections import defaultdict
+
 
 from config import alpha_numeric
-
+#afin d'ajuster les seuil mettre une image genreu n tigre et compter les tache
 
 def adjust_gamma(image, gamma):
     """We add light to the video, we play with gamma"""
@@ -193,12 +196,11 @@ def mouth(faces, frame, mouthcascade, mouth_pts1_x):
 
     for x, y, w, h in faces:
         
-        crop1 = frame[y+h-55:y+h, x+30:x+w-30]
+        crop1 = frame[y+h-50:y+h, x+50:x+w-50]
         crop_g = cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
 
         square = int(w/3)
         crop = frame[y+h-40:y+h, x+square:x+w-square]
-        #cv2.imshow("popopopo", crop)
 
 
         mouth = mouthcascade.detectMultiScale(
@@ -210,26 +212,74 @@ def mouth(faces, frame, mouthcascade, mouth_pts1_x):
 
         for x1, y1, w1, h1 in mouth:
 
-            cv2.circle(crop1, (x1,y1), 1, (0,0,255), 5)
-            cv2.circle(crop1, (x1+w1,y1), 1, (0,0,255), 5)
-            cv2.rectangle(crop1, (x1, y1), (x1+w1, y1+h1), 3)
+            #cv2.circle(crop1, (x1,y1), 1, (0,0,255), 5)
+            #cv2.circle(crop1, (x1+w1,y1), 1, (0,0,255), 5)
+            #cv2.rectangle(crop1, (x1, y1), (x1+w1, y1+h1), 3)
 
-
+            
             if x1+w1 < mouth_pts1_x - 10:
                 print("ooooooh")
             else:
                 mouth_pts1_x = x1+w1
 
-            cv2.imshow("zzz", crop_g)
-        
         nose(frame, x, y, w, h)
 
     return mouth_pts1_x
 
 
+def smyling(frame, faces):
+
+    for x, y, w, h in faces:
+
+        crop1 = frame[y+h-40:y+h-25, x+50:x+w-50]
+        crop_frame = crop1
+        crop1 = adjust_gamma(crop1, 0.6)
+
+
+        gray=cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
+        _, thresh1 = cv2.threshold(gray, 60, 255,cv2.THRESH_BINARY)
+
+        x_liste = []
+        y_liste = []
+
+        for i in range(thresh1.shape[0]):
+            for j in range(thresh1.shape[1]):
+                if thresh1[i, j] == 0:
+                    x_liste.append(i)
+                    y_liste.append(j)
+
+
+
+        
+        coin_dx = min(x_liste)
+        coin_dy = x_liste.index(min(x_liste))
+
+        coin_gx = max(y_liste)
+        coin_gy = y_liste.index(max(y_liste))
+
+   
+        cv2.circle(crop_frame, (coin_dx, coin_dy), 1, (0, 0, 0), 5)
+        cv2.circle(crop_frame, (coin_gx, coin_gy), 1, (0, 0, 0), 5)
+
+
+  
+        cv2.imshow("zaee", thresh1)
+        cv2.imshow("eazeazezaeza", crop1)
+
+
+
+
+
+
+
+
+
+
+
 def nose(frame, x, y, w, h):
     square = int(w/3)
-    crop = frame[y+h-80:y+h-50, x+square:x+w-square]
+    y1 = int(6/100)
+    crop = frame[y+h-y1:y+h-50, x+square:x+w-square]
     #cv2.imshow("azeze1", crop)
 
 
@@ -268,6 +318,7 @@ def video_capture():
 
             mouth_pts1_x = mouth(faces, frame, mouthcascade,
                                  mouth_pts1_x)
+            smyling(frame, faces)
 
             eyes_center_xD, eyes_center_yD,\
             eyes_center_xG, eyes_center_yG\
