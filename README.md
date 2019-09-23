@@ -1,6 +1,6 @@
 # cadju
 
-essais canny sinon la couleur
+jbricole... 3 ia avec arbres dedescisions chai pas c quoi moi ca
 
 ca detecte le cil
 
