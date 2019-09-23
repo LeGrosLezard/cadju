@@ -42,7 +42,12 @@ def detections(frame, gray, faceCascade, eyes_cascade):
         return eyes, crop, faces
 
 
-def sourcile(eyes, crop, alpha_numeric):
+def sourcile(eyes, crop):
+
+
+    alpha_numeric = []
+    for i in range(500):
+        alpha_numeric.append([])
 
     new = 0
     c = 0
@@ -70,30 +75,64 @@ def sourcile(eyes, crop, alpha_numeric):
                     len_x = len(i)
                     ligne.append(i)
 
+        counter_pts = 0
         for i in ligne[-1]:
-            cv2.circle(eyes_crop, (i[1],i[0]), 1, (0,0,255), -1)
-
+            if counter_pts % 10 == 0:
+                cv2.circle(eyes_crop, (i[1],i[0]), 1, (0,0,255), 4)
+            counter_pts += 1
         
         alpha_numeric = []
         for i in range(500):
             alpha_numeric.append([])
 
 
-def mouth(faces, frame):
+def mouth(faces, frame, mouthcascade):
 
     for x, y, w, h in faces:
-        square = int(w/3)
-        cv2.rectangle(frame, (x+square-20, y+h-70), (x+square*2 + 20, y+h),
-                      (0, 0, 255), 2)
-    #soit canny
-    #soit color
+        
+        crop1 = frame[y+h-70:y+h, x:x+w]
 
+        crop_g = cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
+
+        mouth = mouthcascade.detectMultiScale(
+            crop_g,
+            scaleFactor=1.3,
+            minNeighbors=6,
+            flags=cv2.CASCADE_SCALE_IMAGE
+        )
+
+        a = 0
+        b = 0
+        c = 0
+        d = 0
+        min_y = 1000000
+                
+        for x1, y1, w1, h1 in mouth:
+            if len(mouth) > 1:
+                if y1 < min_y:
+                    min_y = y1
+                    a = x1
+                    b = y1
+                    c = w1
+                    d = h1
+            elif len(mouth) == 1:
+                cv2.circle(crop1, (x1-5,y1+5), 1, (0,0,255), 5)
+                cv2.circle(crop1, (x1+w1-5,y1+5), 1, (0,0,255), 5)
+        if a != 0:
+            cv2.circle(crop1, (a-5, b+5), 1, (0,0,255), 5)
+            cv2.circle(crop1, (a+c-5, b+5), 1, (0,0,255), 5)
+
+
+        
+        
 
 
 def video_capture():
 
     eyescascade = cv2.CascadeClassifier('haar/haarcascade_eye.xml')
     facecascade = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
+    mouthcascade = cv2.CascadeClassifier('haar/mouth.xml')
+
     video = cv2.VideoCapture(0)
     while(True):
 
@@ -104,19 +143,17 @@ def video_capture():
 
         try:
             eyes, crop, faces = detections(frame, gray, facecascade, eyescascade)
-            sourcile(eyes, crop, alpha_numeric)
-            mouth(faces, frame)
+            sourcile(eyes, crop)
+            mouth(faces, frame, mouthcascade)
 
             
         except:
             pass
 
-        mouth(faces, frame)
 
         cv2.imshow("frame", frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            cv2.imwrite("yoyoy.jpg")
             break
 
     video.release()
