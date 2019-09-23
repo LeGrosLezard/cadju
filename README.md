@@ -1,6 +1,6 @@
 # cadju
 
-différence entre je comprend pas et colere
+
 
 
 
