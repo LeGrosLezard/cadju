@@ -2,7 +2,7 @@
 
 peut etre mettre une image en arreire plan définir  ce que tu veux, et faire les réglage de seuil dessus
 
-bouche -> thresh 60 - 255 (sans fenetre sur le deuxieme écran)
+bouche -> thresh 60 - 255 (sans fenetre sur le deuxieme écran) jme demandé pk d'un coup ca marchait plus enfin
 
 
 
