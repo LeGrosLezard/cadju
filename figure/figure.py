@@ -42,6 +42,14 @@ def detections(frame, gray, faceCascade, eyes_cascade):
         return eyes, crop, faces
 
 
+def face_ride(faces, gray):
+    for x, y, w, h in faces:
+        gray_crop = gray[y:y+h, x:x+w]
+        edge = cv2.Canny(gray_crop, 0, 255)
+
+    cv2.imshow("aaaa", edge)
+
+
 def sourcile(eyes, crop):
 
     rowD = 0
@@ -120,15 +128,11 @@ def sourcile(eyes, crop):
 
 
 def sourcile_position(crop, rowD, rowG, mean, mean_y):
-
-
     
-
     if rowD != 0 or rowG != 0 or centerD != 0 or centerG != 0:
 
         if rowD < 20 and rowG < 20:
            print("levé")
-
 
     crop = crop[mean_y-40:mean_y, mean-30:mean+30]
     cv2.imshow("dzacxwc", crop)
@@ -144,7 +148,7 @@ def mouth(faces, frame, mouthcascade):
 
         square = int(w/3)
         crop = frame[y+h-50:y+h, x+square:x+w-square]
-        cv2.imshow("popopopo", crop)
+        #cv2.imshow("popopopo", crop)
 
 
         mouth = mouthcascade.detectMultiScale(
@@ -162,10 +166,12 @@ def mouth(faces, frame, mouthcascade):
         
         nose(frame, x, y, w, h)
 
+
+
 def nose(frame, x, y, w, h):
     square = int(w/3)
     crop = frame[y+h-80:y+h-50, x+square:x+w-square]
-    cv2.imshow("azeze1", crop)
+    #cv2.imshow("azeze1", crop)
 
 
 
@@ -241,6 +247,8 @@ def video_capture():
 
         try:
             eyes, crop, faces = detections(frame, gray, facecascade, eyescascade)
+            face_ride(faces, gray)
+
             rowD, rowG, mean, mean_y = sourcile(eyes, crop)
             mouth(faces, frame, mouthcascade)
 
