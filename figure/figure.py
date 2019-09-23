@@ -54,7 +54,7 @@ def sourcile(eyes, crop):
     for x1, y1, w1, h1 in eyes:
 
         #cv2.rectangle(crop, (x1, y1-20), (x1+w1, y1+20), (0, 0, 0), 2)
-        eyes_crop = crop[y1-20:y1+20, x1:x1+w1]
+        eyes_crop = crop[y1-20:y1+10, x1:x1+w1]
         gray=cv2.cvtColor(eyes_crop, cv2.COLOR_BGR2GRAY)
         _, thresh = cv2.threshold(gray, 150, 255,cv2.THRESH_BINARY)
 
@@ -86,6 +86,8 @@ def sourcile(eyes, crop):
             alpha_numeric.append([])
 
 
+
+
 def mouth(faces, frame, mouthcascade):
 
     for x, y, w, h in faces:
@@ -101,30 +103,56 @@ def mouth(faces, frame, mouthcascade):
             flags=cv2.CASCADE_SCALE_IMAGE
         )
 
-        a = 0
-        b = 0
-        c = 0
-        d = 0
-        min_y = 1000000
-                
         for x1, y1, w1, h1 in mouth:
-            if len(mouth) > 1:
-                if y1 < min_y:
-                    min_y = y1
-                    a = x1
-                    b = y1
-                    c = w1
-                    d = h1
-            elif len(mouth) == 1:
-                cv2.circle(crop1, (x1-5,y1+5), 1, (0,0,255), 5)
-                cv2.circle(crop1, (x1+w1-5,y1+5), 1, (0,0,255), 5)
-        if a != 0:
-            cv2.circle(crop1, (a-5, b+5), 1, (0,0,255), 5)
-            cv2.circle(crop1, (a+c-5, b+5), 1, (0,0,255), 5)
-
-
+            
+            cv2.circle(crop1, (x1-5,y1+5), 1, (0,0,255), 5)
+            cv2.circle(crop1, (x1+w1-5,y1+5), 1, (0,0,255), 5) 
+            break
         
         
+def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
+                      eyes_center_xG, eyes_center_yG):
+
+    counter = 0
+    for x1, y1, h1, w1 in eyes:
+
+        eyes_crop = crop[y1+h1-35:y1+h1-10, x1:x1+w1]
+        blur = cv2.GaussianBlur(eyes_crop, (5,5), 3)
+        edge = cv2.Canny(blur, 140, 200)
+
+        _, thresh1 = cv2.threshold(edge, 127, 255,cv2.THRESH_BINARY)
+        cnts, _ = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        if len(cnts) == 0:
+            cv2.circle(crop, (eyes_center_xD, eyes_center_yD), 1, (0,255,0), 5) 
+            cv2.circle(crop, (eyes_center_xG, eyes_center_yG), 1, (255,0,0), 5)
+
+        else:
+            if counter == 0:
+                if int(x1+w1/2) > eyes_center_xD + 20:
+                    eyes_center_xG = int(x1+w1/2)
+                    eyes_center_yG = int(y1+h1/2)
+                else:
+                    eyes_center_xD = int(x1+w1/2)
+                    eyes_center_yD = int(y1+h1/2)
+ 
+            elif counter == 1:
+                if int(x1+w1/2) > eyes_center_xG - 20:
+                    eyes_center_xD = int(x1+w1/2)
+                    eyes_center_yD = int(y1+h1/2)
+                else:
+                    eyes_center_xG = int(x1+w1/2)
+                    eyes_center_yG = int(y1+h1/2)
+    
+            cv2.drawContours(eyes_crop, cnts, -1, (0, 0, 255), 3)
+
+        counter += 1
+
+    
+    return eyes_center_xD, eyes_center_yD, eyes_center_xG, eyes_center_yG
+
+
+
 
 
 def video_capture():
@@ -132,6 +160,11 @@ def video_capture():
     eyescascade = cv2.CascadeClassifier('haar/haarcascade_eye.xml')
     facecascade = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
     mouthcascade = cv2.CascadeClassifier('haar/mouth.xml')
+
+    eyes_center_xD = 0
+    eyes_center_yD = 0
+    eyes_center_xG = 0
+    eyes_center_yG = 0
 
     video = cv2.VideoCapture(0)
     while(True):
@@ -145,7 +178,10 @@ def video_capture():
             eyes, crop, faces = detections(frame, gray, facecascade, eyescascade)
             sourcile(eyes, crop)
             mouth(faces, frame, mouthcascade)
-
+            eyes_center_xD, eyes_center_yD,\
+            eyes_center_xG, eyes_center_yG\
+            = eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
+                                eyes_center_xG, eyes_center_yG)
             
         except:
             pass
@@ -155,6 +191,7 @@ def video_capture():
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
+
 
     video.release()
     cv2.destroyAllWindows()
