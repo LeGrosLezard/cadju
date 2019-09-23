@@ -82,6 +82,7 @@ def sourcile(eyes, crop):
                 if thresh[i, j] == 0:
                     alpha_numeric[new].append([i, j])
 
+
         len_x = 0
         ligne = []
         for i in alpha_numeric:
@@ -105,18 +106,23 @@ def sourcile(eyes, crop):
         for i in range(500):
             alpha_numeric.append([])
 
+
         if (x1+w1/2) < mean:
             rowD = row
  
         elif (x1+w1/2) > mean:
             rowG = row
 
+        
 
     return rowD, rowG, mean, mean_y
 
 
 
 def sourcile_position(crop, rowD, rowG, mean, mean_y):
+
+
+    
 
     if rowD != 0 or rowG != 0 or centerD != 0 or centerG != 0:
 
@@ -175,33 +181,37 @@ def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
 
     for x1, y1, h1, w1 in eyes:
 
-        eyes_crop = crop[y1+h1-35:y1+h1-10, x1:x1+w1]
-        blur = cv2.GaussianBlur(eyes_crop, (5,5), 3)
-        edge = cv2.Canny(blur, 140, 200)
+        if len(eyes) == 2:
+            eyes_crop = crop[y1+h1-35:y1+h1-10, x1:x1+w1]
+            blur = cv2.GaussianBlur(eyes_crop, (5,5), 3)
+            edge = cv2.Canny(blur, 140, 200)
 
-        _, thresh1 = cv2.threshold(edge, 127, 255,cv2.THRESH_BINARY)
-        cnts, _ = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            _, thresh1 = cv2.threshold(edge, 127, 255,cv2.THRESH_BINARY)
+            cnts, _ = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-        if len(cnts) == 0:
-            cv2.circle(crop, (eyes_center_xD, eyes_center_yD), 1, (0,255,0), 5) 
-            cv2.circle(crop, (eyes_center_xG, eyes_center_yG), 1, (255,0,0), 5)
+            if len(cnts) == 0:
+                cv2.circle(crop, (eyes_center_xD, eyes_center_yD), 1, (0,255,0), 10) 
+                cv2.circle(crop, (eyes_center_xG, eyes_center_yG), 1, (255,0,0), 10)
 
-        else:
-
-            if int(x1+w1/2) > mean:
-                eyes_center_xG = int(x1+w1/2)
-                eyes_center_yG = int(y1+h1/2)
             else:
-                eyes_center_xD = int(x1+w1/2)
-                eyes_center_yD = int(y1+h1/2)
+
+                if int(x1+w1/2) > mean:
+                    eyes_center_xG = int(x1+w1/2)
+                    eyes_center_yG = int(y1+h1/2)
+
+                else:
+                    eyes_center_xD = int(x1+w1/2)
+                    eyes_center_yD = int(y1+h1/2)
 
 
-            cv2.drawContours(eyes_crop, cnts, -1, (0, 0, 255), 3)
+                cv2.drawContours(eyes_crop, cnts, -1, (0, 0, 255), 3)
 
         counter += 1
 
-    
-    return eyes_center_xD, eyes_center_yD, eyes_center_xG, eyes_center_yG
+
+
+    if eyes_center_xG > mean and eyes_center_xD < mean and len(eyes) == 2:
+        return eyes_center_xD, eyes_center_yD, eyes_center_xG, eyes_center_yG
 
 
 
@@ -233,6 +243,7 @@ def video_capture():
             eyes, crop, faces = detections(frame, gray, facecascade, eyescascade)
             rowD, rowG, mean, mean_y = sourcile(eyes, crop)
             mouth(faces, frame, mouthcascade)
+
             eyes_center_xD, eyes_center_yD,\
             eyes_center_xG, eyes_center_yG\
             = eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
@@ -242,7 +253,6 @@ def video_capture():
             #si fermeture yeux alors affiche pas sourcile
         except:
             pass
-
         
         cv2.imshow("frame", frame)
 
