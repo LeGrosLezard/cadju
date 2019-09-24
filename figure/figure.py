@@ -231,10 +231,9 @@ def smyling(frame, faces):
 
     for x, y, w, h in faces:
 
-        crop1 = frame[y+h-50:y+h-15, x+50:x+w-50]
+        crop1 = frame[y+h-50:y+h-20, x+55:x+w-55]
         crop_frame = crop1
         crop1 = adjust_gamma(crop1, 0.6)
-
 
         gray=cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
         _, thresh1 = cv2.threshold(gray, 60, 255,cv2.THRESH_BINARY)
@@ -242,29 +241,46 @@ def smyling(frame, faces):
         x_liste = []
         y_liste = []
 
-        for i in range(thresh1.shape[0]):
-            for j in range(thresh1.shape[1]):
-                if thresh1[i, j] == 0:
+
+        crop_window = thresh1[int(thresh1.shape[0]/4):int(thresh1.shape[0]/1.3), 0:thresh1.shape[1]]
+
+        for i in range(crop_window.shape[0]):
+            for j in range(crop_window.shape[1]):
+                if thresh1[i, j] != 255:
                     x_liste.append(i)
                     y_liste.append(j)
 
 
-        coin_dx = min(x_liste)
-        coin_dy = y_liste[x_liste.index(min(x_liste))]
-
+        coin_dx = min(y_liste)
+        coin_dy = x_liste[y_liste.index(min(y_liste))]
 
         coin_gx = max(y_liste)
         coin_gy = x_liste[y_liste.index(max(y_liste))]
 
-   
+
         cv2.circle(crop_frame, (coin_dx, coin_dy), 1, (0, 0, 0), 10)
         cv2.circle(crop_frame, (coin_gx, coin_gy), 1, (0, 0, 0), 10)
 
 
+
+        mid = int((coin_dx + coin_gx) / 2)
+
+        liste_mid_top = []
+        for i in range(crop_window.shape[0]):
+            for j in range(mid):
+                if thresh1[i, j] == 0:
+                    liste_mid_top.append(i)
+
+        cv2.circle(crop_frame, (mid, max(liste_mid_top)), 1, (255, 0, 255), 5)
+        cv2.line(crop_frame, (mid, max(liste_mid_top)), (coin_dx, coin_dy), (0, 0, 255))
+        cv2.line(crop_frame, (mid, max(liste_mid_top)), (coin_gx, coin_gy), (0, 0, 255))
+
   
         cv2.imshow("zaee", thresh1)
         cv2.imshow("eazeazezaeza", crop1)
-
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            o = input("sauve.")
+            cv2.imwrite(o, thresh1)
 
 
 
