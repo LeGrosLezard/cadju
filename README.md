@@ -1,8 +1,6 @@
 # cadju
 
-peut etre mettre une image en arreire plan définir  ce que tu veux, et faire les réglage de seuil dessus
-
-le mouvement de la tete fait apparaitre des contours du nez
+ok mtn faire une intialisation, tu prends toutes les partie de la figure, et faut un truk carac et faut faire les reglage dessus et faut le code review
 
 
 
