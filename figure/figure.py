@@ -140,8 +140,8 @@ def sourcile_position(crop, rowD, rowG, mean, mean_y):
            print("levé")
 
     crop = crop[mean_y-40:mean_y, mean-30:mean+30]
-    cv2.imshow("dzacxwc", crop)
-    #
+    #cv2.imshow("dzacxwc", crop)
+    
 
 
 
@@ -222,7 +222,6 @@ def mouth(faces, frame, mouthcascade, mouth_pts1_x):
             else:
                 mouth_pts1_x = x1+w1
 
-        nose(frame, x, y, w, h)
 
     return mouth_pts1_x
 
@@ -242,7 +241,7 @@ def smyling(frame, faces):
         y_liste = []
 
 
-        crop_window = thresh1[int(thresh1.shape[0]/4):int(thresh1.shape[0]/1.3), 0:thresh1.shape[1]]
+        crop_window = thresh1[int(thresh1.shape[0]/5.5):int(thresh1.shape[0]/1.3), 0:thresh1.shape[1]]
 
         for i in range(crop_window.shape[0]):
             for j in range(crop_window.shape[1]):
@@ -276,11 +275,11 @@ def smyling(frame, faces):
         cv2.line(crop_frame, (mid, max(liste_mid_top)), (coin_gx, coin_gy), (0, 0, 255))
 
   
-        cv2.imshow("zaee", thresh1)
-        cv2.imshow("eazeazezaeza", crop1)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            o = input("sauve.")
-            cv2.imwrite(o, thresh1)
+##        cv2.imshow("zaee", thresh1)
+##        cv2.imshow("eazeazezaeza", crop1)
+##        if cv2.waitKey(1) & 0xFF == ord('q'):
+##            o = input("sauve.")
+##            cv2.imwrite(o, thresh1)
 
 
 
@@ -291,12 +290,30 @@ def smyling(frame, faces):
 
 
 
-def nose(frame, x, y, w, h):
-    square = int(w/3)
-    y1 = int(6/100)
-    crop = frame[y+h-y1:y+h-50, x+square:x+w-square]
-    #cv2.imshow("azeze1", crop)
+def nose(frame, faces):
 
+    for x, y, w, h in faces:
+
+        square = int(w/3)
+
+        y2 = 0
+        
+        crop = frame[y+int(270*100/y):y+h-60, x+square:x+w-square]
+        gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+        edge = cv2.Canny(gray, 0, 255)
+        
+        cnts, _ = cv2.findContours(edge, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        cv2.drawContours(crop, cnts, -1, (0, 0, 255), 3)
+        if cnts:
+            print("He smelling you bro or he ask concentration")
+
+##        cv2.imshow("azeze1111", crop)
+##        cv2.imshow("dazdqsd1111", edge)
+##
+##        if cv2.waitKey(1) & 0xFF == ord('q'):
+##            o = input("sauve.")
+##            cv2.imwrite(o, crop)
 
     
 
@@ -341,6 +358,10 @@ def video_capture():
                                 eyes_center_xG, eyes_center_yG)
             
             sourcile_position(crop, rowD, rowG, mean, mean_y)
+
+            nose(frame, faces)
+
+            
             #si fermeture yeux alors affiche pas sourcile
         except:
             pass
