@@ -8,6 +8,16 @@ from collections import defaultdict
 from config import alpha_numeric
 #afin d'ajuster les seuil mettre une image genreu n tigre et compter les tache
 
+def picture_to_init():
+    cap = cv2.VideoCapture(0)
+    _,frame = cap.read()
+    frame = cv2.resize(frame, (800, 600))
+    cap.release()
+    cv2.imwrite('treat_init.jpg', frame)
+
+
+    return False
+
 def adjust_gamma(image, gamma):
     """We add light to the video, we play with gamma"""
 
@@ -16,7 +26,6 @@ def adjust_gamma(image, gamma):
             for i in np.arange(0, 256)]).astype("uint8")
 
     return cv2.LUT(image, table)
-
 
 
 def detections(frame, gray,
@@ -149,6 +158,7 @@ def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG):
         if x1 < mean:#droite
 
             _, thresh = cv2.threshold(gray, 150, 255,cv2.THRESH_BINARY)
+            right = cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
 
             liste = []
             for i in range(int(thresh.shape[0])):
@@ -451,4 +461,9 @@ def video_capture():
 
 
 if __name__ == "__main__":
+    Ocontinue = True
+    while Ocontinue:
+        Ocontinue = picture_to_init()
+
     video_capture()
+    
