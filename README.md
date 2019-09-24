@@ -1,6 +1,6 @@
 # cadju
 
-ok mtn faire une intialisation, tu prends toutes les parties de la figure, et faut un truk carac, et faut faire les reglages dessus et faut le code review
+ok mtn faire une intialisation, tu prends toutes les parties de la figure, et faut un truk carac, et faut faire les reglages dessus et faut le code review -> met les dans un fichier config (du genre write avec gamma, canny, tresh)
 
 
 
