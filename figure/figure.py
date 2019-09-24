@@ -19,7 +19,9 @@ def adjust_gamma(image, gamma):
 
 
 
-def detections(frame, gray, faceCascade, eyes_cascade):
+def detections(frame, gray,
+               faceCascade, eyes_cascade,
+               frame1):
     faces = faceCascade.detectMultiScale(
         gray,
         scaleFactor=1.3,
@@ -32,6 +34,7 @@ def detections(frame, gray, faceCascade, eyes_cascade):
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
 
         crop = frame[y:y+h, x:x+w]
+        crop1 = frame1[y:y+h, x:x+w]
         gray_crop = gray[y:y+h-50, x:x+w]
         
         eyes = eyes_cascade.detectMultiScale(
@@ -43,15 +46,9 @@ def detections(frame, gray, faceCascade, eyes_cascade):
             flags=cv2.CASCADE_SCALE_IMAGE
         )
 
-        return eyes, crop, faces
+        return eyes, crop, faces, crop1
 
 
-def face_ride(faces, gray):
-    for x, y, w, h in faces:
-        gray_crop = gray[y:y+h, x:x+w]
-        edge = cv2.Canny(gray_crop, 0, 255)
-
-    cv2.imshow("aaaa", edge)
 
 
 
@@ -95,7 +92,7 @@ def sourcile(eyes, crop):
                 if thresh[i, j] == 0:
                     alpha_numeric[new].append([i, j])
 
-        #cv2.imshow("azevcnbv,", thresh)
+        cv2.imshow("azevcnbv,", thresh)
         len_x = 0
         ligne = []
         for i in alpha_numeric:
@@ -126,22 +123,65 @@ def sourcile(eyes, crop):
         elif (x1+w1/2) > mean:
             rowG = row
 
-        
-
-    return rowD, rowG, mean, mean_y
-
-
-
-def sourcile_position(crop, rowD, rowG, mean, mean_y):
-    
     if rowD != 0 or rowG != 0 or centerD != 0 or centerG != 0:
 
-        if rowD < 22 and rowG < 22:
+        if rowD < 25 and rowG < 25:
            print("levé")
 
-    crop = crop[mean_y-40:mean_y, mean-30:mean+30]
-    #cv2.imshow("dzacxwc", crop)
-    
+
+
+
+
+def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG):
+
+    mean = 0
+    for x, y, w, h in eyes:
+        mean += x+w/2
+
+    mean = int(mean/2)
+
+
+    for x1, y1, w1, h1 in eyes:
+        eyes_crop = crop1[y1-20:y1+20, x1+10:x1+w1]
+        gray=cv2.cvtColor(eyes_crop, cv2.COLOR_BGR2GRAY)
+
+
+        if x1 < mean:#droite
+
+            _, thresh = cv2.threshold(gray, 150, 255,cv2.THRESH_BINARY)
+
+            liste = []
+            for i in range(int(thresh.shape[0])):
+                for j in range(int(thresh.shape[1]/2)):
+                    if thresh[i, j] == 0:
+                       liste.append(j)
+
+            a = max(liste)
+
+            if a > lenght_detectionD + 2:
+                print("baisse")
+
+            cv2.circle(eyes_crop, (a, int(thresh.shape[0]/2)), 1, (0, 0, 0), 5)
+
+
+        
+        elif x1 > mean:
+
+
+            _, thresh = cv2.threshold(gray, 150, 255,cv2.THRESH_BINARY)
+ 
+            liste = []
+            for i in range(int(thresh.shape[0])):
+                for j in range(int(thresh.shape[1]/2)):
+                    if thresh[i, j] == 0:
+                       liste.append(j)
+
+            b = max(liste)
+            if b > lenght_detectionG + 2:
+                print("baisse")
+            cv2.circle(eyes_crop, (b, int(thresh.shape[0]/2)), 1, (0, 0, 0), 5)
+
+    return a, b
 
 
 
@@ -224,6 +264,9 @@ def mouth(faces, frame, mouthcascade, mouth_pts1_x):
 
 
     return mouth_pts1_x
+
+
+
 
 
 def smyling(frame, faces):
@@ -326,9 +369,9 @@ def teeth(frame, faces):
             if cv2.contourArea(i) > 95:
                 print("teeth appears or something on the mouse")
  
-
-        cv2.imshow("azeze1111", crop1)
-        cv2.imshow("dazdqsd1111", edge)
+##
+##        cv2.imshow("azeze1111", crop1)
+##        cv2.imshow("dazdqsd1111", edge)
 
 
 
@@ -347,6 +390,10 @@ def video_capture():
     listeD = []
     listeG = []
 
+    lenght_detectionD = 1000
+    lenght_detectionG = 1000
+
+
 
     mouth_pts1_x = -10000
 
@@ -355,14 +402,15 @@ def video_capture():
 
         ret, frame = video.read()
         frame = cv2.resize(frame, (800, 600))
-        #frame1 = frame other frame without draw
+        frame1 = cv2.resize(frame, (800, 600))
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         try:
-            eyes, crop, faces = detections(frame, gray, facecascade, eyescascade)
-            face_ride(faces, gray)
+            eyes, crop, faces, crop1 = detections(frame, gray,
+                                                 facecascade, eyescascade,
+                                                 frame1)
 
-            rowD, rowG, mean, mean_y = sourcile(eyes, crop)
+            sourcile(eyes, crop)
 
             teeth(frame, faces)
 
@@ -375,7 +423,12 @@ def video_capture():
             = eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
                                 eyes_center_xG, eyes_center_yG)
             
-            sourcile_position(crop, rowD, rowG, mean, mean_y)
+            a, b = sourcile_position(eyes, crop,
+                                lenght_detectionD, lenght_detectionG)
+
+            lenght_detectionD = a
+            lenght_detectionG = b
+
             nose(frame, faces)
 
             
@@ -385,7 +438,9 @@ def video_capture():
             pass
 
 
+
         cv2.imshow("frame", frame)
+        
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
