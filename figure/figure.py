@@ -286,10 +286,6 @@ def smyling(frame, faces):
 
 
 
-
-
-
-
 def nose(frame, faces):
 
     for x, y, w, h in faces:
@@ -306,7 +302,7 @@ def nose(frame, faces):
 
         cv2.drawContours(crop, cnts, -1, (0, 0, 255), 3)
         if cnts:
-            print("He smelling you bro or he ask concentration")
+            print("He smelling you bro or he asks concentration")
 
 ##        cv2.imshow("azeze1111", crop)
 ##        cv2.imshow("dazdqsd1111", edge)
@@ -315,7 +311,27 @@ def nose(frame, faces):
 ##            o = input("sauve.")
 ##            cv2.imwrite(o, crop)
 
-    
+
+
+def teeth(frame, faces):
+    for x, y, w, h in faces:
+
+        crop1 = frame[y+h-50:y+h-20, x+55:x+w-55]
+        gray = cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
+        edge = cv2.Canny(gray, 0, 255)
+
+        cnts, _ = cv2.findContours(edge, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        for i in cnts:
+            if cv2.contourArea(i) > 95:
+                print("teeth appears or something on the mouse")
+ 
+
+        cv2.imshow("azeze1111", crop1)
+        cv2.imshow("dazdqsd1111", edge)
+
+
+
 
 def video_capture():
 
@@ -339,7 +355,7 @@ def video_capture():
 
         ret, frame = video.read()
         frame = cv2.resize(frame, (800, 600))
-
+        #frame1 = frame other frame without draw
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         try:
@@ -347,6 +363,8 @@ def video_capture():
             face_ride(faces, gray)
 
             rowD, rowG, mean, mean_y = sourcile(eyes, crop)
+
+            teeth(frame, faces)
 
             mouth_pts1_x = mouth(faces, frame, mouthcascade,
                                  mouth_pts1_x)
@@ -358,13 +376,14 @@ def video_capture():
                                 eyes_center_xG, eyes_center_yG)
             
             sourcile_position(crop, rowD, rowG, mean, mean_y)
-
             nose(frame, faces)
 
+            
             
             #si fermeture yeux alors affiche pas sourcile
         except:
             pass
+
 
         cv2.imshow("frame", frame)
 
