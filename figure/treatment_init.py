@@ -33,55 +33,6 @@ def detections(img, faceCascade, eyes_cascade):
 
 
 
-def crop_mode(mode, x1, y1, w1, h1):
-
-    if mode == "left":
-        eyes_crop = crop[y1-20:y1+10, x1:x1+w1]
-    elif mode == "right":
-        eyes_crop = crop[y1-20:y1+10, x1:x1+w1]
-
-    return eyes_crop
-
-def contours_init(contours, th_min, thresh):
-    if len(contours) == 2:
-        for i in contours:
-            if cv2.contourArea(i) == th_min:
-                Ocontinuer = False
-
-                cv2.imshow("image1", thresh)
-                cv2.waitKey(0)
-
-
-                        
-def find_thresh(mode, x1, y1, w1, h1, th_min):
-
-
-    eyes_crop = crop_mode(mode, x1, y1, w1, h1)
-    gray=cv2.cvtColor(eyes_crop, cv2.COLOR_BGR2GRAY)
-
-    adaptive = 0
-    Ocontinuer = True
-    while Ocontinuer:
-        if adaptive == 255:
-            Ocontinuer = False
-
-
-        _, thresh = cv2.threshold(gray, adaptive, 255,cv2.THRESH_BINARY)
-        if mode == "left":
-            cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
-        elif mode == "right":
-            cv2.line(thresh, (thresh.shape[1], 0),
-                    (thresh.shape[1], thresh.shape[0]),
-                    (255, 255, 255), 5)
-
-        contours, _ = cv2.findContours(thresh, cv2.RETR_TREE,
-                                       cv2.CHAIN_APPROX_SIMPLE)
-
-        contours_init(contours, th_min, thresh)
-
-
-        adaptive += 1
-
 
 def sourcile(eyes, crop):
 
@@ -96,11 +47,92 @@ def sourcile(eyes, crop):
     for x1, y1, w1, h1 in eyes:
 
         if x1+w1 < mean:
-            find_thresh("left", x1, y1, w1, h1, 198.5)
 
-        elif x1+w1 > mean:
-            find_thresh("right", x1, y1, w1, h1, 186.5)
+           
+            eyes_crop1 = crop[y1-20:y1+10, x1:x1+w1]
+            gray=cv2.cvtColor(eyes_crop1, cv2.COLOR_BGR2GRAY)
+
+            adaptive = 0
+            Ocontinuer = True
+            while Ocontinuer:
+                if adaptive == 255:
+                    Ocontinuer = False
+   
+                _, thresh = cv2.threshold(gray, adaptive, 255,cv2.THRESH_BINARY)
+
+                
+                cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
+                cv2.line(thresh, (0, 0), (thresh.shape[1], 0), (255, 255, 255), 5)
+                cv2.line(thresh, (thresh.shape[1], 0), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), 5)
+                cv2.line(thresh, (0,  thresh.shape[0]), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), 5)
+
+                contours, _ = cv2.findContours(thresh, cv2.RETR_TREE,
+                                               cv2.CHAIN_APPROX_SIMPLE)
+
+                print(len(contours))
+                for i in contours:
+                    print(cv2.contourArea(i))
+
+                if len(contours) == 2:
+                    for i in contours:
+                        if 1000.0 > cv2.contourArea(i) > 198.5:
+                            Ocontinuer = False
+
+                            cv2.imshow("image1", thresh)
+                            cv2.waitKey(0)
+                #print(adaptive)
+                adaptive += 1
+
+
+
+
+
             
+        elif x1+w1 > mean:
+            print("ici")
+            eyes_crop2 = crop[y1-20:y1+10, x1:x1+w1]
+            gray=cv2.cvtColor(eyes_crop2, cv2.COLOR_BGR2GRAY)
+
+            adaptive = 0
+            Ocontinuer = True
+            while Ocontinuer:
+                if adaptive == 255:
+                    Ocontinuer = False
+
+                _, thresh = cv2.threshold(gray, 156, 255,cv2.THRESH_BINARY)
+
+
+                cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
+                cv2.line(thresh, (0, 0), (thresh.shape[1], 0), (255, 255, 255), 5)
+                cv2.line(thresh, (thresh.shape[1], 0), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), 5)
+                cv2.line(thresh, (0,  thresh.shape[0]), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), 5)
+
+
+                contours, _ = cv2.findContours(thresh, cv2.RETR_TREE,
+                                               cv2.CHAIN_APPROX_SIMPLE)
+
+
+                cv2.imshow("image", thresh)
+                cv2.waitKey(0)
+                print(adaptive)
+
+                print(len(contours))
+                for i in contours:
+                    print(cv2.contourArea(i))
+
+
+                if len(contours) == 2:
+                    for i in contours:
+                        if 1000.0 > cv2.contourArea(i) > 186.5:
+                            Ocontinuer = False
+
+                            cv2.imshow("image", thresh)
+                            cv2.waitKey(0)
+                
+                adaptive += 1
+
+
+
 
 
             
@@ -123,7 +155,7 @@ facecascade = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
 mouthcascade = cv2.CascadeClassifier('haar/mouth.xml')
 
 
-img = cv2.imread("treat_init.jpg")
+img = cv2.imread("WIN_20190924_22_35_19_Pro.jpg")
 
 eyes, crop, faces = detections(img, facecascade, eyescascade)
 sourcile(eyes, crop)
