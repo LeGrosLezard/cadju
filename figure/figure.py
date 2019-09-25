@@ -33,6 +33,8 @@ def adjust_gamma(image, gamma):
 def detections(frame, gray,
                faceCascade, eyes_cascade,
                frame1):
+    """We detecting face and eyes"""
+
     faces = faceCascade.detectMultiScale(
         gray,
         scaleFactor=1.3,
@@ -62,84 +64,139 @@ def detections(frame, gray,
 
 
 
-
-def sourcile(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
-
-    rowD = 0
-    rowG = 0
-
-    centerD = 0
-    centerG = 0
+def build_list():
+    """We build a list for append each x of threshold
+    and have the borders"""
 
     alpha_numeric = []
     for i in range(500):
         alpha_numeric.append([])
 
-    new = 0
-    c = 0
-    mean = 0
-    mean_y = 0
+    return alpha_numeric
 
+
+def make_mean(eyes):
+    """This mean give us the position of
+    the detection if the eyes is right or left"""
+
+    mean = 0
     if len(eyes) == 2:
         for x1, y1, w1, h1 in eyes:
             mean += int(x1+w1/2)
-            mean_y += int(y1+h1/2)
 
     mean = int(mean/2)
-    mean_y = int(mean_y/2)
+    return mean
+
+
+def threshold_building(x1, w1, mean, eyes_crop,
+                       on_eyes_thresholds_l,
+                       on_eyes_thresholds_r):
+    """We building a filter for recup the on eyes"""
+
+    gray=cv2.cvtColor(eyes_crop, cv2.COLOR_BGR2GRAY)
+
+    if (x1+w1/2) < mean:
+        _, thresh = cv2.threshold(gray, on_eyes_thresholds_l,
+                                  255, cv2.THRESH_BINARY)
+
+
+    elif (x1+w1/2) > mean:
+        _, thresh = cv2.threshold(gray, on_eyes_thresholds_r,
+                                  255, cv2.THRESH_BINARY)
+
+   
+    return thresh
+
+
+
+def points_of_thresh(alpha_numeric, thresh):
+    """We recup each points of the thresh (x and y position of x axis)
+    In case one day we'll ive need of the y axis"""
+
+    new = 0
+
+    for i in range(thresh.shape[0]):
+        for j in range(thresh.shape[1]):
+
+            if j == thresh.shape[1] - 1:
+                new += 1
+
+            if thresh[i, j] == 0:
+                alpha_numeric[new].append([i, j])
+
+
+def x_points_in_treated_list(alpha_numeric):
+    """We recup only x position"""
+
+    len_x = 0
+    row = []
+    for i in alpha_numeric:
+        if i != []:
+            if len(i) > len_x:
+                len_x = len(i)
+                row.append(i)
+  
+    return row
+
+
+def drawing_point_from_list(ligne, eyes_crop):
+    """We dawing the points"""
+
+    counter_pts = 0
+    row = 0
+
+    for i in ligne[-1]:
+        if counter_pts % 10 == 0:
+            cv2.circle(eyes_crop, (i[1],i[0]), 1, (0,0,255), 4)
+            row = i[0]
+        counter_pts += 1
+
+    return row
+
+
+
+def on_eyes_detection(rowD, rowG):
+    """If the two on eyes are min 15 we display it"""
+
+    if rowD != 0 or rowG != 0:
+        if rowD < 15 and rowG < 15:
+           print("levé")
+
+
+
+def on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
+    """ - eyes for eyes detection
+        - crop the crop of the face
+        - on_eyes_thresholds_r automatic by init
+        - on_eyes_thresholds_l automatic by init
+    """
+
+    rowD = 0
+    rowG = 0
+
+    alpha_numeric = build_list() #built a list of list
+    mean = make_mean(eyes) #make a mean of the x position of eyes
+
     for x1, y1, w1, h1 in eyes:
 
-        #cv2.rectangle(crop, (x1, y1-20), (x1+w1, y1+20), (0, 0, 0), 2)
-        eyes_crop = crop[y1-20:y1+10, x1:x1+w1]
-        gray=cv2.cvtColor(eyes_crop, cv2.COLOR_BGR2GRAY)
-        if (x1+w1/2) < mean:
-            _, thresh = cv2.threshold(gray, on_eyes_thresholds_l, 255,cv2.THRESH_BINARY)
-        elif (x1+w1/2) < mean:
-            _, thresh = cv2.threshold(gray, on_eyes_thresholds_r, 255,cv2.THRESH_BINARY)
-        for i in range(thresh.shape[0]):
-            for j in range(thresh.shape[1]):
+        eyes_crop = crop[y1-20:y1+10, x1:x1+w1]#crop frame focus on on eyes
 
-                if j == thresh.shape[1] - 1:
-                    new += 1
+        thresh = threshold_building(x1, w1, mean, eyes_crop,
+                                    on_eyes_thresholds_l,
+                                    on_eyes_thresholds_r)#build thresh
 
-                if thresh[i, j] == 0:
-                    alpha_numeric[new].append([i, j])
+        points_of_thresh(alpha_numeric, thresh)#add list to thresh points
+        ligne = x_points_in_treated_list(alpha_numeric)#only take x axis
 
-        cv2.imshow("azevcnbv,", thresh)
-        len_x = 0
-        ligne = []
-        for i in alpha_numeric:
-            if i != []:
-                if len(i) > len_x:
-                    len_x = len(i)
-                    ligne.append(i)
-
-        
-        counter_pts = 0
-        row = 0
-        last = 0
-        for i in ligne[-1]:
-            if counter_pts % 10 == 0:
-                cv2.circle(eyes_crop, (i[1],i[0]), 1, (0,0,255), 4)
-                row = i[0]
-                last = i[1]
-            counter_pts += 1
-        
-        alpha_numeric = []
-        for i in range(500):
-            alpha_numeric.append([])
-
+        row = drawing_point_from_list(ligne, eyes_crop)#draw points
 
         if (x1+w1/2) < mean:
-            rowD = row
- 
+            rowD = row #We need to know if it's right eyes
+                
         elif (x1+w1/2) > mean:
-            rowG = row
+            rowG = row #We need to know if it's left eyes
 
-    if rowD != 0 or rowG != 0 or centerD != 0 or centerG != 0:
-
-        if rowD < 25 and rowG < 25:
-           print("levé")
+    on_eyes_detection(rowD, rowG)#Displaying in case of detection
 
 
 
@@ -165,7 +222,7 @@ def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG,
             _, thresh = cv2.threshold(gray, on_eyes_thresholds_r, 255,cv2.THRESH_BINARY)
             right = cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
 
-            cv2.imshow("adzezaraz", thresh)
+            #cv2.imshow("adzezaraz", thresh)
 
             liste = []
             for i in range(int(thresh.shape[0])):
@@ -188,7 +245,7 @@ def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG,
             _, thresh = cv2.threshold(gray, on_eyes_thresholds_l, 255,cv2.THRESH_BINARY)
             right = cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
 
-            cv2.imshow("zdnghlui", thresh)
+            #cv2.imshow("zdnghlui", thresh)
             liste = []
             for i in range(int(thresh.shape[0])):
                 for j in range(int(thresh.shape[1]/2)):
@@ -437,7 +494,7 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
                                                  frame1)
 
 
-            sourcile(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
+            on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
 
             teeth(frame, faces)
 
@@ -467,7 +524,7 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
         except:
             pass
 
-
+        #on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
 
         cv2.imshow("frame", frame)
         
