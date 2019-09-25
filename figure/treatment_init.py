@@ -94,6 +94,7 @@ def make_thresh(nb, x1, y1, w1, h1, crop):
 
                     cv2.imshow("image1", thresh)
                     cv2.waitKey(0)
+                    cv2.destroyAllWindows()
                     return adaptive
 
         #print(adaptive)
@@ -144,6 +145,7 @@ def find_canny_eyes(eyes_crop, blur, value):
                     
                     cv2.imshow("image", edge)
                     cv2.waitKey(0)
+                    cv2.destroyAllWindows()
                     return min_canny, grad
 
         min_canny += 1
@@ -192,6 +194,7 @@ def mouth_init(faces, img, mouthcascade):
                     cv2.drawContours(crop, i, -1, (0, 0, 255), 2)
                     cv2.imshow("zaee", thresh)
                     cv2.waitKey(0)
+                    cv2.destroyAllWindows()
 
                     return min_thresh
 
@@ -211,15 +214,20 @@ def main():
 
     eyes, crop, faces = detections(img, facecascade, eyescascade)
 
-    thresholds_r, thresholds_l = on_eyelashes(eyes, crop, img, facecascade, eyescascade)
+    on_eyes_thresholds_r, on_eyes_thresholds_l = on_eyelashes(eyes, crop, img,
+                                                              facecascade, eyescascade)
 
-    min_canny_r, grad_r, min_canny_l, grad_l = eyes_init(eyes, crop)
+    eyes_min_canny_r, eyes_grad_r,\
+    eyes_min_canny_l, eyes_grad_l = eyes_init(eyes, crop)
 
-    mouth_init(faces, img, mouthcascade)
-    nose_init(img, faces)
+    mouth_thresh = mouth_init(faces, img, mouthcascade)
+
 
 
     cv2.imshow("image", crop)
     cv2.waitKey(0)
 
-    return thresholds_r, thresholds_l, min_canny_r, grad_r, min_canny_l, grad_l
+    return on_eyes_thresholds_r, on_eyes_thresholds_l,\
+           eyes_min_canny_r, eyes_grad_r,\
+           eyes_min_canny_l, eyes_grad_l,\
+           mouth_thresh
