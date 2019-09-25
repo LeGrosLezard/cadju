@@ -20,6 +20,17 @@ def picture_to_init():
     return False
 
 
+def make_line(thresh):
+    """We make line for detect more than one area
+    with border, on eyelashes is paste to the border"""
+
+    cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
+    cv2.line(thresh, (0, 0), (thresh.shape[1], 0), (255, 255, 255), 5)
+    cv2.line(thresh, (thresh.shape[1], 0), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), 5)
+    cv2.line(thresh, (0,  thresh.shape[0]), (thresh.shape[1], thresh.shape[0]), (255, 255, 255), 5)
+
+
+
 def adjust_gamma(image, gamma):
     """We add light to the video, we play with gamma"""
 
@@ -64,7 +75,7 @@ def detections(frame, gray,
 
 
 
-#------------------------------------------------------------------------------------------on_eyes()
+#------------------------------------------------------------------------------------------eyelashes_top()
     
 def build_list():
     """We build a list for append each x of threshold
@@ -137,7 +148,7 @@ def x_points_in_treated_list(alpha_numeric):
             if len(i) > len_x:
                 len_x = len(i)
                 row.append(i)
-  
+
     return row
 
 
@@ -166,13 +177,13 @@ def on_eyes_detection(rowD, rowG):
 
 
 
-def on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
+def eyelashes_top(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
     """ - eyes for eyes detection
         - crop the crop of the face
         - on_eyes_thresholds_r automatic by init
         - on_eyes_thresholds_l automatic by init
     
-        -----> lift detection
+        -----> top eyelashes detection
     """
 
     rowD = 0
@@ -188,7 +199,7 @@ def on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
         thresh = threshold_building(x1, w1, mean, eyes_crop,
                                     on_eyes_thresholds_l,
                                     on_eyes_thresholds_r)#build thresh
-
+        
         points_of_thresh(alpha_numeric, thresh)#add list to thresh points
         ligne = x_points_in_treated_list(alpha_numeric)#only take x axis
 
@@ -202,67 +213,72 @@ def on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
 
     on_eyes_detection(rowD, rowG)#Displaying in case of detection
 
-#----------------------------------------------------------------------------------------------------on_eyes()
+#----------------------------------------------------------------------------------------------------eyelashes_top()
 
 
 
 
-def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG,
-                      on_eyes_thresholds_r, on_eyes_thresholds_l):
+#----------------------------------------------------------------------------------------------------eyelashes_down()
 
-    mean = 0
-    for x, y, w, h in eyes:
-        mean += x+w/2
 
-    mean = int(mean/2)
+def down_detection(gray, min_thresh, detection, eyes_crop):
+    """
+        -> Make thresh
+        -> Recup max y points () the one that is the lowest
+        -> if this last point < the last points of the last loop -> it fallen
+    """
 
+    _, thresh = cv2.threshold(gray, min_thresh, 255,cv2.THRESH_BINARY)
+    make_line(thresh)   #Doing lines on each length and with of the rectangle
+
+    liste = []
+    for i in range(int(thresh.shape[0])):  #Recup y points
+        for j in range(int(thresh.shape[1]/2)):
+            if thresh[i, j] == 0:
+               liste.append(j)
+
+    position = max(liste)   #Recup the smallest point on y axis
+
+    if position > detection + 2:    #it is superior of the last detection ?
+        print("baisse")
+
+    #Draw the points
+    cv2.circle(eyes_crop, (position, int(thresh.shape[0]/2)), 1, (0, 0, 0), 5)
+
+    return position
+
+
+def eyelashes_down(eyes, crop1, lenght_detectionD, lenght_detectionG,
+                    on_eyes_thresholds_r, on_eyes_thresholds_l):
+    """We search the smaller points for know if eyelashes has fallen"""
+
+    mean = make_mean(eyes)  #Mean for know if it's right or left points
 
     for x1, y1, w1, h1 in eyes:
-        eyes_crop = crop1[y1-20:y1+20, x1+10:x1+w1]
+        eyes_crop = crop1[y1-20:y1+20, x1+10:x1+w1]     #Only focus on this eyelashes area
         gray=cv2.cvtColor(eyes_crop, cv2.COLOR_BGR2GRAY)
 
 
-        if x1 < mean:#droite
+        if (x1+w1/2) < mean: #right, we search the smaller y point
+            y_position_eyelashes_down_R = down_detection(gray, on_eyes_thresholds_r,
+                                                         lenght_detectionD, eyes_crop)
 
-            _, thresh = cv2.threshold(gray, on_eyes_thresholds_r, 255,cv2.THRESH_BINARY)
-            right = cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
+        elif (x1+w1/2) > mean: #left
+            y_position_eyelashes_down_L = down_detection(gray, on_eyes_thresholds_l,
+                                                         lenght_detectionG, eyes_crop)
 
-            #cv2.imshow("adzezaraz", thresh)
-
-            liste = []
-            for i in range(int(thresh.shape[0])):
-                for j in range(int(thresh.shape[1]/2)):
-                    if thresh[i, j] == 0:
-                       liste.append(j)
-
-            a = max(liste)
-
-            if a > lenght_detectionD + 2:
-                print("baisse")
-
-            cv2.circle(eyes_crop, (a, int(thresh.shape[0]/2)), 1, (0, 0, 0), 5)
+    #We return this points and compare it each loop
+    return y_position_eyelashes_down_R, y_position_eyelashes_down_L
 
 
-        
-        elif x1 > mean:
+
+#----------------------------------------------------------------------------------------------------eyelashes_down()
 
 
-            _, thresh = cv2.threshold(gray, on_eyes_thresholds_l, 255,cv2.THRESH_BINARY)
-            right = cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
 
-            #cv2.imshow("zdnghlui", thresh)
-            liste = []
-            for i in range(int(thresh.shape[0])):
-                for j in range(int(thresh.shape[1]/2)):
-                    if thresh[i, j] == 0:
-                       liste.append(j)
 
-            b = max(liste)
-            if b > lenght_detectionG + 2:
-                print("baisse")
-            cv2.circle(eyes_crop, (b, int(thresh.shape[0]/2)), 1, (0, 0, 0), 5)
 
-    return a, b
+
 
 
 
@@ -499,7 +515,7 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
                                                  frame1)
 
 
-            on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
+            eyelashes_top(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
 
             teeth(frame, faces)
 
@@ -514,12 +530,12 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
                                 eyes_min_canny_r, eyes_grad_r,
                                 eyes_min_canny_l, eyes_grad_l)
             
-            a, b = sourcile_position(eyes, crop,
-                                     lenght_detectionD, lenght_detectionG,
-                                     on_eyes_thresholds_r, on_eyes_thresholds_l)
+            lenght_detectionD, lenght_detectionG\
+            = eyelashes_down(eyes, crop,
+                            lenght_detectionD, lenght_detectionG,
+                            on_eyes_thresholds_r, on_eyes_thresholds_l)
 
-            lenght_detectionD = a
-            lenght_detectionG = b
+  
 
             nose(frame, faces)
 
@@ -529,7 +545,8 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
         except:
             pass
 
-        #on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
+
+
 
         cv2.imshow("frame", frame)
         
