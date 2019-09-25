@@ -4,6 +4,17 @@ at the bottom"""
 import cv2
 import numpy as np
 
+
+def adjust_gamma(image, gamma):
+    """We add light to the video, we play with gamma"""
+
+    invGamma = 1.0 / gamma
+    table = np.array([((i / 255.0) ** invGamma) * 255
+            for i in np.arange(0, 256)]).astype("uint8")
+
+    return cv2.LUT(image, table)
+
+
 def detections(img, faceCascade, eyes_cascade):
     """Here we detect the faces and the eyes"""
 
@@ -112,11 +123,6 @@ def on_eyelashes(eyes, crop, img, facecascade, eyes_cascade):
 
 
 
-
-
-
-
-
 def find_canny_eyes(eyes_crop, blur, value):
 
     ocontinue = True
@@ -150,22 +156,49 @@ def eyes_init(eyes, crop):
     for x1, y1, h1, w1 in eyes:
         eyes_crop = crop[y1+h1-35:y1+h1-10, x1:x1+w1]
         blur = cv2.GaussianBlur(eyes_crop, (5,5), 3)
-        
-        
+
         if int(x1+w1/2) > mean:
-            min_canny, grad = find_canny_eyes(eyes_crop, blur, 4.5)
+            min_canny_r, grad_r = find_canny_eyes(eyes_crop, blur, 4.5)
 
         elif int(x1+w1/2) < mean:
-            min_canny, grad = find_canny_eyes(eyes_crop, blur, 2.5)
+            min_canny_l, grad_l = find_canny_eyes(eyes_crop, blur, 2.5)
   
+    
+    return min_canny_r, grad_r, min_canny_l, grad_l
 
 
 
+def mouth_init(faces, img, mouthcascade):
+    for x, y, w, h in faces:
+        crop = img[y+h-40:y+h-10, x+55:x+w-55]
+        crop_frame = crop
+        crop = adjust_gamma(crop, 0.6)
+
+        gray=cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+
+        ocontinue = True
+        min_thresh = 0
+ 
+        while ocontinue:
+            _, thresh = cv2.threshold(gray, min_thresh, 255,cv2.THRESH_BINARY)
+            make_line(thresh)
+
+
+            
+            cnts, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+            for i in cnts:
+                if 1000 > cv2.contourArea(i) >= 210:
+                    cv2.drawContours(crop, i, -1, (0, 0, 255), 2)
+                    cv2.imshow("zaee", thresh)
+                    cv2.waitKey(0)
+
+                    return min_thresh
+
+            min_thresh += 1
 
 
 
-
-        
 
 def main():
     """We lunch it"""
@@ -178,9 +211,14 @@ def main():
     img = cv2.imread("WIN_20190925_13_48_04_Pro.jpg")
 
     eyes, crop, faces = detections(img, facecascade, eyescascade)
+
     thresholds_r, thresholds_l = on_eyelashes(eyes, crop, img, facecascade, eyescascade)
 
-    eyes_init(eyes, crop)
+    min_canny_r, grad_r, min_canny_l, grad_l = eyes_init(eyes, crop)
+
+    mouth_init(faces, img, mouthcascade)
+
+
 
     cv2.imshow("image", crop)
     cv2.waitKey(0)
