@@ -8,8 +8,19 @@
 
 - ajusté les seuils mais pas bsoin jcrois du coup
 
+# -----------------------------------------------
 
+- finir ca
 
+- factoriser main
+
+- faire ride
+
+- faire gamma
+
+- refaire truk mail
+
+# -------------------------------------------
 
 - full body area
 
