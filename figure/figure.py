@@ -9,6 +9,8 @@ from treatment_init import main
 #afin d'ajuster les seuil mettre une image genreu n tigre et compter les tache
 
 def picture_to_init():
+    """Take a picture of init and adaptation of filters"""
+
     cap = cv2.VideoCapture(0)
     _,frame = cap.read()
     frame = cv2.resize(frame, (800, 600))
@@ -16,7 +18,6 @@ def picture_to_init():
     cv2.imwrite('treat_init.jpg', frame)
 
     return False
-
 
 
 def adjust_gamma(image, gamma):
@@ -63,7 +64,8 @@ def detections(frame, gray,
 
 
 
-
+#------------------------------------------------------------------------------------------on_eyes()
+    
 def build_list():
     """We build a list for append each x of threshold
     and have the borders"""
@@ -197,6 +199,9 @@ def on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
             rowG = row #We need to know if it's left eyes
 
     on_eyes_detection(rowD, rowG)#Displaying in case of detection
+
+#----------------------------------------------------------------------------------------------------on_eyes()
+
 
 
 
