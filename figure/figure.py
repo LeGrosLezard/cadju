@@ -165,6 +165,8 @@ def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG,
             _, thresh = cv2.threshold(gray, on_eyes_thresholds_r, 255,cv2.THRESH_BINARY)
             right = cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
 
+            cv2.imshow("adzezaraz", thresh)
+
             liste = []
             for i in range(int(thresh.shape[0])):
                 for j in range(int(thresh.shape[1]/2)):
@@ -184,7 +186,9 @@ def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG,
 
 
             _, thresh = cv2.threshold(gray, on_eyes_thresholds_l, 255,cv2.THRESH_BINARY)
- 
+            right = cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
+
+            cv2.imshow("zdnghlui", thresh)
             liste = []
             for i in range(int(thresh.shape[0])):
                 for j in range(int(thresh.shape[1]/2)):
@@ -449,7 +453,8 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
                                 eyes_min_canny_l, eyes_grad_l)
             
             a, b = sourcile_position(eyes, crop,
-                                     lenght_detectionD, lenght_detectionG)
+                                     lenght_detectionD, lenght_detectionG,
+                                     on_eyes_thresholds_r, on_eyes_thresholds_l)
 
             lenght_detectionD = a
             lenght_detectionG = b
@@ -477,7 +482,7 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
 
 if __name__ == "__main__":
 
-    picture_to_init()
+    #picture_to_init()
 
     on_eyes_thresholds_r, on_eyes_thresholds_l,\
     eyes_min_canny_r, eyes_grad_r,\
