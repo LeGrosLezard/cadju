@@ -199,7 +199,6 @@ def mouth_init(faces, img, mouthcascade):
 
 
 
-
 def main():
     """We lunch it"""
 
@@ -208,7 +207,7 @@ def main():
     mouthcascade = cv2.CascadeClassifier('haar/mouth.xml')
 
 
-    img = cv2.imread("WIN_20190925_13_48_04_Pro.jpg")
+    img = cv2.imread("treat_init.jpg")
 
     eyes, crop, faces = detections(img, facecascade, eyescascade)
 
@@ -217,32 +216,10 @@ def main():
     min_canny_r, grad_r, min_canny_l, grad_l = eyes_init(eyes, crop)
 
     mouth_init(faces, img, mouthcascade)
-
+    nose_init(img, faces)
 
 
     cv2.imshow("image", crop)
     cv2.waitKey(0)
 
-
-if __name__ == "__main__":
-    main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return thresholds_r, thresholds_l, min_canny_r, grad_r, min_canny_l, grad_l
