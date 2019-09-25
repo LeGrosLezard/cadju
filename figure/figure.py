@@ -229,7 +229,7 @@ def down_detection(gray, min_thresh, detection, eyes_crop):
     """
 
     _, thresh = cv2.threshold(gray, min_thresh, 255,cv2.THRESH_BINARY)
-    make_line(thresh)   #Doing lines on each length and with of the rectangle
+    make_line(thresh)   #Doing lines on each length and width of the rectangle
 
     liste = []
     for i in range(int(thresh.shape[0])):  #Recup y points
