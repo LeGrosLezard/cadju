@@ -1,6 +1,7 @@
 # cadju
 
-ok mtn faire une intialisation, tu prends toutes les parties de la figure, et faut un truk carac, et faut faire les reglages dessus et faut le code review -> met les dans un fichier config (du genre write avec gamma, canny, tresh)
+
+enfete faudrai mettre la meme lumino sur chaque parti de l'image du genre si la face gauche en haut est dans l'ombre ajusté gamma, si le l'arcade est sous une lampe réduire ect... 
 
 
 
