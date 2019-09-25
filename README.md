@@ -8,6 +8,8 @@
 
 - ajusté les seuils mais pas bsoin jcrois du coup
 
+-> adaptive threshold
+
 # -----------------------------------------------
 
 - finir ca
