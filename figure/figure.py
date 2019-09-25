@@ -171,6 +171,8 @@ def on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
         - crop the crop of the face
         - on_eyes_thresholds_r automatic by init
         - on_eyes_thresholds_l automatic by init
+    
+        -----> lift detection
     """
 
     rowD = 0
@@ -201,8 +203,6 @@ def on_eyes(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
     on_eyes_detection(rowD, rowG)#Displaying in case of detection
 
 #----------------------------------------------------------------------------------------------------on_eyes()
-
-
 
 
 
