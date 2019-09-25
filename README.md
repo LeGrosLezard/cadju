@@ -20,7 +20,7 @@
 
 - refaire truk mail
 
-- faire un site avec orm et les load static et les fnction de django
+- faire un site avec orm et les load static et les fnction de django (et le finir)
 
 # -------------------------------------------
 
