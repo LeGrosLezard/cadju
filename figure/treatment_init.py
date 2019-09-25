@@ -185,12 +185,10 @@ def mouth_init(faces, img, mouthcascade):
             _, thresh = cv2.threshold(gray, min_thresh, 255,cv2.THRESH_BINARY)
             make_line(thresh)
 
-
-            
             cnts, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
             for i in cnts:
-                if 1000 > cv2.contourArea(i) >= 210:
+                if 1000 > cv2.contourArea(i) >= 130:
                     cv2.drawContours(crop, i, -1, (0, 0, 255), 2)
                     cv2.imshow("zaee", thresh)
                     cv2.waitKey(0)
@@ -231,3 +229,25 @@ def main():
            eyes_min_canny_r, eyes_grad_r,\
            eyes_min_canny_l, eyes_grad_l,\
            mouth_thresh
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
