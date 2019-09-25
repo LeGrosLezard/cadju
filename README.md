@@ -20,6 +20,8 @@
 
 - refaire truk mail
 
+- faire un site avec orm et les load static et les fnction de django
+
 # -------------------------------------------
 
 - full body area
