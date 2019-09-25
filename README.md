@@ -1,7 +1,12 @@
 # cadju
 
+- trouver un tuto
 
-enfete faudrai mettre la meme lumino sur chaque parti de l'image du genre si la face gauche en haut est dans l'ombre ajusté gamma, si le l'arcade est sous une lampe réduire ect... 
+- découpé chaque parti en 50/50
+
+- ajusté la luminosité via une luminosité (celle du jour)
+
+- ajusté les seuils mais pas bsoin jcrois du coup
 
 
 
