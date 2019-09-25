@@ -5,7 +5,7 @@ import operator
 from collections import defaultdict
 
 
-from config import alpha_numeric
+from treatment_init import main
 #afin d'ajuster les seuil mettre une image genreu n tigre et compter les tache
 
 def picture_to_init():
@@ -15,8 +15,9 @@ def picture_to_init():
     cap.release()
     cv2.imwrite('treat_init.jpg', frame)
 
-
     return False
+
+
 
 def adjust_gamma(image, gamma):
     """We add light to the video, we play with gamma"""
@@ -26,6 +27,7 @@ def adjust_gamma(image, gamma):
             for i in np.arange(0, 256)]).astype("uint8")
 
     return cv2.LUT(image, table)
+
 
 
 def detections(frame, gray,
@@ -61,7 +63,7 @@ def detections(frame, gray,
 
 
 
-def sourcile(eyes, crop):
+def sourcile(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
 
     rowD = 0
     rowG = 0
@@ -90,8 +92,10 @@ def sourcile(eyes, crop):
         #cv2.rectangle(crop, (x1, y1-20), (x1+w1, y1+20), (0, 0, 0), 2)
         eyes_crop = crop[y1-20:y1+10, x1:x1+w1]
         gray=cv2.cvtColor(eyes_crop, cv2.COLOR_BGR2GRAY)
-        _, thresh = cv2.threshold(gray, 150, 255,cv2.THRESH_BINARY)
-
+        if (x1+w1/2) < mean:
+            _, thresh = cv2.threshold(gray, on_eyes_thresholds_l, 255,cv2.THRESH_BINARY)
+        elif (x1+w1/2) < mean:
+            _, thresh = cv2.threshold(gray, on_eyes_thresholds_r, 255,cv2.THRESH_BINARY)
         for i in range(thresh.shape[0]):
             for j in range(thresh.shape[1]):
 
@@ -141,7 +145,8 @@ def sourcile(eyes, crop):
 
 
 
-def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG):
+def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG,
+                      on_eyes_thresholds_r, on_eyes_thresholds_l):
 
     mean = 0
     for x, y, w, h in eyes:
@@ -157,7 +162,7 @@ def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG):
 
         if x1 < mean:#droite
 
-            _, thresh = cv2.threshold(gray, 150, 255,cv2.THRESH_BINARY)
+            _, thresh = cv2.threshold(gray, on_eyes_thresholds_r, 255,cv2.THRESH_BINARY)
             right = cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (255, 255, 255), 5)
 
             liste = []
@@ -178,7 +183,7 @@ def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG):
         elif x1 > mean:
 
 
-            _, thresh = cv2.threshold(gray, 150, 255,cv2.THRESH_BINARY)
+            _, thresh = cv2.threshold(gray, on_eyes_thresholds_l, 255,cv2.THRESH_BINARY)
  
             liste = []
             for i in range(int(thresh.shape[0])):
@@ -196,7 +201,9 @@ def sourcile_position(eyes, crop1, lenght_detectionD, lenght_detectionG):
 
 
 def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
-                      eyes_center_xG, eyes_center_yG):
+                      eyes_center_xG, eyes_center_yG,
+                      eyes_min_canny_r, eyes_grad_r,
+                      eyes_min_canny_l, eyes_grad_l):
 
     counter = 0
     mean = 0
@@ -210,7 +217,11 @@ def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
         if len(eyes) == 2:
             eyes_crop = crop[y1+h1-35:y1+h1-10, x1:x1+w1]
             blur = cv2.GaussianBlur(eyes_crop, (5,5), 3)
-            edge = cv2.Canny(blur, 140, 200)
+
+            if int(x1+w1/2) > mean:
+                edge = cv2.Canny(blur, eyes_min_canny_r, eyes_grad_r)
+            elif int(x1+w1/2) < mean:
+                edge = cv2.Canny(blur, eyes_min_canny_l, eyes_grad_l)
 
             _, thresh1 = cv2.threshold(edge, 127, 255,cv2.THRESH_BINARY)
             cnts, _ = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -279,7 +290,7 @@ def mouth(faces, frame, mouthcascade, mouth_pts1_x):
 
 
 
-def smyling(frame, faces):
+def smyling(frame, faces, mouth_thresh):
 
     for x, y, w, h in faces:
 
@@ -288,7 +299,7 @@ def smyling(frame, faces):
         crop1 = adjust_gamma(crop1, 0.6)
 
         gray=cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
-        _, thresh1 = cv2.threshold(gray, 60, 255,cv2.THRESH_BINARY)
+        _, thresh1 = cv2.threshold(gray, mouth_thresh, 255,cv2.THRESH_BINARY)
 
         x_liste = []
         y_liste = []
@@ -345,8 +356,6 @@ def nose(frame, faces):
 
         square = int(w/3)
 
-        y2 = 0
-        
         crop = frame[y+int(270*100/y):y+h-60, x+square:x+w-square]
         gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
         edge = cv2.Canny(gray, 0, 255)
@@ -386,7 +395,10 @@ def teeth(frame, faces):
 
 
 
-def video_capture():
+def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
+                   eyes_min_canny_r, eyes_grad_r,\
+                   eyes_min_canny_l, eyes_grad_l,\
+                   mouth_thresh):
 
     eyescascade = cv2.CascadeClassifier('haar/haarcascade_eye.xml')
     facecascade = cv2.CascadeClassifier('haar/haarcascade_frontalface_alt2.xml')
@@ -420,21 +432,24 @@ def video_capture():
                                                  facecascade, eyescascade,
                                                  frame1)
 
-            sourcile(eyes, crop)
+
+            sourcile(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
 
             teeth(frame, faces)
 
             mouth_pts1_x = mouth(faces, frame, mouthcascade,
                                  mouth_pts1_x)
-            smyling(frame, faces)
+            smyling(frame, faces, mouth_thresh)
 
             eyes_center_xD, eyes_center_yD,\
             eyes_center_xG, eyes_center_yG\
             = eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
-                                eyes_center_xG, eyes_center_yG)
+                                eyes_center_xG, eyes_center_yG,
+                                eyes_min_canny_r, eyes_grad_r,
+                                eyes_min_canny_l, eyes_grad_l)
             
             a, b = sourcile_position(eyes, crop,
-                                lenght_detectionD, lenght_detectionG)
+                                     lenght_detectionD, lenght_detectionG)
 
             lenght_detectionD = a
             lenght_detectionG = b
@@ -461,9 +476,20 @@ def video_capture():
 
 
 if __name__ == "__main__":
-    Ocontinue = True
-    while Ocontinue:
-        Ocontinue = picture_to_init()
 
-    video_capture()
+    picture_to_init()
+
+    on_eyes_thresholds_r, on_eyes_thresholds_l,\
+    eyes_min_canny_r, eyes_grad_r,\
+    eyes_min_canny_l, eyes_grad_l,\
+    mouth_thresh = main()
+
+    print(on_eyes_thresholds_r, on_eyes_thresholds_l,
+           eyes_min_canny_r, eyes_grad_r,
+            eyes_min_canny_l, eyes_grad_l, mouth_thresh)
+
+    video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
+                   eyes_min_canny_r, eyes_grad_r,\
+                   eyes_min_canny_l, eyes_grad_l,\
+                   mouth_thresh)
     
