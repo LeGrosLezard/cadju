@@ -2,7 +2,7 @@
 at the bottom"""
 
 import cv2
-
+import numpy as np
 
 def detections(img, faceCascade, eyes_cascade):
     """Here we detect the faces and the eyes"""
@@ -47,6 +47,7 @@ def make_mean(eyes):
 
     return mean
 
+
 def make_line(thresh):
     """We make line for detect more than one area
     with border, on eyelashes is paste to the border"""
@@ -72,7 +73,6 @@ def make_thresh(nb, x1, y1, w1, h1, crop):
 
         _, thresh = cv2.threshold(gray, adaptive, 255,cv2.THRESH_BINARY)
 
-
         make_line(thresh)
         contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -89,20 +89,83 @@ def make_thresh(nb, x1, y1, w1, h1, crop):
         adaptive += 1
 
         
-def sourcile(eyes, crop, img, facecascade, eyes_cascade):
+def on_eyelashes(eyes, crop, img, facecascade, eyes_cascade):
     """We call the mean for differenciate the eyes,
     and we run the threshold"""
 
     mean = make_mean(eyes)
     eyes, crop, faces = detections(img, facecascade, eyes_cascade)
+
+    thresholds_r = 0
+    thresholds_l = 0
+
     for x1, y1, w1, h1 in eyes:
 
         if x1+w1 < mean:
             threshold = make_thresh(198.5, x1, y1, w1, h1, crop)
-
+            thresholds_l = threshold
         elif x1+w1 > mean:
             threshold = make_thresh(180.5, x1, y1, w1, h1, crop)
+            thresholds_r = threshold
+ 
+    return thresholds_r, thresholds_l
 
+
+
+
+
+
+
+
+def find_canny_eyes(eyes_crop, blur, value):
+
+    ocontinue = True
+    grad = 100
+    min_canny = 100
+    while ocontinue:
+
+        if min_canny == 255:
+            min_canny = 0
+            grad += 1
+
+        edge = cv2.Canny(blur, min_canny, grad)
+
+        cnts, _ = cv2.findContours(edge, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        if len(cnts) == 2:
+            for i in cnts:
+                if cv2.contourArea(i) >= value:
+                    cv2.drawContours(eyes_crop, i, -1, (0, 0, 255), 2)
+                    
+                    cv2.imshow("image", edge)
+                    cv2.waitKey(0)
+                    return min_canny, grad
+
+        min_canny += 1
+
+
+
+def eyes_init(eyes, crop):
+    mean = make_mean(eyes)
+
+    for x1, y1, h1, w1 in eyes:
+        eyes_crop = crop[y1+h1-35:y1+h1-10, x1:x1+w1]
+        blur = cv2.GaussianBlur(eyes_crop, (5,5), 3)
+        
+        
+        if int(x1+w1/2) > mean:
+            min_canny, grad = find_canny_eyes(eyes_crop, blur, 4.5)
+
+        elif int(x1+w1/2) < mean:
+            min_canny, grad = find_canny_eyes(eyes_crop, blur, 2.5)
+  
+
+
+
+
+
+
+
+        
 
 def main():
     """We lunch it"""
@@ -112,11 +175,12 @@ def main():
     mouthcascade = cv2.CascadeClassifier('haar/mouth.xml')
 
 
-    img = cv2.imread("WIN_20190924_22_35_19_Pro.jpg")
+    img = cv2.imread("WIN_20190925_13_48_04_Pro.jpg")
 
     eyes, crop, faces = detections(img, facecascade, eyescascade)
-    sourcile(eyes, crop, img, facecascade, eyescascade)
+    thresholds_r, thresholds_l = on_eyelashes(eyes, crop, img, facecascade, eyescascade)
 
+    eyes_init(eyes, crop)
 
     cv2.imshow("image", crop)
     cv2.waitKey(0)
