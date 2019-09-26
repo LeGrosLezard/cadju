@@ -14,7 +14,7 @@
 
 - refaire truk mail
 
-- faire un site avec orm et les load static et les fnction de django (et le finir)
+- un site web qui dit les lignes de la main !!! jles avait appris un jour jcrois
 
 # -------------------------------------------
 
