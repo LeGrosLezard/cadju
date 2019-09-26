@@ -74,6 +74,7 @@ def make_thresh(nb, x1, y1, w1, h1, crop):
     in a loop. If we detect the area we stop it and recup it !"""
 
     eyes_crop1 = crop[y1-20:y1+10, x1:x1+w1]
+    eyes_crop1 = adjust_gamma(eyes_crop1, 0.5)
     gray=cv2.cvtColor(eyes_crop1, cv2.COLOR_BGR2GRAY)
 
     adaptive = 0
@@ -87,17 +88,24 @@ def make_thresh(nb, x1, y1, w1, h1, crop):
         make_line(thresh)
         contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
+        liste = []
+        for i in range(thresh.shape[0]):
+            for j in range(thresh.shape[1]):
+                if thresh[i, j] == 0:
+                    liste.append(j)
+        length = 0
+        if len(liste) > 1:
+            length = max(liste)  - min(liste)
+
         if len(contours) >= 2:
             for i in contours:
-                if 1000.0 > cv2.contourArea(i) > nb:
+                if 1000.0 > cv2.contourArea(i) > nb and length > 30:
                     Ocontinuer = False
-
                     cv2.imshow("image1", thresh)
                     cv2.waitKey(0)
-                    cv2.destroyAllWindows()
                     return adaptive
 
-        #print(adaptive)
+
         adaptive += 1
 
         
@@ -116,6 +124,7 @@ def on_eyelashes(eyes, crop, img, facecascade, eyes_cascade):
         if x1+w1 < mean:
             threshold = make_thresh(198.5, x1, y1, w1, h1, crop)
             thresholds_l = threshold
+
         elif x1+w1 > mean:
             threshold = make_thresh(180.5, x1, y1, w1, h1, crop)
             thresholds_r = threshold
@@ -173,9 +182,6 @@ def eyes_init(eyes, crop):
 def mouth_init(faces, img, mouthcascade):
     for x, y, w, h in faces:
         crop = img[y+h-40:y+h-10, x+55:x+w-55]
-        crop_frame = crop
-        crop = adjust_gamma(crop, 0.6)
-
         gray=cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
 
         ocontinue = True
@@ -185,10 +191,20 @@ def mouth_init(faces, img, mouthcascade):
             _, thresh = cv2.threshold(gray, min_thresh, 255,cv2.THRESH_BINARY)
             make_line(thresh)
 
+            liste = []
+            for i in range(thresh.shape[0]):
+                for j in range(thresh.shape[1]):
+                    if thresh[i, j] == 0:
+                        liste.append(j)
+            length = 0
+            if len(liste) > 1:
+                length = max(liste)  - min(liste)
+  
             cnts, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
             for i in cnts:
-                if 1000 > cv2.contourArea(i) >= 130:
+
+                if 1000 > cv2.contourArea(i) >= 500 and length > 50:
                     cv2.drawContours(crop, i, -1, (0, 0, 255), 2)
                     cv2.imshow("zaee", thresh)
                     cv2.waitKey(0)
@@ -209,7 +225,7 @@ def main():
 
 
     img = cv2.imread("treat_init.jpg")
-
+    img = adjust_gamma(img, 2.0)
     eyes, crop, faces = detections(img, facecascade, eyescascade)
 
     on_eyes_thresholds_r, on_eyes_thresholds_l = on_eyelashes(eyes, crop, img,
@@ -229,25 +245,6 @@ def main():
            eyes_min_canny_r, eyes_grad_r,\
            eyes_min_canny_l, eyes_grad_l,\
            mouth_thresh
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
