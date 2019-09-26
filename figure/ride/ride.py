@@ -79,7 +79,7 @@ for x, y, w, h in faces:
                 contours, _ = cv2.findContours(thresh, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
                 for i in contours:
 
-                    if 1000 >= cv2.contourArea(i) >= 63.5:
+                    if 1000 >= cv2.contourArea(i) >= 60.0:
                         M = cv2.moments(i)
                         cX = int(M["m10"] / M["m00"])
                         cY = int(M["m01"] / M["m00"])
@@ -121,7 +121,7 @@ thresh2 = make_line(thresh2)
 
 contours, _ = cv2.findContours(thresh2, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 for i in contours:
-    if cv2.contourArea(i) > 200:
+    if 30000 > cv2.contourArea(i) > 200:
         print(cv2.contourArea(i))
         cv2.drawContours(img, [i], -1, (0,0,255), 1)
     
