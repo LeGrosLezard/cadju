@@ -1,8 +1,68 @@
-    for x, y, w, h in faces:
+import cv2
+import numpy as np
 
-        y1 = int(150*100/y+h)
-        
-        crop1 = frame[y1:y+h, x+50:x+w-50]
-        crop_g = cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
-        crop_g = adjust_gamma(crop_g, 2.5)
-        edge = cv2.Canny(crop_g, 40, 10)
+facecascade = cv2.CascadeClassifier('../haar/haarcascade_frontalface_alt2.xml')
+eyescascade = cv2.CascadeClassifier('../haar/haarcascade_eye.xml')
+
+img = cv2.imread("WIN_20190925_13_48_04_Pro.jpg")
+
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+faces = facecascade.detectMultiScale(
+    gray,
+    scaleFactor=1.3,
+    minNeighbors=5,
+    minSize=(60, 100),
+    flags=cv2.CASCADE_SCALE_IMAGE
+)
+
+for x, y, w, h in faces:
+    cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
+
+    crop = img[y:y+h, x:x+w]
+    gray_crop = gray[y:y+h, x:x+w]
+    edge = cv2.Canny(gray_crop, 0, 255)
+
+    eyes = eyescascade.detectMultiScale(
+        gray_crop,
+        scaleFactor=1.3,
+        minNeighbors=4,
+        minSize=(30, 30),
+
+        flags=cv2.CASCADE_SCALE_IMAGE
+        )
+
+
+    mean = 0
+    for x1, y1, w1, h1 in eyes:
+        mean += x1+w1 / 2
+    mean = int(mean /2)
+    
+    for x1, y1, w1, h1 in eyes:
+        if x1+w1/2 < mean:
+            eyes_crop_l = crop[y1:y1+w1, x1:x1+w1]
+            gray = cv2.cvtColor(eyes_crop_l, cv2.COLOR_BGR2GRAY)
+            edge_l = cv2.Canny(gray, 0, 255)
+ 
+
+
+        else:
+            eyes_crop_r = crop[y1:y1+w1, x1:x1+w1]
+            gray = cv2.cvtColor(eyes_crop_r, cv2.COLOR_BGR2GRAY)
+            edge_r = cv2.Canny(gray, 0, 255)
+    
+
+##
+##cv2.imshow("edge", edge)
+##cv2.imshow("image", img)
+
+
+#cv2.imshow("eyes_crop_l", eyes_crop_l)
+#cv2.imshow("eyes_crop_r", eyes_crop_r)
+cv2.imshow("dzad", edge_l)
+cv2.imshow("eyes_vwvwcrop_r", edge_r)
+
+
+
+
+
+
