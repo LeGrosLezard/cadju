@@ -133,8 +133,8 @@ for x, y, w, h in faces:
                         cX = int(M["m10"] / M["m00"])
                         cY = int(M["m01"] / M["m00"])
 
-                        cv2.circle(eyes_crop_r,(cX, cY), 2, (0,0,255), 5)
-
+                        cv2.circle(eyes_crop_r,(cX, cY), 2, (255,255,255), 6)
+                        print(eyes_crop_r.shape[0], eyes_crop_r.shape[1], cX, cY)
                         continuer = False
                         cv2.imshow("aaaaa111", eyes_crop_r)
                         cv2.waitKey(0)
@@ -156,25 +156,30 @@ for x, y, w, h in faces:
 
 
 
-
-
-
-
-
-
-
-
 img = cv2.imread("eyes_crop_l.png")
 gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 ret,thresh2 = cv2.threshold(gray,127,255,cv2.THRESH_BINARY_INV)
 thresh2 = make_line(thresh2)
 
+
+#print(eyes_crop_r.shape[0], eyes_crop_r.shape[1], cX, cY)
+
+a = eyes_crop_r.shape[0] 
+b = eyes_crop_r.shape[1]
+cX = int(25 * img.shape[1]/ eyes_crop_r.shape[1])
+cY = int(20 * img.shape[0]/ eyes_crop_r.shape[0])
+img[cX, cY] = 0, 0, 255
+
+#ICI c position de l'oeil du crop premier * la taille du resize / par la taille du crop
+#tableau de proportionalité 4eme :D
+
+cv2.imshow("thresh2thresh2", img)
+    
 contours, _ = cv2.findContours(thresh2, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 for i in contours:
     if 30000 > cv2.contourArea(i) > 200:
-        print(cv2.contourArea(i))
         cv2.drawContours(img, [i], -1, (0,0,255), 1)
-    
+        
 cv2.imwrite("eyes_crop_l.png", img)
 
 
