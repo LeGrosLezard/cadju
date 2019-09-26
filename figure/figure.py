@@ -117,7 +117,6 @@ def threshold_building(x1, w1, mean, eyes_crop,
         _, thresh = cv2.threshold(gray, on_eyes_thresholds_r,
                                   255, cv2.THRESH_BINARY)
 
-
     return thresh
 
 
@@ -170,10 +169,11 @@ def drawing_point_from_list(ligne, eyes_crop):
 def on_eyes_detection(rowD, rowG):
     """If the two on eyes are min 15 we display it"""
 
+    up = False
     if rowD != 0 or rowG != 0:
         if rowD < 15 and rowG < 15:
-           print("levé")
-
+           up = True
+    return up
 
 
 def eyelashes_top(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
@@ -198,7 +198,7 @@ def eyelashes_top(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
         thresh = threshold_building(x1, w1, mean, eyes_crop,
                                     on_eyes_thresholds_l,
                                     on_eyes_thresholds_r)#build thresh
-        
+
         points_of_thresh(alpha_numeric, thresh)#add list to thresh points
         ligne = x_points_in_treated_list(alpha_numeric)#only take x axis
 
@@ -210,8 +210,9 @@ def eyelashes_top(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l):
         elif (x1+w1/2) > mean:
             rowG = row #We need to know if it's left eyes
 
-    on_eyes_detection(rowD, rowG)#Displaying in case of detection
+    up = on_eyes_detection(rowD, rowG)#Displaying in case of detection
 
+    return up
 #----------------------------------------------------------------------------------------------------eyelashes_top()
 
 
@@ -226,6 +227,7 @@ def down_detection(gray, min_thresh, detection, eyes_crop):
         -> if this last point < the last points of the last loop -> it fallen
     """
 
+    baisse = False
     _, thresh = cv2.threshold(gray, min_thresh, 255,cv2.THRESH_BINARY)
     make_line(thresh)   #Doing lines on each length and width of the rectangle
 
@@ -238,12 +240,14 @@ def down_detection(gray, min_thresh, detection, eyes_crop):
     position = max(liste)   #Recup the smallest point on y axis
 
     if position > detection + 2:    #it is superior of the last detection ?
-        print("baisse")
+        baisse = True
+
+
 
     #Draw the points
-    cv2.circle(eyes_crop, (position, int(thresh.shape[0]/2)), 1, (0, 0, 0), 5)
+    cv2.circle(eyes_crop, (int(thresh.shape[0]/2), position), 1, (0, 0, 0), 5)
 
-    return position
+    return position, baisse
 
 
 def eyelashes_down(eyes, crop1, lenght_detectionD, lenght_detectionG,
@@ -262,15 +266,19 @@ def eyelashes_down(eyes, crop1, lenght_detectionD, lenght_detectionG,
 
 
         if (x1+w1/2) < mean: #right, we search the smaller y point
-            y_position_eyelashes_down_R = down_detection(gray, on_eyes_thresholds_r,
-                                                         lenght_detectionD, eyes_crop)
+            y_position_eyelashes_down_R, baisse1\
+            = down_detection(gray, on_eyes_thresholds_r,
+                            lenght_detectionD, eyes_crop)
 
         elif (x1+w1/2) > mean: #left
-            y_position_eyelashes_down_L = down_detection(gray, on_eyes_thresholds_l,
-                                                         lenght_detectionG, eyes_crop)
+            y_position_eyelashes_down_L, baisse2\
+            = down_detection(gray, on_eyes_thresholds_l,
+                             lenght_detectionG, eyes_crop)
+
 
     #We return this points and compare it each loop
-    return y_position_eyelashes_down_R, y_position_eyelashes_down_L
+    return y_position_eyelashes_down_R, y_position_eyelashes_down_L,\
+           baisse1, baisse2
 
 
 
@@ -294,11 +302,6 @@ def make_canny(x1, w1, mean, blur,
     return edge
 
 
-def close_eyes(cnts, crop, eyes_center_xD, eyes_center_yD,
-               eyes_center_xG, eyes_center_yG):
-
-    cv2.circle(crop, (eyes_center_xD, eyes_center_yD), 1, (0,255,0), 10) 
-    cv2.circle(crop, (eyes_center_xG, eyes_center_yG), 1, (255,0,0), 10)
 
 def in_case_close_eye(x1, w1, y1, h1, mean,
                       eyes_center_xG, eyes_center_yG,
@@ -323,8 +326,8 @@ def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
                       eyes_min_canny_r, eyes_grad_r,
                       eyes_min_canny_l, eyes_grad_l):
 
-
     mean = make_mean(eyes)
+
 
     for x1, y1, h1, w1 in eyes:
 
@@ -341,24 +344,22 @@ def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
             cnts, _ = cv2.findContours(thresh1, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 
-            if len(cnts) == 0:
-                close_eyes(cnts, crop, eyes_center_xD, eyes_center_yD,
-                           eyes_center_xG, eyes_center_yG)
-
             for i in cnts:
                 if cv2.contourArea(i) > 2.0:
                     cv2.drawContours(eyes_crop, i, -1, (0, 0, 255), 3)
 
-            else:
-                eyes_center_xG, eyes_center_yG,\
-                eyes_center_xD, eyes_center_yD =\
-                in_case_close_eye(x1, w1, y1, h1, mean,
-                                  eyes_center_xG, eyes_center_yG,
-                                  eyes_center_xD, eyes_center_yD)
+
+
+            eyes_center_xG, eyes_center_yG,\
+            eyes_center_xD, eyes_center_yD =\
+            in_case_close_eye(x1, w1, y1, h1, mean,
+                              eyes_center_xG, eyes_center_yG,
+                              eyes_center_xD, eyes_center_yD)
 
 
     if eyes_center_xG > mean and eyes_center_xD < mean and len(eyes) == 2:
-        return eyes_center_xD, eyes_center_yD, eyes_center_xG, eyes_center_yG
+        return eyes_center_xD, eyes_center_yD,\
+               eyes_center_xG, eyes_center_yG, eyes_crop
 
 
 
@@ -373,6 +374,8 @@ def eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
 
 def mouth(faces, frame, mouthcascade, mouth_pts1_x):
 
+    oooh = False
+    
     for x, y, w, h in faces:
         
         crop1 = frame[y+h-50:y+h, x+50:x+w-50]
@@ -392,11 +395,11 @@ def mouth(faces, frame, mouthcascade, mouth_pts1_x):
         for x1, y1, w1, h1 in mouth:
 
             if x1+w1 < mouth_pts1_x - 10:
-                print("ooooooh")
+                oooh = True
             else:
                 mouth_pts1_x = x1+w1
 
-    return mouth_pts1_x
+    return mouth_pts1_x, oooh
 
 #----------------------------------------------------------------------------------------------------mouth()
 
@@ -453,17 +456,15 @@ def smyling(frame, faces, mouth_thresh):
 
     for x, y, w, h in faces:
 
-        crop1 = frame[y+h-50:y+h-30, x+55:x+w-55]
+        crop1 = frame[y+h-50:y+h-20, x+55:x+w-55]
         crop_frame = crop1
-        crop1 = adjust_gamma(crop1, 0.6)
-
+        crop1 = adjust_gamma(crop1, 2.0)
         gray=cv2.cvtColor(crop1, cv2.COLOR_BGR2GRAY)
         _, thresh1 = cv2.threshold(gray, mouth_thresh, 255,cv2.THRESH_BINARY)
-        cv2.imshow("dazdaz", thresh1)
+        make_line(thresh1)
 
 
         crop_window = thresh1[int(thresh1.shape[0]/5.5):int(thresh1.shape[0]/1.3), 0:thresh1.shape[1]]
-
 
         x_liste, y_liste = smyling_list_thresh(crop_window, thresh1)
 
@@ -501,6 +502,7 @@ def nose(frame, faces):
 
 #----------------------------------------------------------------------------------------------------teeth()
 def teeth(frame, faces):
+    show_teeth = False
     for x, y, w, h in faces:
 
         crop1 = frame[y+h-50:y+h-20, x+55:x+w-55]
@@ -511,8 +513,9 @@ def teeth(frame, faces):
 
         for i in cnts:
             if cv2.contourArea(i) > 95:
-                print("teeth appears or something on the mouse")
- 
+                show_teeth = True
+     
+    return show_teeth
 #----------------------------------------------------------------------------------------------------teeth()
 
 
@@ -554,23 +557,29 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
                                                  facecascade, eyescascade,
                                                  frame1)
 
+            if len(eyes) == 0:
+                cv2.circle(eyes_crop, (eyes_center_xD, eyes_center_yD), 1, (0,255,0), 10) 
+                cv2.circle(eyes_crop, (eyes_center_xG, eyes_center_yG), 1, (255,0,0), 10)
+                close = True
 
-            eyelashes_top(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
 
-            teeth(frame, faces)
+            up = eyelashes_top(eyes, crop, on_eyes_thresholds_r, on_eyes_thresholds_l)
 
-            mouth_pts1_x = mouth(faces, frame, mouthcascade,
+            show_teeth = teeth(frame, faces)
+
+            mouth_pts1_x, oooh = mouth(faces, frame, mouthcascade,
                                  mouth_pts1_x)
             smyling(frame, faces, mouth_thresh)
 
             eyes_center_xD, eyes_center_yD,\
-            eyes_center_xG, eyes_center_yG\
+            eyes_center_xG, eyes_center_yG, eyes_crop1\
             = eyes_localisation(eyes, crop, eyes_center_xD, eyes_center_yD,
                                 eyes_center_xG, eyes_center_yG,
                                 eyes_min_canny_r, eyes_grad_r,
                                 eyes_min_canny_l, eyes_grad_l)
             
-            lenght_detectionD, lenght_detectionG\
+            lenght_detectionD, lenght_detectionG,\
+            baisse1, baisse2\
             = eyelashes_down(eyes, crop,
                             lenght_detectionD, lenght_detectionG,
                             on_eyes_thresholds_r, on_eyes_thresholds_l)
@@ -583,8 +592,11 @@ def video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
         except:
             pass
 
+        if len(eyes) == 0:
 
-
+            cv2.circle(crop, (eyes_center_xD, eyes_center_yD), 1, (0,255,0), 10) 
+            cv2.circle(crop, (eyes_center_xG, eyes_center_yG), 1, (255,0,0), 10)
+            close = True
 
         cv2.imshow("frame", frame)
         
@@ -606,9 +618,6 @@ if __name__ == "__main__":
     eyes_min_canny_l, eyes_grad_l,\
     mouth_thresh = main()
 
-    print(on_eyes_thresholds_r, on_eyes_thresholds_l,
-           eyes_min_canny_r, eyes_grad_r,
-            eyes_min_canny_l, eyes_grad_l, mouth_thresh)
 
     video_capture(on_eyes_thresholds_r, on_eyes_thresholds_l,\
                    eyes_min_canny_r, eyes_grad_r,\
