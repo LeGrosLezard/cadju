@@ -1,24 +1,16 @@
 # cadju
 
-- trouver un tuto
+- ride
 
-- découpé chaque parti en 50/50
+- oh bouche
 
-- ajusté la luminosité via une luminosité (celle du jour)
+- combo  
 
-- ajusté les seuils mais pas bsoin jcrois du coup
 
--> adaptive threshold
 
 # -----------------------------------------------
 
-- finir ca
-
-- factoriser main
-
 - faire ride
-
-- faire gamma
 
 - refaire truk mail
 
@@ -27,7 +19,6 @@
 # -------------------------------------------
 
 - full body area
-
 
 
 --------------------------------------------- esquisse
