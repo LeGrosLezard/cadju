@@ -11,9 +11,16 @@ def adjust_gamma(image, gamma):
 
     return cv2.LUT(image, table)
 
+def make_line(thresh):
+    """We make line for detect more than one area
+    with border, on eyelashes is paste to the border"""
 
+    cv2.line(thresh, (0, 0), (0, thresh.shape[0]), (0, 0, 0), 1)
+    cv2.line(thresh, (0, 0), (thresh.shape[1], 0), (0, 0, 0), 1)
+    cv2.line(thresh, (thresh.shape[1], 0), (thresh.shape[1], thresh.shape[0]), (0, 0, 0), 1)
+    cv2.line(thresh, (0,  thresh.shape[0]), (thresh.shape[1], thresh.shape[0]), (0, 0, 0), 1)
 
-
+    return thresh
 
 
 facecascade = cv2.CascadeClassifier('../haar/haarcascade_frontalface_alt2.xml')
@@ -62,7 +69,7 @@ for x, y, w, h in faces:
             continuer = True
             while continuer:
             
-                eyes_crop_l = crop[y1:y1+w1, x1:x1+w1]
+                eyes_crop_l = crop[y1:y1+w1+20, x1:x1+w1]
                 gray=cv2.cvtColor(eyes_crop_l, cv2.COLOR_BGR2GRAY)
                 
                 blur = cv2.GaussianBlur(gray, (11, 11), 0)
@@ -80,8 +87,7 @@ for x, y, w, h in faces:
                         cv2.circle(eyes_crop_l,(cX, cY), 2, (0,0,255), 5)
 
                         continuer = False
-                        cv2.imshow("thresh", eyes_crop_l)
-                        cv2.waitKey(0)
+
 
                 counter += 1
 
@@ -101,7 +107,7 @@ for x, y, w, h in faces:
                 image_pil.save("eyes_crop_r.png")
 
 
-    edge = cv2.Canny(edge, 100, 255)
+
 
 
 
@@ -109,24 +115,23 @@ for x, y, w, h in faces:
 
 
 img = cv2.imread("eyes_crop_l.png")
-a = img
 gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+ret,thresh2 = cv2.threshold(gray,127,255,cv2.THRESH_BINARY_INV)
+thresh2 = make_line(thresh2)
 
-
-contours, _ = cv2.findContours(gray, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+contours, _ = cv2.findContours(thresh2, cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 for i in contours:
-    cv2.drawContours(img, [i], 0, (0,255,0), 3)
+    if cv2.contourArea(i) > 200:
+        print(cv2.contourArea(i))
+        cv2.drawContours(img, [i], -1, (0,0,255), 1)
+    
+cv2.imwrite("eyes_crop_l.png", img)
 
 
+
+img = cv2.imread("eyes_crop_l.png")
 cv2.imshow("image", img)
 
-
-        
-
-
-
-##img2 = cv2.imread("eyes_crop_r.png")
-##cv2.imshow("image1", img2)
 
 
 
