@@ -1,6 +1,18 @@
 import cv2
 import numpy as np
 
+
+def adjust_gamma(image, gamma):
+    """We add light to the video, we play with gamma"""
+
+    invGamma = 1.0 / gamma
+    table = np.array([((i / 255.0) ** invGamma) * 255
+            for i in np.arange(0, 256)]).astype("uint8")
+
+    return cv2.LUT(image, table)
+
+
+
 facecascade = cv2.CascadeClassifier('../haar/haarcascade_frontalface_alt2.xml')
 eyescascade = cv2.CascadeClassifier('../haar/haarcascade_eye.xml')
 
@@ -20,7 +32,7 @@ for x, y, w, h in faces:
 
     crop = img[y:y+h, x:x+w]
     gray_crop = gray[y:y+h, x:x+w]
-    edge = cv2.Canny(gray_crop, 0, 255)
+    edge = cv2.Canny(gray_crop, 40, 10)
 
     eyes = eyescascade.detectMultiScale(
         gray_crop,
@@ -40,15 +52,11 @@ for x, y, w, h in faces:
     for x1, y1, w1, h1 in eyes:
         if x1+w1/2 < mean:
             eyes_crop_l = crop[y1:y1+w1, x1:x1+w1]
-            gray = cv2.cvtColor(eyes_crop_l, cv2.COLOR_BGR2GRAY)
-            edge_l = cv2.Canny(gray, 0, 255)
+            edge_l = cv2.Canny(eyes_crop_l, 0, 0)
  
-
-
         else:
             eyes_crop_r = crop[y1:y1+w1, x1:x1+w1]
-            gray = cv2.cvtColor(eyes_crop_r, cv2.COLOR_BGR2GRAY)
-            edge_r = cv2.Canny(gray, 0, 255)
+            edge_r = cv2.Canny(eyes_crop_r, 0, 0)
     
 
 ##
@@ -56,8 +64,8 @@ for x, y, w, h in faces:
 ##cv2.imshow("image", img)
 
 
-#cv2.imshow("eyes_crop_l", eyes_crop_l)
-#cv2.imshow("eyes_crop_r", eyes_crop_r)
+##cv2.imshow("eyes_crop_l", eyes_crop_l)
+##cv2.imshow("eyes_crop_r", eyes_crop_r)
 cv2.imshow("dzad", edge_l)
 cv2.imshow("eyes_vwvwcrop_r", edge_r)
 
