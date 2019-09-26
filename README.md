@@ -14,7 +14,7 @@
 
 - refaire truk mail
 
-- un site web qui dit les lignes de la main !!! jles avait appris un jour jcrois
+- un site web avec l'orm et les load static et les fonction de django
 
 # -------------------------------------------
 
