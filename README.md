@@ -1,6 +1,6 @@
 # cadju
-
--> vérifier que .mat c la main (matplolib)
+                                                                             
+-> vérifier que .mat c la main (matplolib)             
 
 -> transférer .mat to csv  (ptetre que ca a rien a voir)
 
@@ -9,6 +9,20 @@
 -> sinon télécharger egoland
 
 -> faire le programme
+
+
+
+pendant chargement:
+
+-> apprendre les processus
+
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
 
 #-------------------------------------------------------------------------- après
 
