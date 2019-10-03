@@ -1,22 +1,13 @@
 # cadju
-                                                                             
--> vérifier que .mat c la main (matplolib)             
 
--> transférer .mat to csv  (ptetre que ca a rien a voir)
 
--> chercher si faut faire le meme type de model 
+-> savoir quel model utilisé le meme ? cnn ? rnn ?
 
--> sinon télécharger egoland
+-> découpé toutes les images
 
 -> faire le programme
 
-
-
-pendant chargement:
-
 -> apprendre les processus
-
-
 
 
 <br><br><br><br><br><br><br><br><br><br><br><br>
