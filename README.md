@@ -6,6 +6,8 @@
 
 - combo  
 
+- améliorer et/ou supprimer yeux zone pcque mtn on peut faire le truk des mains
+
 
 
 # -----------------------------------------------
