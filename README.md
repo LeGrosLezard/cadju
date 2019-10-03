@@ -1,5 +1,17 @@
 # cadju
 
+-> vérifier que .mat c la main
+
+-> transférer .mat to csv
+
+-> chercher si faut faire le meme type de model 
+
+-> sinon télécharger egoland
+
+
+
+#-------------------------------------------------------------------------- après
+
 - ride
 
 - oh bouche
