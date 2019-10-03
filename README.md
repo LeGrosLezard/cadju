@@ -1,8 +1,8 @@
 # cadju
 
--> vérifier que .mat c la main
+-> vérifier que .mat c la main (matplolib)
 
--> transférer .mat to csv
+-> transférer .mat to csv  (ptetre que ca a rien a voir)
 
 -> chercher si faut faire le meme type de model 
 
