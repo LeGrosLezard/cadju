@@ -15,7 +15,7 @@
 chui raplaplapla j'ai chercher toute la journée le truk des mains et faut -> object detection y'a pas pour sklearn et pytorch j'arrive pas non plus a le télécharger et tf jessais plus
 ca m'a mis ko mais j'ai appris la segmentation d'image et qu'il faut un de ces deux framework...
 
-bon go faire le truk des assiettes mais chui naze la
+bon go faire le truk des assiettes mais chui naze la et le mec c pour un site de konsula avec 2 capchats j arriverai pas et si konsula = consulat c mort
 
 <br><br><br><br><br><br><br><br><br><br><br><br>
 
