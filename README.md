@@ -3,19 +3,20 @@
 
 -> yolo model
 
--> tuto
+-> comprendre pourquoi les images sont annotés et si je dois me servir des images non anoté ou que des anoté ou les deux ptin
+
+-> si je dois faire un cnn sklearn ou que yolo est un framework
 
 -> faire un model personalisé
 
 -> faire le programme
 
--> apprendre les processus cnn svm, rl rnn, lstm et tous les autre trucks, im classification/detection, différence entre machine learning, deep learning et les autres trucks
+  -> utiliser la segmentation de l'image / mask image (silouhette)
+
+-> si pas assez ok faire avec egoland sinon le supprimer
 
 
-chui raplaplapla j'ai chercher toute la journée le truk des mains et faut -> object detection y'a pas pour sklearn et pytorch j'arrive pas non plus a le télécharger et tf jessais plus
-ca m'a mis ko mais j'ai appris la segmentation d'image et qu'il faut un de ces deux framework...
 
-bon go faire le truk des assiettes mais chui naze la et le mec c pour un site de konsula avec 2 capchats j arriverai pas et si konsula = consulat c mort
 
 <br><br><br><br><br><br><br><br><br><br><br><br>
 
