@@ -16,7 +16,7 @@
 -> si pas assez ok faire avec egoland sinon le supprimer
 
 
-
+2h a télécharger les weights cfg alors fallait juste le récupérer dans le dossier cfg 
 
 <br><br><br><br><br><br><br><br><br><br><br><br>
 
