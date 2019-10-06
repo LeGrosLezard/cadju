@@ -39,7 +39,7 @@
 
 - full body area hog ?
 
-- sklearn voice ia (apprendre a faire avec les mots)
+- sklearn voice ia (apprendre a faire avec les mots mais se servir du truck sklearn))
 
 
 # -----------------------------------------------
