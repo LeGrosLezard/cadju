@@ -28,18 +28,20 @@ def resize_coordinate(width, height, points):
     coords = [[], []]
 
     for i in range(len(points)):
+        try:
+            x = (points[i][0][0] + points[i][0][1])/2.0
+            y = (points[i][1][0] + points[i][1][1])/2.0
+            w = points[i][0][1] - points[i][0][0]
+            h = points[i][1][1] - points[i][1][0]
+            x = x * dw
+            w = w * dw
+            y = y * dh
+            h = h * dh
 
-        x = (points[i][0][0] + points[i][0][1])/2.0
-        y = (points[i][1][0] + points[i][1][1])/2.0
-        w = points[i][0][1] - points[i][0][0]
-        h = points[i][1][1] - points[i][1][0]
-        x = x * dw
-        w = w * dw
-        y = y * dh
-        h = h * dh
-
-        coords[i].append(x);coords[i].append(w);
-        coords[i].append(y);coords[i].append(h);
+            coords[i].append(x);coords[i].append(w);
+            coords[i].append(y);coords[i].append(h);
+        except IndexError:
+            pass
 
     return coords
 
@@ -79,6 +81,7 @@ def define_numbers_point(coords):
     for lst in coords:
         if lst == []:
             one = True
+
     return one
 
 
@@ -98,13 +101,11 @@ def numbers_of_points(one, coords, path, i):
         writting_annotation_to_picture(path, i, first)
         
         for p in pts:
-            print(p[0])
-            
-            writting_points_into_txt(path, i, p[0])
+            writting_points_into_txt(path, i, p)
 
         if one is True:
             break
-        print("")
+
 
 
     #faut définir tous les pts en txt.
