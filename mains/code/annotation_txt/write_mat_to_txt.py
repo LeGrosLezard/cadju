@@ -20,7 +20,7 @@ from config import path_picture
 
 
 
-def resize_coordinate(width, height, points):
+def recup_points(width, height, points):
 
     dw = 1./width
     dh = 1./height
@@ -28,20 +28,49 @@ def resize_coordinate(width, height, points):
     coords = [[], []]
 
     for i in range(len(points)):
-        try:
-            x = (points[i][0][0] + points[i][0][1])/2.0
-            y = (points[i][1][0] + points[i][1][1])/2.0
-            w = points[i][0][1] - points[i][0][0]
-            h = points[i][1][1] - points[i][1][0]
+        list_x = []
+        list_y = []
+
+        for j in points[i]:
+
+            list_x.append(j[1])
+            list_y.append(j[0])
+
+            coords[i].append(min(list_x))
+            coords[i].append(min(list_y))
+            
+            coords[i].append(min(list_x) + (max(list_x) - min(list_x)))
+            coords[i].append(min(list_y) + (max(list_y) - min(list_y)))
+
+    return coords
+
+
+def resize_points(points, width, height):
+
+    dw = 1./width
+    dh = 1./height
+    
+    coords = [[], []]
+    for i in range(len(points)):
+
+        if points[i] == []:
+            pass
+        else:
+
+            x = (points[i][0] + points[i][1])/2.0
+            y = (points[i][2] + points[i][3])/2.0
+            w = points[i][1] - points[i][0]
+            h = points[i][3] - points[i][2]
             x = x * dw
             w = w * dw
             y = y * dh
             h = h * dh
 
-            coords[i].append(x);coords[i].append(w);
-            coords[i].append(y);coords[i].append(h);
-        except IndexError:
-            pass
+            coords[i].append(x)
+            coords[i].append(w)
+            coords[i].append(y)
+            coords[i].append(h)
+
 
     return coords
 
@@ -68,7 +97,8 @@ def recup_data_mat_file(i, path, width, height):
                 except:
                     pass
 
-    coords = resize_coordinate(width, height, coords)
+    coords = recup_points(width, height, coords)
+    coords = resize_points(coords, width, height)
 
     return coords
 
@@ -93,7 +123,6 @@ def numbers_of_points(one, coords, path, i):
     first = True
     
     for nb, pts in enumerate(coords):
-        print(nb)
 
         if nb == 1:
             first = False
@@ -153,15 +182,4 @@ def acess_to_list_path(liste, path, path_picture):
 
 if __name__ == "__main__":
     acess_to_list_path(liste_mat, path_mat, path_picture)
-
-
-
-
-
-
-
-
-
-
-
 
