@@ -5,6 +5,15 @@
 
     -> refaire avec les labels right left si jamais
 
+- copier les images dans obj
+
+- essais avec path complet (.names / process.py)
+
+- essayer sans path complet (.names / process.py)
+
+- lancer la commande avec les path en commencant pas build/...
+
+
 -> faire un model personalisé
 
 -> faire le programme
