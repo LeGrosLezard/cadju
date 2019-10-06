@@ -3,7 +3,7 @@
 
 -> yolo model
 
-    -> si ca marche pas refaire un le tuto yolov2->3...
+    -> refaire les points
 
 -> faire un model personalisé
 
