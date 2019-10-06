@@ -70,7 +70,7 @@ def numbers_of_points(one, coords, path, i):
         if nb == 1:
             first = False
 
-        writting_annotation_to_picture(path, i, nb, first)
+        writting_annotation_to_picture(path, i, first)
         
         for p in pts:
             print(p[0])
@@ -85,20 +85,15 @@ def numbers_of_points(one, coords, path, i):
     #faut définir tous les pts en txt.
 
 
-def writting_annotation_to_picture(path, i, nb, first):
-
-    if first is True:
-        jump = nb
-    else:
-        jump = "\n" + str(nb)
+def writting_annotation_to_picture(path, i, first):
 
     i = str(i[:-4]) + ".txt"
 
     print(path.format(i))
 
     with open(path.format(i), "a") as file:
-        file.write(str(jump))
-        file.write(" ")
+        if first is False:
+            file.write(str("\n"))
         file.write("0")
 
 
