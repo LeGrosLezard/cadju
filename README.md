@@ -3,7 +3,7 @@
 
 -> yolo model
 
-    -> refaire les points
+    -> lancer le training ste nuit jdeteste le laisser en marche mais bon et si ca fait trop de tour et que c'est pas bien ben
 
 -> faire un model personalisé
 
