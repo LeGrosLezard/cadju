@@ -7,13 +7,13 @@
 
 -> faire le programme
 
-  -> entourer la main d'une couleur impossible
+    -> entourer la main d'une couleur impossible
 
-  -> detecter la tete (hog ? ou haar)
+    -> detecter la tete (hog ? ou haar)
   
-  -> faire les zone tete + visage
+    -> faire les zone tete + visage
   
-  -> on veut eviter les initialisation donc les haar récupérer un model visage + yeux
+    -> on veut eviter les initialisation donc les haar récupérer un model visage + yeux
 
 -> utiliser la segmentation de l'image et/ou mask image 
 
