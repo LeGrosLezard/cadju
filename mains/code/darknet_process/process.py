@@ -5,8 +5,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 path_data = "data/obj/"
 cp=current_dir+"/"+path_data
-print(cp)
-print(os.path.join(cp, "*.jpg"))
+
 
 
 percentage_test = 30;
@@ -20,8 +19,8 @@ for pathAndFilename in glob.iglob(os.path.join(cp, "*.jpg")):
 
     if counter == index_test:
         counter = 1
-        file_test.write(path_data + title + ".jpg" + "\n")
+        file_test.write(cp + title + ".jpg" + "\n")
 
     else:
-        file_train.write(path_data + title + ".jpg" + "\n")
+        file_train.write(cp + title + ".jpg" +  "\n")
         counter = counter + 1
