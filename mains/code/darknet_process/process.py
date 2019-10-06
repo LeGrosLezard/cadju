@@ -5,6 +5,10 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 path_data = "data/obj/"
 cp=current_dir+"/"+path_data
+print(cp)
+print(os.path.join(cp, "*.jpg"))
+
+
 percentage_test = 30;
 file_train = open("train.txt", "w")
 file_test = open("test.txt", "w")
