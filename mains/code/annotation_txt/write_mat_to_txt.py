@@ -32,15 +32,15 @@ def recup_points(width, height, points):
         list_y = []
 
         for j in points[i]:
+            if len(j) == 2:
+                list_x.append(j[1])
+                list_y.append(j[0])
 
-            list_x.append(j[1])
-            list_y.append(j[0])
-
-            coords[i].append(min(list_x))
-            coords[i].append(min(list_y))
-            
-            coords[i].append(min(list_x) + (max(list_x) - min(list_x)))
-            coords[i].append(min(list_y) + (max(list_y) - min(list_y)))
+                coords[i].append(min(list_x))
+                coords[i].append(min(list_y))
+                
+                coords[i].append(min(list_x) + (max(list_x) - min(list_x)))
+                coords[i].append(min(list_y) + (max(list_y) - min(list_y)))
 
     return coords
 
@@ -182,4 +182,3 @@ def acess_to_list_path(liste, path, path_picture):
 
 if __name__ == "__main__":
     acess_to_list_path(liste_mat, path_mat, path_picture)
-
