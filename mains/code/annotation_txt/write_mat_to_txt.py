@@ -26,14 +26,23 @@ def recup_data_mat_file(i, path):
 
     #ouverture fichier .mat
     points = scipy.io.loadmat(path.format(str(i)))
+
     coords = [[], []]
+
+
 
     #recuperation des pts du .mat
     for nb, i in enumerate(points["boxes"][0]):
         for j in i[0]:
             for k in j:
-                coords[nb].append(k[0].tolist())
-
+                try:
+                    if k[0] == "R" or k[0] == "L":
+                        pass
+                    else:
+                        coords[nb].append(k[0].tolist())
+                except:
+                    pass
+  
     return coords
 
 
@@ -109,7 +118,7 @@ def acess_to_list_path(liste, path):
     for i in liste:
         print("")
 
-
+        print(i)
         coords = recup_data_mat_file(i, path)
         one = define_numbers_point(coords)
         numbers_of_points(one, coords, path_picture, i)
