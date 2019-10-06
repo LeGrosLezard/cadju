@@ -20,9 +20,32 @@ from config import path_picture
 
 
 
+def resize_coordinate(width, height, points):
+
+    dw = 1./width
+    dh = 1./height
+
+    coords = [[], []]
+
+    for i in range(len(points)):
+
+        x = (points[i][0][0] + points[i][0][1])/2.0
+        y = (points[i][1][0] + points[i][1][1])/2.0
+        w = points[i][0][1] - points[i][0][0]
+        h = points[i][1][1] - points[i][1][0]
+        x = x * dw
+        w = w * dw
+        y = y * dh
+        h = h * dh
+
+        coords[i].append(x);coords[i].append(w);
+        coords[i].append(y);coords[i].append(h);
+
+    return coords
 
 
-def recup_data_mat_file(i, path):
+
+def recup_data_mat_file(i, path, width, height):
 
     #ouverture fichier .mat
     points = scipy.io.loadmat(path.format(str(i)))
@@ -42,7 +65,9 @@ def recup_data_mat_file(i, path):
                         coords[nb].append(k[0].tolist())
                 except:
                     pass
-  
+
+    coords = resize_coordinate(width, height, coords)
+
     return coords
 
 
@@ -108,18 +133,34 @@ def writting_points_into_txt(path, i, p):
 
 
 
-def acess_to_list_path(liste, path):
+def acess_to_list_path(liste, path, path_picture):
     #les fichiers .mat
     for i in liste:
         print("")
 
         print(i)
-        coords = recup_data_mat_file(i, path)
+
+        img = cv2.imread(path_picture.format(str(i[:-4]) + ".jpg"))
+        width = img.shape[1]
+        height = img.shape[0]
+
+        coords = recup_data_mat_file(i, path, width, height)
         one = define_numbers_point(coords)
         numbers_of_points(one, coords, path_picture, i)
 
 
 
-
 if __name__ == "__main__":
-    acess_to_list_path(liste_mat, path_mat)
+    acess_to_list_path(liste_mat, path_mat, path_picture)
+
+
+
+
+
+
+
+
+
+
+
+
