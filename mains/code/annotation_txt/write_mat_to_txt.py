@@ -22,6 +22,8 @@ from config import path_picture
 
 def recup_points(width, height, points):
 
+    print(points)
+
     dw = 1./width
     dh = 1./height
 
@@ -39,9 +41,9 @@ def recup_points(width, height, points):
         try:
 
             coords[i].append(min(list_x))
-            coords[i].append(min(list_y))
-                        
             coords[i].append(min(list_x) + (max(list_x) - min(list_x)))
+
+            coords[i].append(min(list_y))
             coords[i].append(min(list_y) + (max(list_y) - min(list_y)))
         except:
             pass
@@ -56,8 +58,6 @@ def resize_points(points, width, height):
     dh = 1./height
 
 
-    print(points)
-    
     coords = [[], []]
     for i in range(len(points)):
 
@@ -184,7 +184,7 @@ def acess_to_list_path(liste, path, path_picture):
 
         coords = recup_data_mat_file(i, path, width, height)
         one = define_numbers_point(coords)
-        #numbers_of_points(one, coords, path_picture, i)
+        numbers_of_points(one, coords, path_picture, i)
 
 
 
