@@ -3,6 +3,8 @@
 
 -> yolo model
 
+    -> refaire avec les labels right left si jamais
+
 -> faire un model personalisé
 
 -> faire le programme
