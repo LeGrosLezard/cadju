@@ -3,20 +3,24 @@
 
 -> yolo model
 
--> comprendre pourquoi les images sont annotés et si je dois me servir des images non anoté ou que des anoté ou les deux ptin
-
--> si je dois faire un cnn sklearn ou que yolo est un framework
-
 -> faire un model personalisé
 
 -> faire le programme
 
-  -> utiliser la segmentation de l'image / mask image (silouhette)
+  -> entourer la main d'une couleur impossible
+
+  -> detecter la tete (hog ? ou haar)
+  
+  -> faire les zone tete + visage
+  
+  -> on veut eviter les initialisation donc les haar récupérer un model visage + yeux
+
+-> utiliser la segmentation de l'image et/ou mask image 
 
 -> si pas assez ok faire avec egoland sinon le supprimer
 
 
-2h a télécharger les weights cfg alors fallait juste le récupérer dans le dossier cfg 
+
 
 <br><br><br><br><br><br><br><br><br><br><br><br>
 
