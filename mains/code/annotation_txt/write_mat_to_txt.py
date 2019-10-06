@@ -36,12 +36,17 @@ def recup_points(width, height, points):
                 list_x.append(j[1])
                 list_y.append(j[0])
 
-                coords[i].append(min(list_x))
-                coords[i].append(min(list_y))
-                
-                coords[i].append(min(list_x) + (max(list_x) - min(list_x)))
-                coords[i].append(min(list_y) + (max(list_y) - min(list_y)))
+        try:
 
+            coords[i].append(min(list_x))
+            coords[i].append(min(list_y))
+                        
+            coords[i].append(min(list_x) + (max(list_x) - min(list_x)))
+            coords[i].append(min(list_y) + (max(list_y) - min(list_y)))
+        except:
+            pass
+
+    
     return coords
 
 
@@ -49,6 +54,9 @@ def resize_points(points, width, height):
 
     dw = 1./width
     dh = 1./height
+
+
+    print(points)
     
     coords = [[], []]
     for i in range(len(points)):
@@ -176,9 +184,21 @@ def acess_to_list_path(liste, path, path_picture):
 
         coords = recup_data_mat_file(i, path, width, height)
         one = define_numbers_point(coords)
-        numbers_of_points(one, coords, path_picture, i)
+        #numbers_of_points(one, coords, path_picture, i)
 
 
 
 if __name__ == "__main__":
     acess_to_list_path(liste_mat, path_mat, path_picture)
+
+
+
+
+
+
+
+
+
+
+
+
