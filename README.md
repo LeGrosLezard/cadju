@@ -3,7 +3,7 @@
 
 -> yolo model
 
-    -> lancer le training ste nuit jdeteste le laisser en marche mais bon et si ca fait trop de tour et que c'est pas bien ben
+    -> refaire les detections... ca met -nan jcroyais que sté normal
 
 -> faire un model personalisé
 
