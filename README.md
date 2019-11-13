@@ -1,6 +1,6 @@
 # cadju
 
-tu viens de te gratter derriere la tete ? je peux etre ton animal de compagnie
+ok c'est l'heure pause série
 
 pcque mec, ne fait pas tout toi meme, si y'a deja un modele open source nique mais quand meme essayer
 
