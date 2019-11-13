@@ -32,6 +32,8 @@ un algo qui dit ici il a dit par, ici, ect... (mais ca faut conda et truk de la 
 
 est-ce qu'un detecteur infra rouge marche sur des vidéo ?
 
+en vrai ca va etre super légé
+
 récupérer petit(2) petit(1) / grand(2) grand(1)
 
 convertir
