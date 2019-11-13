@@ -1,8 +1,12 @@
 # cadju
 
 
-bouaaa 2 mois !
+récupérer petit(2) petit(1) / grand(2) grand(1)
 
-bon faut touuuut recomprendre, faire les annotations
+convertir
+
+mettre dans txt
+
+
 
 
