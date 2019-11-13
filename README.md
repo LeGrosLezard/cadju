@@ -1,6 +1,6 @@
 # cadju
 
-pcque mec, ne fait pas tout toi meme, si y'a deja un modele open source nique
+pcque mec, ne fait pas tout toi meme, si y'a deja un modele open source nique mais quand meme essayer
 
 un modele pour suivis de main
 
