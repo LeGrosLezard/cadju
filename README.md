@@ -6,7 +6,7 @@ un modele pour suivis de main
 
 un modele pour signe des main
 
-un modele pour les yeux
+un modele pour les yeux + lunette
 
 ride
 
