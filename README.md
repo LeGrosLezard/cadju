@@ -40,6 +40,8 @@ convertir
 
 mettre dans txt
 
+récupérer les annotation avant de s'enflammer
 
+le faire a ma sauce, apres si je suis pris faire en fonction de
 
-
+tout faire en programme détacher
